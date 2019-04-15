@@ -35,6 +35,8 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+src/main/webapp/WEB-INF/classes
+src/main/webapp/.gitignore
 
 # External tool builders
 .externalToolBuilders/
@@ -142,6 +144,3 @@ crashlytics-build.properties
 fabric.properties
 /.project
 /.classpath
-
-src/main/webapp/WEB-INF/classes/
-src/main/webapp/WEB-INF/lib/

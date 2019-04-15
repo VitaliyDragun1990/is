@@ -10,6 +10,8 @@ import javax.servlet.ServletRegistration;
 import com.revenat.ishop.servlet.AdminServlet;
 import com.revenat.ishop.servlet.GetParametersServlet;
 import com.revenat.ishop.servlet.JavaConfigServlet;
+import com.revenat.ishop.servlet.ShoppingCartServlet;
+import com.revenat.ishop.util.ShoppingCartCookieMapper;
 
 public class ApplicationConfigInitializer implements ServletContainerInitializer {
 
@@ -28,5 +30,8 @@ public class ApplicationConfigInitializer implements ServletContainerInitializer
 		registration.setInitParameter("accessKey", "super-secret-access-key");
 		registration.setInitParameter("login", "admin");
 		registration.setInitParameter("password", "password");
+		
+		registration = ctx.addServlet("ShoppingCartServlet", new ShoppingCartServlet(new ShoppingCartCookieMapper()));
+		registration.addMapping("/shopping-cart");
 	}
 }
