@@ -32,6 +32,6 @@ public class ApplicationConfigInitializer implements ServletContainerInitializer
 		registration.setInitParameter("password", "password");
 		
 		registration = ctx.addServlet("ShoppingCartServlet", new ShoppingCartServlet(new ShoppingCartCookieMapper()));
-		registration.addMapping("/shopping-cart");
+		registration.addMapping("/current-cart");
 	}
 }

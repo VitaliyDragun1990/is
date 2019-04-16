@@ -57,13 +57,13 @@ public class ShoppingCartServlet extends HttpServlet {
 		}
 	}
 	
-	private void showShoppingCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private void showShoppingCart(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		HttpSession session = req.getSession();
 		if (ShoppingCartUtils.isCurrentShoppingCartExists(session)) {
-			resp.getWriter().println(ShoppingCartUtils.getCurrentShoppingCart(session));
-		} else {
-			resp.getWriter().println("Shopping Cart is not exist");
+			ShoppingCart cart = ShoppingCartUtils.getCurrentShoppingCart(session);
+			req.setAttribute("cart", cart);
 		}
+		req.getRequestDispatcher("/WEB-INF/jsp/shopping-cart.jsp").forward(req, resp);
 	}
 	
 	@Override
