@@ -1,4 +1,3 @@
-<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +7,7 @@
 </head>
 <body>
 	<form action="/order" method="post">
-		<input type="hidden" name="id_customer" value="<%=request.getParameter("idCustomer")%>">
+		<input type="hidden" name="id_customer" value="secret">
 		Product name: <input name="product"><br>
 		Product count:<input name="count" type="number"><br>
 		<input type="submit" value="Make order">

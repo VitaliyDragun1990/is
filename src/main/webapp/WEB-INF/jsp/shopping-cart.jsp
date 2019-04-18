@@ -9,15 +9,15 @@
 </head>
 <body>
 	<h2>Shopping cart content</h2>
-	Total count = ${!(empty cart) ? cart.totalCount : 0} <br />
+	Total count = ${!(empty CURRENT_SHOPPING_CART) ? CURRENT_SHOPPING_CART.totalCount : 0} <br />
 	
-	<% ShoppingCart cart = (ShoppingCart) request.getAttribute("cart");
+	<% ShoppingCart cart = (ShoppingCart) session.getAttribute("CURRENT_SHOPPING_CART");
 	if (cart != null) { %>
 	
 	Products: <br />
 	
 	<% for (ShoppingCartItem item : cart.getItems()) {%>
-		<%= item.getProductId()%>-><%=item.getQuantity()%> <br />
+		<%= item.getProductId()%>-&gt;<%=item.getQuantity()%> <br />
 	<% }} %> <br />
 	
 </body>

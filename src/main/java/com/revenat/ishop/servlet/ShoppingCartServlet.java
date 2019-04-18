@@ -8,7 +8,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.revenat.ishop.model.ShoppingCart;
 import com.revenat.ishop.util.ShoppingCartMapper;
@@ -58,11 +57,6 @@ public class ShoppingCartServlet extends HttpServlet {
 	}
 	
 	private void showShoppingCart(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		HttpSession session = req.getSession();
-		if (ShoppingCartUtils.isCurrentShoppingCartExists(session)) {
-			ShoppingCart cart = ShoppingCartUtils.getCurrentShoppingCart(session);
-			req.setAttribute("cart", cart);
-		}
 		req.getRequestDispatcher("/WEB-INF/jsp/shopping-cart.jsp").forward(req, resp);
 	}
 	

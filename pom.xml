@@ -37,7 +37,23 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
+			<scope>compile</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jasper</artifactId>
+			<version>8.5.39</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-catalina</artifactId>
+			<version>8.5.39</version>
+			<scope>provided</scope>
+		</dependency>
+
+
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -62,52 +78,16 @@
 	<build>
 		<finalName>iShop</finalName>
 		<plugins>
-			<!-- <plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.version}</version>
-				<configuration>
-					<excludes>
-						<exclude>**/CLI.*</exclude>
-						<exclude>**/ServiceWrapper.*</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>jacoco-report</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-					Add this checking
-					<execution>
-						<id>jacoco-check</id>
-						<goals>
-							<goal>check</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<rule>
-									<element>PACKAGE</element>
-									<limits>
-										<limit>
-											<counter>LINE</counter>
-											<value>COVEREDRATIO</value>
-											<minimum>0.85</minimum>
-										</limit>
-									</limits>
-								</rule>
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin> -->
+			<!-- <plugin> <groupId>org.jacoco</groupId> <artifactId>jacoco-maven-plugin</artifactId> 
+				<version>${jacoco.version}</version> <configuration> <excludes> <exclude>**/CLI.*</exclude> 
+				<exclude>**/ServiceWrapper.*</exclude> </excludes> </configuration> <executions> 
+				<execution> <goals> <goal>prepare-agent</goal> </goals> </execution> <execution> 
+				<id>jacoco-report</id> <phase>test</phase> <goals> <goal>report</goal> </goals> 
+				</execution> Add this checking <execution> <id>jacoco-check</id> <goals> 
+				<goal>check</goal> </goals> <configuration> <rules> <rule> <element>PACKAGE</element> 
+				<limits> <limit> <counter>LINE</counter> <value>COVEREDRATIO</value> <minimum>0.85</minimum> 
+				</limit> </limits> </rule> </rules> </configuration> </execution> </executions> 
+				</plugin> -->
 		</plugins>
 	</build>
 
