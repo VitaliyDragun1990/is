@@ -36,6 +36,7 @@ local.properties
 .loadpath
 .recommenders
 src/main/webapp/WEB-INF/classes
+src/main/webapp/WEB-INF/lib
 src/main/webapp/.gitignore
 
 # External tool builders

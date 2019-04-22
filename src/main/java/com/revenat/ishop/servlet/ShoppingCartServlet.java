@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,10 +48,6 @@ public class ShoppingCartServlet extends HttpServlet {
 			ShoppingCart cart = ShoppingCartUtils.getCurrentShoppingCart(req.getSession());
 			String cookieValue = cookieMapper.toString(cart);
 			ShoppingCartUtils.setCurrentShoppingCartCookie(cookieValue, resp);
-		} else if (ShoppingCartUtils.findShoppingCartCookie(req) != null) {
-			Cookie cartCookie = ShoppingCartUtils.findShoppingCartCookie(req);
-			ShoppingCart cart = cookieMapper.fromString(cartCookie.getValue());
-			ShoppingCartUtils.setCurrentShoppingCart(req.getSession(), cart);
 		}
 	}
 	
