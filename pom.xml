@@ -14,11 +14,16 @@
 		<servlet.version>3.1.0</servlet.version>
 		<jsp-api.version>2.2</jsp-api.version>
 		<jstl.version>1.2</jstl.version>
+		<commons-lang3.version>3.8.1</commons-lang3.version>
+		<commons-dbcp2.version>2.6.0</commons-dbcp2.version>
+		<postgresql.version>42.2.5</postgresql.version>
+		<json.version>20180813</json.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>2.13.0</mockito.version>
 		<hamcrest.version>2.1</hamcrest.version>
 		<jacoco.version>0.8.2</jacoco.version>
 		<logback.version>1.2.3</logback.version>
+		<h2.version>1.4.199</h2.version>
 	</properties>
 
 	<dependencies>
@@ -41,11 +46,36 @@
 			<!-- <scope>provided</scope> -->
 		</dependency>
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
 			<scope>compile</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>${commons-dbcp2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>${json.version}</version>
+		</dependency>
+
+
+
 
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
@@ -67,6 +97,12 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.hamcrest</groupId>
+					<artifactId>hamcrest-core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -80,6 +116,13 @@
 			<version>${hamcrest.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -95,6 +138,42 @@
 				<limits> <limit> <counter>LINE</counter> <value>COVEREDRATIO</value> <minimum>0.85</minimum> 
 				</limit> </limits> </rule> </rules> </configuration> </execution> </executions> 
 				</plugin> -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<!-- clean -->
+					<execution>
+						<id>clean-lib</id>
+						<phase>clean</phase>
+						<configuration>
+							<tasks>
+								<delete dir="${basedir}/src/main/webapp/WEB-INF/lib" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<!-- build -->
+					<execution>
+						<id>copy-lib</id>
+						<phase>install</phase>
+						<configuration>
+							<tasks>
+								<delete dir="${basedir}/src/main/webapp/WEB-INF/lib" />
+								<copy todir="${basedir}/src/main/webapp/WEB-INF/lib">
+									<fileset
+										dir="${basedir}/target/${project.build.finalName}/WEB-INF/lib" />
+								</copy>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

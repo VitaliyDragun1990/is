@@ -8,7 +8,7 @@ import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.revenat.ishop.config.Constants;
+import com.revenat.ishop.config.Constants.Attribute;
 
 @WebListener
 public class AccountRequestStatisticsListener implements ServletRequestListener {
@@ -45,7 +45,7 @@ public class AccountRequestStatisticsListener implements ServletRequestListener 
 
 	@SuppressWarnings("unchecked")
 	static List<String> getUserRequests(HttpSession session) {
-		return (List<String>) session.getAttribute(Constants.ACCOUNT_REQUEST_STATISTICS);
+		return (List<String>) session.getAttribute(Attribute.ACCOUNT_REQUEST_STATISTICS);
 	}
 
 }

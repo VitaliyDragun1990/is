@@ -2,19 +2,16 @@ package com.revenat.ishop.filter;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.revenat.ishop.model.ShoppingCart;
-import com.revenat.ishop.util.ShoppingCartMapper;
-import com.revenat.ishop.util.ShoppingCartUtils;
+import com.revenat.ishop.config.Constants.Attribute;
+import com.revenat.ishop.repository.ShoppingCartRepository;
+import com.revenat.ishop.service.impl.ServiceManager;
 
 /**
  * This filter responsible for deserializing customer's shopping cart from
@@ -24,33 +21,27 @@ import com.revenat.ishop.util.ShoppingCartUtils;
  * @author Vitaly Dragun
  *
  */
-public class ShoppingCartDeserializationFilter implements Filter {
+
+public class ShoppingCartDeserializationFilter extends AbstractFilter {
 	private static final String SHOPPING_CART_DESERIALIZATION_DONE = "SHOPPING_CART_DESERIALIZATION_DONE";
 
-	private final ShoppingCartMapper cookieToCartMapper;
+	private ShoppingCartRepository shoppingCartRepository;
 
-	public ShoppingCartDeserializationFilter(ShoppingCartMapper cookieMapper) {
-		this.cookieToCartMapper = cookieMapper;
-	}
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		ServiceManager serviceManager = (ServiceManager) filterConfig.getServletContext()
+				.getAttribute(Attribute.SERVICE_MANAGER);
+		this.shoppingCartRepository = serviceManager.getShoppingCartRepository();
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpSession session = req.getSession();
+		HttpSession session = request.getSession();
 
-		if (session.getAttribute(SHOPPING_CART_DESERIALIZATION_DONE) == null
-				&& !ShoppingCartUtils.isCurrentShoppingCartExists(session)) {
-			
-			Cookie cartCookie = ShoppingCartUtils.findShoppingCartCookie(req);
-			if (cartCookie != null) {
-				ShoppingCart cart = cookieToCartMapper.fromString(cartCookie.getValue());
-				ShoppingCartUtils.setCurrentShoppingCart(session, cart);
-			}
+		if (session.getAttribute(SHOPPING_CART_DESERIALIZATION_DONE) == null) {
+			shoppingCartRepository.loadShoppingCart(request);
 			session.setAttribute(SHOPPING_CART_DESERIALIZATION_DONE, Boolean.TRUE);
 		}
 		chain.doFilter(request, response);

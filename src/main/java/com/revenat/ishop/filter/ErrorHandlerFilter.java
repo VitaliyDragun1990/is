@@ -1,46 +1,28 @@
 package com.revenat.ishop.filter;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static com.revenat.ishop.config.Constants.Page;
 
-import javax.servlet.Filter;
+import java.io.IOException;
+
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.revenat.ishop.util.web.RoutingUtils;
 
-//@WebFilter("/*")
-public class ErrorHandlerFilter implements Filter {
-	private static final Logger LOGGER = Logger.getLogger("ErrorhandlerFilter");
-
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-	}
+public class ErrorHandlerFilter extends AbstractFilter {
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		try {
-//			throwException();
 			chain.doFilter(request, response);
 		} catch (Exception e) {
-			String requestUrl = ((HttpServletRequest) request).getRequestURI();
-			LOGGER.log(Level.SEVERE, "Request " + requestUrl + "failed: " + e.getMessage(), e);
-			((HttpServletResponse)response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+			String requestUrl = request.getRequestURI();
+			LOGGER.error("Request " + requestUrl + " failed: " + e.getMessage(), e);
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			RoutingUtils.forwardToPage(Page.ERROR, request, response);
 		}
-	}
-
-	private void throwException() {
-		throw new RuntimeException();
-	}
-
-	@Override
-	public void destroy() {
 	}
 }

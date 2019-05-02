@@ -1,11 +1,15 @@
 package com.revenat.ishop.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.revenat.ishop.config.Constants;
+import com.revenat.ishop.entity.Product;
+import com.revenat.ishop.exception.ConfigurationException;
 import com.revenat.ishop.exception.ValidationException;
 
 /**
@@ -23,8 +27,9 @@ import com.revenat.ishop.exception.ValidationException;
 public class ShoppingCart implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private final HashMap<Integer, ShoppingCartItem> cart = new HashMap<>();
-	private int totalCount;
+	private final HashMap<Integer, ShoppingCartItem> cart = new LinkedHashMap<>();
+	private int totalCount = 0;
+	private BigDecimal totalCost = BigDecimal.ZERO;
 
 	/**
 	 * Returns total number of product units in shopping cart.
@@ -34,32 +39,40 @@ public class ShoppingCart implements Serializable {
 	}
 
 	/**
+	 * Returns total cost of all products inside this shopping cart instance.
+	 */
+	public BigDecimal getTotalCost() {
+		return totalCost;
+	}
+
+	/**
 	 * Adds product represented by provided {@code productId} with specified
 	 * {@code quantity} to client's shopping cart.
 	 * 
 	 * @param productId special identifier that represents certain product
 	 * @param quantity  number of product units to add
-	 * @throws ValidationException if at least one of the following is true:
-	 *                             quantity to add is less then
-	 *                             {@value #MIN_PRODUCT_QUANTITY} or greater than
-	 *                             {@value #MAX_PRODUCT_QUANTITY}, total product
-	 *                             unit count after adding specified
-	 *                             {@code quantity} would be greater than
-	 *                             {@value #MAX_PRODUCT_QUANTITY}
+	 * @throws ConfigurationException if at least one of the following is true:
+	 *                              quantity to add is less then
+	 *                              {@value #MIN_PRODUCT_QUANTITY} or greater than
+	 *                              {@value #MAX_PRODUCT_QUANTITY}, total product
+	 *                              unit count after adding specified
+	 *                              {@code quantity} would be greater than
+	 *                              {@value #MAX_PRODUCT_QUANTITY}
 	 */
-	public void addProduct(int productId, int quantity) {
+	public void addProduct(Product product, int quantity) {
 		validateProductQuantity(quantity);
 
-		ShoppingCartItem oldItem = cart.get(productId);
+		ShoppingCartItem oldItem = cart.get(product.getId());
 		if (oldItem != null) {
 			int totalQuantity = oldItem.getQuantity() + quantity;
 			validateProductQuantity(totalQuantity);
-			cart.put(productId, new ShoppingCartItem(productId, oldItem.getQuantity() + quantity));
+			cart.put(product.getId(), new ShoppingCartItem(product, oldItem.getQuantity() + quantity));
 		} else {
 			validateTotalProductCount();
-			cart.put(productId, new ShoppingCartItem(productId, quantity));
+			cart.put(product.getId(), new ShoppingCartItem(product, quantity));
 		}
 		recalculateTotalCount();
+		recalculateTotalCost();
 	}
 
 	/**
@@ -71,21 +84,23 @@ public class ShoppingCart implements Serializable {
 	 * 
 	 * @param productId special identifier that represents certain product
 	 * @param quantity  number of product units to remove
-	 * @throws ValidationException if quantity to remove is negative.
+	 * @throws ConfigurationException if quantity to remove is negative.
 	 */
-	public void removeProduct(int productId, int quantity) {
+	public void removeProduct(Integer productId, int quantity) {
 		if (quantity < 0) {
-			throw new ValidationException("You could not remove negative number of product unit: quantity=" + quantity);
+			throw new ValidationException(
+					"You could not remove negative number of product unit: quantity=" + quantity);
 		}
 
 		ShoppingCartItem item = cart.get(productId);
 		if (item != null) {
-			if (quantity > item.getQuantity()) {
+			if (quantity >= item.getQuantity()) {
 				cart.remove(productId);
 			} else {
-				cart.put(productId, new ShoppingCartItem(productId, item.getQuantity() - quantity));
+				cart.put(productId, new ShoppingCartItem(item.getProduct(), item.getQuantity() - quantity));
 			}
 			recalculateTotalCount();
+			recalculateTotalCost();
 		}
 	}
 
@@ -101,11 +116,23 @@ public class ShoppingCart implements Serializable {
 		return Collections.unmodifiableCollection(cart.values());
 	}
 	
+	/**
+	 * Recalculates shopping cart total cost.
+	 */
+	public void recalculateTotalCost() {
+		totalCost = BigDecimal.ZERO;
+		for (ShoppingCartItem item : cart.values()) {
+			totalCost = totalCost.add(item.getCost());
+		}
+	}
 	
+	public boolean isEmpty() {
+		return totalCount == 0;
+	}
 
 	@Override
 	public String toString() {
-		return String.format("ShoppingCart: %s", getItems());
+		return String.format("ShoppingCart [cart=%s, totalCount=%s, totalCost=%s]", cart, totalCount, totalCost);
 	}
 
 	private void validateTotalProductCount() {
@@ -121,7 +148,7 @@ public class ShoppingCart implements Serializable {
 					Constants.MAX_PRODUCT_COUNT_PER_SHOPPING_CART));
 		}
 	}
-	
+
 	private void recalculateTotalCount() {
 		totalCount = cart.values().stream().mapToInt(ShoppingCartItem::getQuantity).sum();
 	}
@@ -135,26 +162,30 @@ public class ShoppingCart implements Serializable {
 	 */
 	public static class ShoppingCartItem implements Serializable {
 		private static final long serialVersionUID = 1L;
-		
-		private final int productId;
+
+		private final Product product;
 		private final int quantity;
 
-		private ShoppingCartItem(int productId, int quantity) {
-			this.productId = productId;
+		private ShoppingCartItem(Product product, int quantity) {
+			this.product = product;
 			this.quantity = quantity;
 		}
 
-		public int getProductId() {
-			return productId;
+		public Product getProduct() {
+			return product;
 		}
 
 		public int getQuantity() {
 			return quantity;
 		}
+		
+		public BigDecimal getCost() {
+			return product.getPrice().multiply(BigDecimal.valueOf(quantity));
+		}
 
 		@Override
 		public String toString() {
-			return String.format("[productId=%s, quantity=%s]", productId, quantity);
+			return String.format("[product=%s, quantity=%s]", product, quantity);
 		}
 	}
 }

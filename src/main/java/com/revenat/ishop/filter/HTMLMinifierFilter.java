@@ -7,14 +7,13 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.WriteListener;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
@@ -25,7 +24,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
  * @author Vitaly Dragun
  *
  */
-public class HTMLMinifierFilter implements Filter {
+public class HTMLMinifierFilter extends AbstractFilter {
 	private static final String FIND_ALL_SPACES_BETWEEN_TAGS = "(?<=\\s)\\s+(?![^<>]*</pre>)";
 	private static final String FIND_ALL_NEW_LINES_BETWEEN_TAGS = "\\r?\\n(?![^<]*</pre>)";
 
@@ -39,26 +38,35 @@ public class HTMLMinifierFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		HttpServletResponse resp = (HttpServletResponse) response;
-		SimpleResponseWrapper responseWrapper = new SimpleResponseWrapper(resp);
+		SimpleResponseWrapper responseWrapper = new SimpleResponseWrapper(response);
 
 		chain.doFilter(request, responseWrapper);
-		if (resp.getContentType() != null && resp.getContentType().startsWith("text/html")) {
-			String html = responseWrapper.contentAsString();
-			html = regex.matcher(html).replaceAll("");
-			response.setContentLength(html.getBytes().length);
-			PrintWriter out = response.getWriter();
-			out.write(html);
-			out.close();
+		if (isHtmlContentType(response.getContentType())) {
+			minifyHtmlContent(response, responseWrapper);
 		} else {
-			responseWrapper.flushContentToWrappedResponse();
+			writeOriginalContent(responseWrapper);
 		}
 	}
+	
+	private boolean isHtmlContentType(String contentType) {
+		return contentType != null && contentType.startsWith("text/html");
+	}
 
-	@Override
-	public void destroy() {
+	private void minifyHtmlContent(HttpServletResponse response, SimpleResponseWrapper responseWrapper)
+			throws IOException {
+		String html = responseWrapper.contentAsString();
+		html = regex.matcher(html).replaceAll("");
+		int contentLength = html.getBytes("UTF-8").length;
+		response.setContentLength(contentLength);
+		PrintWriter out = response.getWriter();
+		out.write(html);
+		out.close();
+	}
+	
+	private void writeOriginalContent(SimpleResponseWrapper responseWrapper) throws IOException {
+		responseWrapper.flushContentToWrappedResponse();
 	}
 
 	/**
@@ -132,6 +140,7 @@ public class HTMLMinifierFilter implements Filter {
 
 				@Override
 				public void setWriteListener(WriteListener writeListener) {
+					// this implementation doesn't support addition of write listeners
 				}
 
 				@Override
