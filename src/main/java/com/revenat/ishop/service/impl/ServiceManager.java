@@ -12,16 +12,20 @@ import org.slf4j.LoggerFactory;
 import com.revenat.ishop.config.Constants;
 import com.revenat.ishop.config.Constants.Attribute;
 import com.revenat.ishop.config.PropertiesLoader;
+import com.revenat.ishop.repository.AccountRepository;
 import com.revenat.ishop.repository.CategoryRepository;
 import com.revenat.ishop.repository.ProducerRepository;
 import com.revenat.ishop.repository.ProductRepository;
 import com.revenat.ishop.repository.ShoppingCartRepository;
+import com.revenat.ishop.repository.impl.JdbcAccountRepository;
 import com.revenat.ishop.repository.impl.JdbcCategoryRepository;
 import com.revenat.ishop.repository.impl.JdbcProducerRepository;
 import com.revenat.ishop.repository.impl.JdbcProductRepository;
+import com.revenat.ishop.service.AuthenticationService;
 import com.revenat.ishop.service.OrderService;
 import com.revenat.ishop.service.ProductService;
 import com.revenat.ishop.service.ShoppingCartService;
+import com.revenat.ishop.service.SocialService;
 
 /**
  * This component exists as single instance and resides in the
@@ -41,9 +45,12 @@ public class ServiceManager {
 	private final CategoryRepository categoryRepository;
 	private final ProducerRepository producerRepository;
 	private final ShoppingCartRepository shoppingCartRepository;
+	private final AccountRepository accountRepository;
 	private final ProductService productService;
 	private final OrderService orderService;
 	private final ShoppingCartService shoppingCartService;
+	private final SocialService socialService;
+	private final AuthenticationService authService;
 
 	public ShoppingCartRepository getShoppingCartRepository() {
 		return shoppingCartRepository;
@@ -63,6 +70,14 @@ public class ServiceManager {
 	
 	public String getApplicationProperty(String propertyName) {
 		return applicationProperties.getProperty(propertyName);
+	}
+	
+	public SocialService getSocialService() {
+		return socialService;
+	}
+	
+	public AuthenticationService getAuthService() {
+		return authService;
 	}
 
 	public static synchronized ServiceManager getInstance(ServletContext context) {
@@ -95,9 +110,15 @@ public class ServiceManager {
 		categoryRepository = new JdbcCategoryRepository(dataSource);
 		producerRepository = new JdbcProducerRepository(dataSource);
 		shoppingCartRepository = new ShoppingCartRepository(new ShoppingCartCookieStringMapper(productRepository));
+		accountRepository = new JdbcAccountRepository(dataSource);
 		productService = new ProductServiceImpl(productRepository, categoryRepository, producerRepository);
 		orderService = new OrderServiceImpl(productRepository);
 		shoppingCartService = new ShoppingCartService(shoppingCartRepository, productRepository);
+		socialService = new FacebookSocialService(
+				getApplicationProperty("social.facebook.appId"),
+				getApplicationProperty("social.facebook.secret"),
+				getApplicationProperty("app.host") + "/social-login");
+		authService = new SocialAuthenticationService(socialService, accountRepository);
 	}
 	
 	private Properties loadApplicationProperties() {

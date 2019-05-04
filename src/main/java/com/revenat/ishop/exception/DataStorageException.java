@@ -8,9 +8,12 @@ package com.revenat.ishop.exception;
  */
 public class DataStorageException extends ApplicationException {
 	private static final long serialVersionUID = -3176677130267805185L;
+	
+	public DataStorageException(String message) {
+		super(message);
+	}
 
 	public DataStorageException(String message, Throwable cause) {
 		super(message, cause);
 	}
-
 }

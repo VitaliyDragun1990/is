@@ -96,7 +96,9 @@ abstract class JdbcRepository {
 
 	protected <T> T execute(Function<T> func) {
 		try (Connection con = dataSource.getConnection()) {
-			return func.execute(con);
+			T result =  func.execute(con);
+			con.commit();
+			return result;
 		} catch (SQLException e) {
 			throw new DataStorageException("Error while executing sql query", e);
 		}

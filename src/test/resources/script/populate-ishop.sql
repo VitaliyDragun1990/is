@@ -15,3 +15,6 @@ INSERT INTO product (name, description, image_link, price, category_id, producer
 	VALUES ('SmartphoneA', 'SmartphoneA description', '/images/smartphoneA.jpg', 200.00, 2, 1);
 INSERT INTO product (name, description, image_link, price, category_id, producer_id)
 	VALUES ('SmartphoneB', 'SmartphoneB description', '/images/smartphoneB.jpg', 200.00, 2, 4);
+	
+INSERT INTO account (name, email) VALUES ('Jack', 'jack@test.com');
+INSERT INTO account (name, email) VALUES ('Anna', 'anna@test.com');

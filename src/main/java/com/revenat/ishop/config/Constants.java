@@ -17,6 +17,7 @@ public final class Constants {
 		public static final String FILTER_CATEGORIES = "filterCategories";
 		public static final String FILTER_PRODUCERS = "filterProducers";
 		public static final String TOTAL_PAGE_COUNT = "totalPageCount";
+		public static final String CURRENT_USER = "CURRENT_USER";
 		
 		
 		private Attribute() {}
@@ -36,6 +37,8 @@ public final class Constants {
 		public static final String PRODUCTS = "products.jsp";
 		public static final String SHOPPING_CART = "shopping-cart.jsp";
 		public static final String SEARCH_RESULT = "search-result.jsp";
+		public static final String SIGN_IN = "sign-in.jsp";
+		public static final String MY_ORDERS = "my-orders.jsp";
 		
 		private Page() {}
 	}

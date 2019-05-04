@@ -34,6 +34,7 @@ class SqlQueries {
 			+ "INNER JOIN producer AS pr ON p.producer_id = pr.id "
 			+ " %s "
 			+ "ORDER BY p.id LIMIT ? OFFSET ?";
+	public static final String GET_ACCOUNT_BY_EMAIL = "SELECT * FROM account WHERE email = ?";
 	public static final String COUNT_ALL_PRODUCTS = "SELECT count(*) as count FROM product";
 	public static final String COUNT_PRODUCTS_BY_CATEGORY = "SELECT product_count AS count FROM category AS c "
 			+ "WHERE c.url = ?";
@@ -41,6 +42,8 @@ class SqlQueries {
 				+ "FROM product AS p INNER JOIN category AS c ON p.category_id = c.id "
 				+ "INNER JOIN producer AS pr ON p.producer_id = pr.id "
 				+ "%s";
+	public static final String INSERT_ACCOUNT = "INSERT INTO account (name, email) "
+			+ "VALUES (?,?)";
 	
 	private SqlQueries() {}
 }

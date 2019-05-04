@@ -4,9 +4,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revenat.ishop.entity.Account;
 import com.revenat.ishop.entity.Category;
 import com.revenat.ishop.entity.Producer;
 import com.revenat.ishop.entity.Product;
+import com.revenat.ishop.exception.DataStorageException;
 import com.revenat.ishop.util.jdbc.JDBCUtils.ResultSetHandler;
 
 /**
@@ -63,21 +65,46 @@ final class ResultSetHandlerFactory {
 	};
 	
 	/**
+	 * This implementation of the {@link ResultSetHandler} interface responsible for
+	 * transforming data which {@link ResultSet} instance holds into single instance
+	 * of the {@link Account} entity. {@link ResultSet} instance aimed to handle by
+	 * this result set handler should have cursor initially positioned at existing
+	 * row (prior call to {@link ResultSet#next()} with {@code true} return value is
+	 * a necessary prerequisit before passing result set instance to handle by this
+	 * handler implementation). In general this implementation should be used either
+	 * with {@link #getSingleResultSetHandler(ResultSetHandler)} or with
+	 * {@link #getListResultSetHandler(ResultSetHandler)} methods
+	 */
+	public static final ResultSetHandler<Account> ACCOUNT_RESULT_SET_HANDLER = rs -> {
+		Account a = new Account();
+		a.setId(rs.getInt("id"));
+		a.setName(rs.getString("name"));
+		a.setEmail(rs.getString("email"));
+		
+		return a;
+	};
+	
+	/**
 	 * This implementation of the {@link ResultSetHandlerFactory} responsible for
 	 * extracting {@code count} field from {@link ResultSet} row data.
-	 * {@link ResultSet} instance aimed to handle by this result set handler should
-	 * have cursor initially positioned at existing row (prior call to
-	 * {@link ResultSet#next()} with {@code true} return value is a necessary
-	 * prerequisit before passing result set instance to handle by this handler
-	 * implementation). In general this implementation should be used either with
-	 * {@link #getSingleResultSetHandler(ResultSetHandler)} or with
-	 * {@link #getListResultSetHandler(ResultSetHandler)} methods
 	 */
 	public static final ResultSetHandler<Integer> COUNT_RESULT_SET_HANDLER = rs -> {
 		if (rs.next()) {
 			return rs.getInt("count");
 		} else {
 			return 0;
+		}
+	};
+	
+	/**
+	 * This implementation of the {@link ResultSetHandlerFactory} responsible for
+	 * extracting {@code count} field from {@link ResultSet} row data.
+	 */
+	public static final ResultSetHandler<Integer> GENERATED_ID_RESULT_SET_HANDLER = rs -> {
+		if (rs.next()) {
+			return rs.getInt("id");
+		} else {
+			throw new DataStorageException("Error while retrieving auto-generated key value: no key has been generated");
 		}
 	};
 	

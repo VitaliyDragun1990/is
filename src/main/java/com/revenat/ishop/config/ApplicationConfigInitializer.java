@@ -22,9 +22,13 @@ import com.revenat.ishop.servlet.ajax.LoadMoreProductsForSearchResultController;
 import com.revenat.ishop.servlet.ajax.RemoveProductFromShoppingCartController;
 import com.revenat.ishop.servlet.page.AllProductsController;
 import com.revenat.ishop.servlet.page.ErrorController;
+import com.revenat.ishop.servlet.page.MyOrdersController;
 import com.revenat.ishop.servlet.page.ProductsByCategoryController;
 import com.revenat.ishop.servlet.page.SearchController;
 import com.revenat.ishop.servlet.page.ShoppingCartController;
+import com.revenat.ishop.servlet.page.SignInController;
+import com.revenat.ishop.servlet.page.SignOutController;
+import com.revenat.ishop.servlet.page.SocialLoginController;
 
 public class ApplicationConfigInitializer implements ServletContainerInitializer {
 	//TODO: refactor: creating ServiceManager in onStartup and injecting dep from it into each component
@@ -46,6 +50,18 @@ public class ApplicationConfigInitializer implements ServletContainerInitializer
 		
 		servletReg = ctx.addServlet("ShoppingCartController", new ShoppingCartController());
 		servletReg.addMapping("/shopping-cart");
+		
+		servletReg = ctx.addServlet("SignInController", new SignInController());
+		servletReg.addMapping("/sign-in");
+		
+		servletReg = ctx.addServlet("SignOutController", new SignOutController());
+		servletReg.addMapping("/sign-out");
+		
+		servletReg = ctx.addServlet("SocialLoginController", new SocialLoginController());
+		servletReg.addMapping("/social-login");
+		
+		servletReg = ctx.addServlet("MyOrdersController", new MyOrdersController());
+		servletReg.addMapping("/my-orders");
 		
 		servletReg = ctx.addServlet("LoadMoreProductsController", new LoadMoreProductsController());
 		servletReg.addMapping("/ajax/html/more/products");

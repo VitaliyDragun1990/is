@@ -1,6 +1,8 @@
 package com.revenat.ishop.entity;
 
-public class Account extends AbstractEntity<Integer> {
+import com.revenat.ishop.model.CurrentAccount;
+
+public class Account extends AbstractEntity<Integer> implements CurrentAccount {
 	private static final long serialVersionUID = -8951792395607124164L;
 
 	private String name;
@@ -28,6 +30,11 @@ public class Account extends AbstractEntity<Integer> {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	@Override
+	public String getDescription() {
+		return String.format("%s(%s)", name, email);
 	}
 
 	@Override

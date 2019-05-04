@@ -28,9 +28,23 @@
               </div>
             </li>
           </ul>
-          <a href="#" class="btn btn-primary navbar-btn navbar-right sign-in">
-            <i class="fa fa-facebook-official" aria-hidden="true"></i> Sign in
-          </a>
+          <c:choose>
+          	<c:when test="${CURRENT_USER != null}">
+          		<ul class="nav navbar-nav navbar-right">
+          			<li><a>Welcome ${CURRENT_USER.description}</a></li>
+          			<li><a href='<c:url value="/my-orders" />'>My orders</a></li>
+          			<li><a href='<c:url value="/sign-out" />'>Sign out</a></li>
+          		</ul>
+          	</c:when>
+          	<c:otherwise>
+          		<form action='<c:url value="/sign-in" />' method="post">
+          			<button class="btn btn-primary navbar-btn navbar-right sign-in">
+            			<i class="fa fa-facebook-official" aria-hidden="true"></i> Sign in
+          			</button>
+          		</form>
+          	</c:otherwise>
+          </c:choose>
+
         </div>
       </div>
     </nav>

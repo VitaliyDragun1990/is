@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -13,9 +15,15 @@ import org.junit.Test;
 
 import com.revenat.ishop.entity.Category;
 import com.revenat.ishop.repository.DataSourceFactory;
+import com.revenat.ishop.search.criteria.ProductCriteria;
 
 public class JdbcCategoryRepositoryTest {
-
+	private static final int CATEGORY_TV_ID = 3;
+	private static final int CATEGORY_SMARTPHONE_ID = 2;
+	private static final int CATEGORY_TABLET_ID = 1;
+	private static final int SONY_PRODUCER_ID = 3;
+	private static final int APPLE_PRODUCER_ID = 1;
+	
 	private BasicDataSource dataSource;
 	private JdbcCategoryRepository repository;
 
@@ -35,6 +43,30 @@ public class JdbcCategoryRepositoryTest {
 		List<Category> categories = repository.getAll();
 		
 		assertThat(categories, hasSize(3));
+	}
+	
+	@Test
+	public void shouldAllowToGetCategoriesByCriteria() throws Exception {
+		ProductCriteria criteria = ProductCriteria.byCategoriesAndProducers("tab", Collections.emptyList(),
+				Arrays.asList(APPLE_PRODUCER_ID, SONY_PRODUCER_ID));
+		
+		List<Category> categories = repository.getByCriteria(criteria);
+		
+		assertThat(categories, hasSize(3));
+		assertThat(categories, hasItem(
+				allOf(
+				hasProperty("id", equalTo(CATEGORY_TABLET_ID)),
+				hasProperty("productCount", equalTo(1))))
+				);
+		assertThat(categories, hasItem(
+				allOf(
+				hasProperty("id", equalTo(CATEGORY_SMARTPHONE_ID)),
+				hasProperty("productCount", equalTo(0))))
+				);
+		assertThat(categories, hasItem(allOf(
+				hasProperty("id", equalTo(CATEGORY_TV_ID)),
+				hasProperty("productCount", equalTo(0))))
+				);
 	}
 
 }
