@@ -1,4 +1,4 @@
-package com.revenat.ishop.service.impl;
+package com.revenat.ishop.service.domain.impl;
 
 import java.util.List;
 
@@ -9,9 +9,9 @@ import com.revenat.ishop.repository.CategoryRepository;
 import com.revenat.ishop.repository.ProducerRepository;
 import com.revenat.ishop.repository.ProductRepository;
 import com.revenat.ishop.search.criteria.ProductCriteria;
-import com.revenat.ishop.service.ProductService;
+import com.revenat.ishop.service.domain.ProductService;
 
-class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductService {
 	private final ProductRepository productRepository;
 	private final CategoryRepository categoryRepository;
 	private final ProducerRepository producerRepository;

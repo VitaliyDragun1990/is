@@ -1,6 +1,6 @@
-package com.revenat.ishop.service.impl;
+package com.revenat.ishop.service.application.impl;
 
-import com.revenat.ishop.service.Credentials;
+import com.revenat.ishop.service.application.AuthenticationService.Credentials;
 
 /**
  * This factory is responsible for building different {@link Credentials}

@@ -38,29 +38,29 @@ public class JdbcProductRepository extends JdbcRepository implements ProductRepo
 
 	@Override
 	public int countAll() {
-		return execute(conn -> JDBCUtils.select(conn, SqlQueries.COUNT_ALL_PRODUCTS, COUNT_HANDLER));
+		return executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.COUNT_ALL_PRODUCTS, COUNT_HANDLER));
 	}
 	
 	@Override
 	public int countByCategory(String categoryUrl) {
-		return execute(conn -> JDBCUtils.select(conn, SqlQueries.COUNT_PRODUCTS_BY_CATEGORY, COUNT_HANDLER, categoryUrl));
+		return executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.COUNT_PRODUCTS_BY_CATEGORY, COUNT_HANDLER, categoryUrl));
 	}
 	
 	@Override
 	public int countByCriteria(ProductCriteria criteria) {
 		SqlQuery sqlQuery = buildSqlQuery(criteria, SqlQueries.COUNT_PRODUCTS_BY_CRITERIA_TEMPLATE);
 		LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());
-		return execute(conn -> JDBCUtils.select(conn, sqlQuery.getQuery(), COUNT_HANDLER, sqlQuery.getParameters()));
+		return executeSelect(conn -> JDBCUtils.select(conn, sqlQuery.getQuery(), COUNT_HANDLER, sqlQuery.getParameters()));
 	}
 	
 	@Override
 	public Product getById(Integer id) {
-		return execute(conn -> JDBCUtils.select(conn, SqlQueries.GET_PRODUCT_BY_ID, PRODUCT_HANDLER, id));
+		return executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.GET_PRODUCT_BY_ID, PRODUCT_HANDLER, id));
 	}
 
 	@Override
 	public List<Product> getByCategory(String categoryUrl, int offset, int limit) {
-		return execute(
+		return executeSelect(
 				conn -> JDBCUtils.select(conn, SqlQueries.GET_PRODUCTS_BY_CATEGORY, PRODUCTS_HANDLER, categoryUrl, limit, offset)
 				);
 	}
@@ -69,7 +69,7 @@ public class JdbcProductRepository extends JdbcRepository implements ProductRepo
 	public List<Product> getByCriteria(ProductCriteria criteria, int offset, int limit) {
 		SqlQuery sqlQuery = buildSqlQuery(criteria, SqlQueries.GET_PRODUCTS_BY_CRITERIA_TEMPLATE, limit, offset);
 		LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());
-		return execute(
+		return executeSelect(
 				conn -> JDBCUtils.select(conn, sqlQuery.getQuery(), PRODUCTS_HANDLER,
 						sqlQuery.getParameters())
 				);
@@ -77,6 +77,6 @@ public class JdbcProductRepository extends JdbcRepository implements ProductRepo
 	
 	@Override
 	public List<Product> getAll(int offset, int limit) {
-		return execute(conn -> JDBCUtils.select(conn, SqlQueries.GET_ALL_PRODUCTS, PRODUCTS_HANDLER, limit, offset));
+		return executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.GET_ALL_PRODUCTS, PRODUCTS_HANDLER, limit, offset));
 	}
 }

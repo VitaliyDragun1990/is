@@ -19,7 +19,7 @@ import com.revenat.ishop.entity.Product;
 import com.revenat.ishop.model.ShoppingCart;
 import com.revenat.ishop.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.repository.ProductRepository;
-import com.revenat.ishop.service.impl.ShoppingCartCookieStringMapper;
+import com.revenat.ishop.service.application.impl.ShoppingCartCookieStringMapper;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ShoppingCartCookieMapperTest {

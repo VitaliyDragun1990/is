@@ -19,8 +19,6 @@ import com.revenat.ishop.util.web.RoutingUtils;
 
 public class SearchController extends AbstractController {
 	private static final long serialVersionUID = 1L;
-	private static final String PRODUCTS = "products";
-	private static final String PRODUCT_COUNT = "productCount";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,10 +30,10 @@ public class SearchController extends AbstractController {
 		int totalProductCount = getProductService().countProductsByCriteria(productCriteria);
 		int totalPageCount = getTotalPageCount(totalProductCount, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
 		
-		req.setAttribute(PRODUCTS, products);
+		req.setAttribute(Attribute.PRODUCTS, products);
 		req.setAttribute(Attribute.TOTAL_PAGE_COUNT, totalPageCount);
-		req.setAttribute(PRODUCT_COUNT, totalProductCount);
-		req.setAttribute("searchForm", searchForm);
+		req.setAttribute(Attribute.PRODUCT_COUNT, totalProductCount);
+		req.setAttribute(Attribute.SEARCH_FORM, searchForm);
 		
 		RoutingUtils.forwardToPage(Page.SEARCH_RESULT, req, resp);
 	}

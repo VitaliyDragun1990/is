@@ -1,4 +1,4 @@
-package com.revenat.ishop.service.impl;
+package com.revenat.ishop.service;
 
 import java.sql.SQLException;
 import java.util.Properties;
@@ -14,31 +14,41 @@ import com.revenat.ishop.config.Constants.Attribute;
 import com.revenat.ishop.config.PropertiesLoader;
 import com.revenat.ishop.repository.AccountRepository;
 import com.revenat.ishop.repository.CategoryRepository;
+import com.revenat.ishop.repository.OrderItemRepository;
+import com.revenat.ishop.repository.OrderRepository;
 import com.revenat.ishop.repository.ProducerRepository;
 import com.revenat.ishop.repository.ProductRepository;
 import com.revenat.ishop.repository.ShoppingCartRepository;
 import com.revenat.ishop.repository.impl.JdbcAccountRepository;
 import com.revenat.ishop.repository.impl.JdbcCategoryRepository;
+import com.revenat.ishop.repository.impl.JdbcOrderItemRepository;
+import com.revenat.ishop.repository.impl.JdbcOrderRepository;
 import com.revenat.ishop.repository.impl.JdbcProducerRepository;
 import com.revenat.ishop.repository.impl.JdbcProductRepository;
-import com.revenat.ishop.service.AuthenticationService;
-import com.revenat.ishop.service.OrderService;
-import com.revenat.ishop.service.ProductService;
-import com.revenat.ishop.service.ShoppingCartService;
-import com.revenat.ishop.service.SocialService;
+import com.revenat.ishop.service.application.AuthenticationService;
+import com.revenat.ishop.service.application.OrderManager;
+import com.revenat.ishop.service.application.ShoppingCartService;
+import com.revenat.ishop.service.application.SocialService;
+import com.revenat.ishop.service.application.impl.FacebookSocialService;
+import com.revenat.ishop.service.application.impl.ShoppingCartCookieStringMapper;
+import com.revenat.ishop.service.application.impl.SocialAuthenticationService;
+import com.revenat.ishop.service.domain.OrderService;
+import com.revenat.ishop.service.domain.ProductService;
+import com.revenat.ishop.service.domain.impl.OrderServiceImpl;
+import com.revenat.ishop.service.domain.impl.ProductServiceImpl;
 
 /**
  * This component exists as single instance and resides in the
  * {@link ServletContext} object. It is responsible for instantiating different
- * application/domain services, providing access to them, and also for gracefully
- * destroying them when application closes.
+ * application/domain services, providing access to them, and also for
+ * gracefully destroying them when application closes.
  * 
  * @author Vitaly Dragun
  *
  */
 public class ServiceManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceManager.class);
-	
+
 	private final Properties applicationProperties;
 	private final BasicDataSource dataSource;
 	private final ProductRepository productRepository;
@@ -46,38 +56,45 @@ public class ServiceManager {
 	private final ProducerRepository producerRepository;
 	private final ShoppingCartRepository shoppingCartRepository;
 	private final AccountRepository accountRepository;
+	private final OrderItemRepository orderItemRepository;
+	private final OrderRepository orderRepository;
 	private final ProductService productService;
 	private final OrderService orderService;
 	private final ShoppingCartService shoppingCartService;
 	private final SocialService socialService;
 	private final AuthenticationService authService;
+	private final OrderManager orderManager;
 
 	public ShoppingCartRepository getShoppingCartRepository() {
 		return shoppingCartRepository;
 	}
-	
+
 	public OrderService getOrderService() {
 		return orderService;
 	}
-	
+
 	public ProductService getProductService() {
 		return productService;
 	}
-	
+
 	public ShoppingCartService getShoppingCartService() {
 		return shoppingCartService;
 	}
-	
+
 	public String getApplicationProperty(String propertyName) {
 		return applicationProperties.getProperty(propertyName);
 	}
-	
+
 	public SocialService getSocialService() {
 		return socialService;
 	}
-	
+
 	public AuthenticationService getAuthService() {
 		return authService;
+	}
+	
+	public OrderManager getOrderManager() {
+		return orderManager;
 	}
 
 	public static synchronized ServiceManager getInstance(ServletContext context) {
@@ -99,28 +116,25 @@ public class ServiceManager {
 
 	private ServiceManager(ServletContext context) {
 		applicationProperties = loadApplicationProperties();
-		dataSource = createDataSource(
-				getApplicationProperty("db.url"),
-				getApplicationProperty("db.username"),
-				getApplicationProperty("db.password"),
-				getApplicationProperty("db.driver"),
-				getApplicationProperty("db.pool.initSize"),
-				getApplicationProperty("db.pool.maxSize"));
+		dataSource = createDataSource(getApplicationProperty("db.url"), getApplicationProperty("db.username"),
+				getApplicationProperty("db.password"), getApplicationProperty("db.driver"),
+				getApplicationProperty("db.pool.initSize"), getApplicationProperty("db.pool.maxSize"));
 		productRepository = new JdbcProductRepository(dataSource);
 		categoryRepository = new JdbcCategoryRepository(dataSource);
 		producerRepository = new JdbcProducerRepository(dataSource);
+		orderItemRepository = new JdbcOrderItemRepository(dataSource);
+		orderRepository = new JdbcOrderRepository(dataSource, orderItemRepository);
 		shoppingCartRepository = new ShoppingCartRepository(new ShoppingCartCookieStringMapper(productRepository));
 		accountRepository = new JdbcAccountRepository(dataSource);
 		productService = new ProductServiceImpl(productRepository, categoryRepository, producerRepository);
-		orderService = new OrderServiceImpl(productRepository);
+		orderService = new OrderServiceImpl(orderRepository);
 		shoppingCartService = new ShoppingCartService(shoppingCartRepository, productRepository);
-		socialService = new FacebookSocialService(
-				getApplicationProperty("social.facebook.appId"),
-				getApplicationProperty("social.facebook.secret"),
-				getApplicationProperty("app.host") + "/social-login");
+		socialService = new FacebookSocialService(getApplicationProperty("social.facebook.appId"),
+				getApplicationProperty("social.facebook.secret"), getApplicationProperty("app.host") + "/social-login");
 		authService = new SocialAuthenticationService(socialService, accountRepository);
+		orderManager = new OrderManager(shoppingCartService, authService, orderService);
 	}
-	
+
 	private Properties loadApplicationProperties() {
 		return new PropertiesLoader().load(Constants.APPLICATION_PROPERTIES);
 	}
@@ -136,7 +150,7 @@ public class ServiceManager {
 		ds.setPassword(password);
 		ds.setInitialSize(Integer.parseInt(poolInitSize));
 		ds.setMaxTotal(Integer.parseInt(poolMaxSize));
-		
+
 		return ds;
 	}
 }

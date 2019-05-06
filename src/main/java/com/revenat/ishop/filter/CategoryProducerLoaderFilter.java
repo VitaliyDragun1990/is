@@ -9,8 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.revenat.ishop.service.ProductService;
-import com.revenat.ishop.service.impl.ServiceManager;
+import com.revenat.ishop.service.ServiceManager;
+import com.revenat.ishop.service.domain.ProductService;
 import com.revenat.ishop.config.Constants.Attribute;
 import com.revenat.ishop.entity.Category;
 import com.revenat.ishop.entity.Producer;

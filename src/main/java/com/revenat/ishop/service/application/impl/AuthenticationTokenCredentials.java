@@ -1,6 +1,6 @@
-package com.revenat.ishop.service.impl;
+package com.revenat.ishop.service.application.impl;
 
-import com.revenat.ishop.service.Credentials;
+import com.revenat.ishop.service.application.AuthenticationService.Credentials;
 
 /**
  * This component represents user credentials in for of authentication token.
@@ -8,7 +8,7 @@ import com.revenat.ishop.service.Credentials;
  * @author Vitaly Dragun
  *
  */
-class AuthenticationTokenCredentials implements Credentials {
+public class AuthenticationTokenCredentials implements Credentials {
 
 	private final String authToken;
 

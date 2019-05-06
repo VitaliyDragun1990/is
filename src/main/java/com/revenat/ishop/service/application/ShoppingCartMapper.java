@@ -1,4 +1,4 @@
-package com.revenat.ishop.service;
+package com.revenat.ishop.service.application;
 
 import com.revenat.ishop.model.ShoppingCart;
 

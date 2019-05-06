@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.config.Constants.Attribute;
 import com.revenat.ishop.entity.Category;
-import com.revenat.ishop.service.impl.ServiceManager;
+import com.revenat.ishop.service.ServiceManager;
 
 /**
  * This implementation of the {@link ServletContextListener} is responsible for

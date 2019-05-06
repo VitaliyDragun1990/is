@@ -32,12 +32,12 @@ public class JdbcCategoryRepository extends JdbcRepository implements CategoryRe
 
 	@Override
 	public List<Category> getAll() {
-		return execute(conn -> JDBCUtils.select(conn, SqlQueries.GET_ALL_CATEGORIES, CATEGORIES_HANDLER));
+		return executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.GET_ALL_CATEGORIES, CATEGORIES_HANDLER));
 	}
 
 	@Override
 	public List<Category> getByCriteria(ProductCriteria criteria) {
-		return execute(conn -> {
+		return executeSelect(conn -> {
 			SqlQuery sqlQuery = buildSqlQuery(criteria, SqlQueries.GET_CATEGORIES_BY_CRITERIA_TEMPLATE);
 			LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());
 			return JDBCUtils.select(conn, sqlQuery.getQuery(), CATEGORIES_HANDLER, sqlQuery.getParameters());

@@ -16,5 +16,15 @@ INSERT INTO product (name, description, image_link, price, category_id, producer
 INSERT INTO product (name, description, image_link, price, category_id, producer_id)
 	VALUES ('SmartphoneB', 'SmartphoneB description', '/images/smartphoneB.jpg', 200.00, 2, 4);
 	
-INSERT INTO account (name, email) VALUES ('Jack', 'jack@test.com');
-INSERT INTO account (name, email) VALUES ('Anna', 'anna@test.com');
+INSERT INTO account (id, name, email) VALUES (1, 'Jack', 'jack@test.com');
+INSERT INTO account (id, name, email) VALUES (2, 'Anna', 'anna@test.com');
+
+INSERT INTO "order" (id, account_id, created) VALUES (1, 1, '2019-05-01 05:10:15');
+INSERT INTO "order" (id, account_id, created) VALUES (2, 1, '2019-05-01 06:10:15');
+INSERT INTO "order" (id, account_id, created) VALUES (3, 1, '2019-05-08 05:10:15');
+INSERT INTO "order" (id, account_id, created) VALUES (4, 1, '2019-05-09 07:10:15');
+INSERT INTO "order" (id, account_id, created) VALUES (5, 1, '2019-06-01 05:10:15');
+INSERT INTO "order" (id, account_id, created) VALUES (6, 1, '2019-06-02 06:10:15');
+
+INSERT INTO order_item (order_id, product_id, quantity) VALUES (1, 1, 1);
+INSERT INTO order_item (order_id, product_id, quantity) VALUES (1, 2, 2);

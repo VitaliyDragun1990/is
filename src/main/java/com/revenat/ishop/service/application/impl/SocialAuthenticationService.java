@@ -1,14 +1,14 @@
-package com.revenat.ishop.service.impl;
+package com.revenat.ishop.service.application.impl;
 
 import javax.servlet.http.HttpSession;
+
 import com.revenat.ishop.config.Constants.Attribute;
 import com.revenat.ishop.entity.Account;
 import com.revenat.ishop.model.CurrentAccount;
 import com.revenat.ishop.model.SocialAccount;
 import com.revenat.ishop.repository.AccountRepository;
-import com.revenat.ishop.service.AuthenticationService;
-import com.revenat.ishop.service.Credentials;
-import com.revenat.ishop.service.SocialService;
+import com.revenat.ishop.service.application.AuthenticationService;
+import com.revenat.ishop.service.application.SocialService;
 
 /**
  * Default implementation of the {@link AuthenticationService} interface which
@@ -17,7 +17,7 @@ import com.revenat.ishop.service.SocialService;
  * @author Vitaly Dragun
  *
  */
-class SocialAuthenticationService implements AuthenticationService {
+public class SocialAuthenticationService implements AuthenticationService {
 	private final SocialService socialService;
 	private final AccountRepository accountRepository;
 
@@ -33,7 +33,7 @@ class SocialAuthenticationService implements AuthenticationService {
 
 	@Override
 	public void authenticate(Credentials credentials, HttpSession userSession) {
-		String authToken = ((AuthenticationTokenCredentials)credentials).getAuthToken();
+		String authToken = ((AuthenticationTokenCredentials) credentials).getAuthToken();
 		SocialAccount socialAccount = getUserSocialAccount(authToken);
 		Account account = getUserAccount(socialAccount);
 		setCurrentAccount(userSession, account);
@@ -42,6 +42,11 @@ class SocialAuthenticationService implements AuthenticationService {
 	@Override
 	public String getAuthenticationUrl() {
 		return socialService.getAuthorizeUrl();
+	}
+
+	@Override
+	public CurrentAccount getAuthenticatedUserAccount(HttpSession userSession) {
+		return getCurrentAccount(userSession);
 	}
 
 	private SocialAccount getUserSocialAccount(String authToken) {

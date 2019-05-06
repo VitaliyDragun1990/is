@@ -1,4 +1,4 @@
-package com.revenat.ishop.service.impl;
+package com.revenat.ishop.service.application.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,7 @@ import com.revenat.ishop.exception.ValidationException;
 import com.revenat.ishop.model.ShoppingCart;
 import com.revenat.ishop.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.repository.ProductRepository;
-import com.revenat.ishop.service.ShoppingCartMapper;
+import com.revenat.ishop.service.application.ShoppingCartMapper;
 
 /**
  * This component is responsible for marshalling {@link ShoppingCart} instance

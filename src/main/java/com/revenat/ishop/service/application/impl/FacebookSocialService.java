@@ -1,4 +1,4 @@
-package com.revenat.ishop.service.impl;
+package com.revenat.ishop.service.application.impl;
 
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
@@ -11,7 +11,7 @@ import com.restfb.scope.ScopeBuilder;
 import com.restfb.types.User;
 import com.revenat.ishop.exception.AuthenticationException;
 import com.revenat.ishop.model.SocialAccount;
-import com.revenat.ishop.service.SocialService;
+import com.revenat.ishop.service.application.SocialService;
 
 /**
  * Implementation of the {@link SocialService} using Facebook social network to

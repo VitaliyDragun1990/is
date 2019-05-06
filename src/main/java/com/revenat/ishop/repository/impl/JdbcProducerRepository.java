@@ -32,12 +32,12 @@ public class JdbcProducerRepository extends JdbcRepository implements ProducerRe
 
 	@Override
 	public List<Producer> getAll() {
-		return execute(conn -> JDBCUtils.select(conn, SqlQueries.GET_ALL_PRODUCERS, PRODUCERS_HANDLER));
+		return executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.GET_ALL_PRODUCERS, PRODUCERS_HANDLER));
 	}
 	
 	@Override
 	public List<Producer> getByCriteria(ProductCriteria criteria) {
-		return execute(conn -> {
+		return executeSelect(conn -> {
 			SqlQuery sqlQuery = buildSqlQuery(criteria, SqlQueries.GET_PRODUCERS_BY_CRITERIA_TEMPLATE);
 			LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());
 			return JDBCUtils.select(conn, sqlQuery.getQuery(), PRODUCERS_HANDLER, sqlQuery.getParameters());

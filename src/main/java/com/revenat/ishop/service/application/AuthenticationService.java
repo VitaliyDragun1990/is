@@ -1,6 +1,8 @@
-package com.revenat.ishop.service;
+package com.revenat.ishop.service.application;
 
 import javax.servlet.http.HttpSession;
+
+import com.revenat.ishop.model.CurrentAccount;
 
 /**
  * This application service is responsible for managing authentication-related
@@ -38,4 +40,25 @@ public interface AuthenticationService {
 	 */
 	String getAuthenticationUrl();
 
+	/**
+	 * Returns account in form of {@link CurrentAccount} of the authenticated user
+	 * represented by the provided {@link HttpSession} object.
+	 * 
+	 * @param userSession {@link HttpSession} object which represents particular
+	 *                    user of the application.
+	 * @return {@link CurrentAccount} object if the user represented by provided
+	 *         {@link HttpSession} object is authenticated, or {@code null}
+	 *         otherwise.
+	 */
+	CurrentAccount getAuthenticatedUserAccount(HttpSession userSession);
+	
+	/**
+	 * Represents user-provided credentials for authentication purpose.
+	 * 
+	 * @author Vitaly Dragun
+	 *
+	 */
+	public interface Credentials {
+
+	}
 }

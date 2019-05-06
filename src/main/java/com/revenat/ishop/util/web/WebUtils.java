@@ -52,6 +52,20 @@ public class WebUtils {
 		resp.addCookie(cookie);
 	}
 
+	/**
+	 * Returns request URI with query string if any from provided
+	 * {@link HttpServletRequest} object.
+	 * 
+	 */
+	public static String getCurrentRequestUrl(HttpServletRequest request) {
+		String queryString = request.getQueryString();
+		if (queryString == null) {
+			return request.getRequestURI();
+		} else {
+			return request.getRequestURI() + "?" + queryString;
+		}
+	}
+
 	private static boolean isExist(String value) {
 		return value != null && !"".equals(value.trim());
 	}

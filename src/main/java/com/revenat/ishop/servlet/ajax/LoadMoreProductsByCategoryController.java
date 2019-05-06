@@ -13,11 +13,12 @@ import com.revenat.ishop.config.Constants;
 import com.revenat.ishop.entity.Product;
 import com.revenat.ishop.servlet.AbstractController;
 import com.revenat.ishop.util.web.RoutingUtils;
+import com.revenat.ishop.config.Constants.Attribute;
+import com.revenat.ishop.config.Constants.URL;
 
 public class LoadMoreProductsByCategoryController extends AbstractController {
 	private static final long serialVersionUID = 1L;
-	private static final int SUBSTRING_INDEX = "/ajax/html/more/products".length();
-	private static final String PRODUCTS = "products";
+	private static final int SUBSTRING_INDEX = URL.AJAX_MORE_PRODUCTS.length();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -26,7 +27,7 @@ public class LoadMoreProductsByCategoryController extends AbstractController {
 		List<Product> products =
 				getProductService().getProductsByCategory(categoryUrl, requestedPage, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
 		
-		req.setAttribute(PRODUCTS, products);
+		req.setAttribute(Attribute.PRODUCTS, products);
 		
 		RoutingUtils.forwardToFragment(Fragment.PRODUCT_LIST, req, resp);
 	}

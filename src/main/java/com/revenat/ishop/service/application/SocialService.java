@@ -1,4 +1,4 @@
-package com.revenat.ishop.service;
+package com.revenat.ishop.service.application;
 
 import com.revenat.ishop.exception.AuthenticationException;
 import com.revenat.ishop.model.SocialAccount;
@@ -15,6 +15,7 @@ public interface SocialService {
 	/**
 	 * Returns authorization url to which clients should be redirected in order to
 	 * authenticate themselves as users of some social network.
+	 * 
 	 */
 	String getAuthorizeUrl();
 

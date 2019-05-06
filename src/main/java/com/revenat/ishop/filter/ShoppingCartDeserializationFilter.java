@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import com.revenat.ishop.config.Constants.Attribute;
 import com.revenat.ishop.repository.ShoppingCartRepository;
-import com.revenat.ishop.service.impl.ServiceManager;
+import com.revenat.ishop.service.ServiceManager;
 
 /**
  * This filter responsible for deserializing customer's shopping cart from

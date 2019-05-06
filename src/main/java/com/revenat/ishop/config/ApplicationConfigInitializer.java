@@ -10,12 +10,16 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
+import com.revenat.ishop.config.Constants.URL;
+import com.revenat.ishop.filter.AuthenticationFilter;
 import com.revenat.ishop.filter.CategoryProducerLoaderFilter;
 import com.revenat.ishop.filter.ErrorHandlerFilter;
 import com.revenat.ishop.filter.HTMLMinifierFilter;
+import com.revenat.ishop.filter.SetCurrentRequestUriFilter;
 import com.revenat.ishop.filter.ShoppingCartDeserializationFilter;
 import com.revenat.ishop.listener.IShopApplicationListener;
 import com.revenat.ishop.servlet.ajax.AddProductToShoppingCartController;
+import com.revenat.ishop.servlet.ajax.LoadMoreOrdersController;
 import com.revenat.ishop.servlet.ajax.LoadMoreProductsByCategoryController;
 import com.revenat.ishop.servlet.ajax.LoadMoreProductsController;
 import com.revenat.ishop.servlet.ajax.LoadMoreProductsForSearchResultController;
@@ -23,6 +27,7 @@ import com.revenat.ishop.servlet.ajax.RemoveProductFromShoppingCartController;
 import com.revenat.ishop.servlet.page.AllProductsController;
 import com.revenat.ishop.servlet.page.ErrorController;
 import com.revenat.ishop.servlet.page.MyOrdersController;
+import com.revenat.ishop.servlet.page.OrderController;
 import com.revenat.ishop.servlet.page.ProductsByCategoryController;
 import com.revenat.ishop.servlet.page.SearchController;
 import com.revenat.ishop.servlet.page.ShoppingCartController;
@@ -37,46 +42,52 @@ public class ApplicationConfigInitializer implements ServletContainerInitializer
 	@Override
 	public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
 		ServletRegistration.Dynamic servletReg = ctx.addServlet("AllProductsController", new AllProductsController());
-		servletReg.addMapping("/products");
+		servletReg.addMapping(URL.ALL_PRODUCTS);
 		
 		servletReg = ctx.addServlet("ErrorController", ErrorController.class);
-		servletReg.addMapping("/error");
+		servletReg.addMapping(URL.ERROR);
 		
 		servletReg = ctx.addServlet("ProductsByCategoryController", new ProductsByCategoryController());
-		servletReg.addMapping("/products/*");
+		servletReg.addMapping(URL.PRODUCTS_BY_CATEGORY);
 		
 		servletReg = ctx.addServlet("SearchController", new SearchController());
-		servletReg.addMapping("/search");
+		servletReg.addMapping(URL.SEARCH);
 		
 		servletReg = ctx.addServlet("ShoppingCartController", new ShoppingCartController());
-		servletReg.addMapping("/shopping-cart");
+		servletReg.addMapping(URL.SHOPPING_CART);
 		
 		servletReg = ctx.addServlet("SignInController", new SignInController());
-		servletReg.addMapping("/sign-in");
+		servletReg.addMapping(URL.SIGN_IN);
 		
 		servletReg = ctx.addServlet("SignOutController", new SignOutController());
-		servletReg.addMapping("/sign-out");
+		servletReg.addMapping(URL.SIGN_OUT);
 		
 		servletReg = ctx.addServlet("SocialLoginController", new SocialLoginController());
-		servletReg.addMapping("/social-login");
+		servletReg.addMapping(URL.SOCIAL_LOGIN);
 		
 		servletReg = ctx.addServlet("MyOrdersController", new MyOrdersController());
-		servletReg.addMapping("/my-orders");
+		servletReg.addMapping(URL.MY_ORDERS);
+		
+		servletReg = ctx.addServlet("OrderController", new OrderController());
+		servletReg.addMapping(URL.ORDER);
 		
 		servletReg = ctx.addServlet("LoadMoreProductsController", new LoadMoreProductsController());
-		servletReg.addMapping("/ajax/html/more/products");
+		servletReg.addMapping(URL.AJAX_MORE_PRODUCTS);
 		
 		servletReg = ctx.addServlet("LoadMoreProductsByCategoryController", new LoadMoreProductsByCategoryController());
-		servletReg.addMapping("/ajax/html/more/products/*");
+		servletReg.addMapping(URL.AJAX_MORE_PRODUCTS_BY_CATEGORY);
 		
 		servletReg = ctx.addServlet("LoadMoreProductsForSearchResultController", new LoadMoreProductsForSearchResultController());
-		servletReg.addMapping("/ajax/html/more/search");
+		servletReg.addMapping(URL.AJAX_MORE_SEARCH);
 		
 		servletReg = ctx.addServlet("AddProductToShoppingCartController", new AddProductToShoppingCartController());
-		servletReg.addMapping("/ajax/json/cart/product/add");
+		servletReg.addMapping(URL.AJAX_ADD_PRODUCT_TO_CART);
 		
 		servletReg = ctx.addServlet("RemoveProductFromShoppingCartController", new RemoveProductFromShoppingCartController());
-		servletReg.addMapping("/ajax/json/cart/product/remove");
+		servletReg.addMapping(URL.AJAX_REMOVE_PRODUCT_FROM_CART);
+		
+		servletReg = ctx.addServlet("LoadMoreOrdersController", new LoadMoreOrdersController());
+		servletReg.addMapping(URL.AJAX_MORE_ORDERS);
 		
 		FilterRegistration.Dynamic filterReg = ctx.addFilter("ErrorHandlerFilter", new ErrorHandlerFilter());
 		filterReg.addMappingForUrlPatterns(
@@ -95,12 +106,25 @@ public class ApplicationConfigInitializer implements ServletContainerInitializer
 				true,
 				"/*");
 		
-		ctx.addListener(new IShopApplicationListener());
 		
 		filterReg = ctx.addFilter("ShoppingCartDeserializationFilter",new ShoppingCartDeserializationFilter());
 		filterReg.addMappingForUrlPatterns(
 				EnumSet.of(DispatcherType.REQUEST),
 				true,
 				"/*");
+		
+		filterReg = ctx.addFilter("SetCurrentRequestUriFilter",new SetCurrentRequestUriFilter());
+		filterReg.addMappingForUrlPatterns(
+				EnumSet.of(DispatcherType.REQUEST),
+				true,
+				"/*");
+		
+		filterReg = ctx.addFilter("AuthenticationFilter",new AuthenticationFilter());
+		filterReg.addMappingForUrlPatterns(
+				EnumSet.of(DispatcherType.REQUEST),
+				true,
+				URL.MY_ORDERS, URL.ORDER, URL.AJAX_MORE_ORDERS);
+		
+		ctx.addListener(new IShopApplicationListener());
 	}
 }

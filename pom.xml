@@ -25,6 +25,7 @@
 		<jacoco.version>0.8.2</jacoco.version>
 		<logback.version>1.2.3</logback.version>
 		<h2.version>1.4.199</h2.version>
+		<hamcrest-date.version>2.0.5</hamcrest-date.version>
 	</properties>
 
 	<dependencies>
@@ -118,6 +119,11 @@
 			<artifactId>hamcrest</artifactId>
 			<version>${hamcrest.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.exparity</groupId>
+			<artifactId>hamcrest-date</artifactId>
+			<version>${hamcrest-date.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>

@@ -9,10 +9,47 @@ $(function() {
         $('#addToCart').on('click', addProductToCart);
         $('#addProductPopup .quantity').on('change', calculateItemTotal);
         $('#loadMore').on('click', loadMoreProducts);
+        $('#loadMoreOrders').on('click', loadMoreOrders);
         initSearchForm();
         $('#goSearch').on('click', goSearch);
         $('.remove-product').on('click', removeProductFromCart);
+        $('.sign-in-form').on('submit', signIn);
+        $('.post-request').on('click', sendPostRequest);
     };
+    
+    /**
+     * This function responsible for intercepting sign-in form submiting event,
+     * add hidden 'redirectUrl' input element wich contains page url from which
+     * such form submit event has been made (except if such even has been made from signin page).
+     */
+    var signIn = function(event) {
+    	if ($(this).attr('action') !== location.pathname) {
+    		var currentPageUri = location.pathname + location.search;
+    		var input = $('<input>', {
+    			type: 'hidden',
+    			name: 'redirectUrl',
+    			value: encodeURI(currentPageUri)
+    		});
+    		$(this).append(input);			
+		}
+    	return true;
+    };
+    
+    /**
+     * This function responsible for sending post request
+     * via form post submition.
+     */
+    var sendPostRequest = function(event) {
+		event.preventDefault();
+		var destination = $(this).attr('data-url');
+		var form = $('<form>', {
+			id : 'postRequestForm',
+			action: destination,
+			method: 'POST',
+		});
+		$('body').append(form);
+		form.submit();
+	}
 
     /**
      * This function responsible for handling 'Buy' button on product panel by
@@ -109,8 +146,8 @@ $(function() {
     };
 
     /**
-     * This function responsible for toggling 'hidden' classes on 'Load more products' button
-     * and corresponding 'Loading' spinner element.
+     * This function responsible for sending AJAX request to server in order to
+     * load products for the next page on the screen
      */
     var loadMoreProducts = function() {
     	var btn = $('#loadMore');
@@ -140,6 +177,40 @@ $(function() {
 			},
 			error : function(data) {
 				convertLoaderSpinnerToButton(btn, 'btn-success', loadMoreProducts);
+				alert('Error');
+			}
+        });
+    };
+    
+    /**
+     * This function responsible sending AJAX request to the server in order to
+     * load next page with orders on the screen.
+     */
+    var loadMoreOrders = function() {
+    	var btn = $('#loadMoreOrders');
+    	convertButtonToLoaderSpinner(btn, 'btn-success');
+    	
+    	var currentPage = parseInt($('#orderList').attr('data-page-current'));
+    	
+    	var url = ctx + '/ajax/html/more/my-orders?page=' + (currentPage + 1);
+        
+        $.ajax({
+        	url : url,
+        	success : function(html) {
+        		$('#orderList tbody').append(html);
+        		
+        		var totalPages = parseInt($('#orderList').attr('data-page-total'));
+        		currentPage++;
+        		$('#orderList').attr('data-page-current', currentPage);
+        		
+        		if (currentPage < totalPages) {
+        			convertLoaderSpinnerToButton(btn, 'btn-success', loadMoreOrders);
+				} else {
+					btn.remove();
+				}
+			},
+			error : function(data) {
+				convertLoaderSpinnerToButton(btn, 'btn-success', loadMoreOrders);
 				alert('Error');
 			}
         });

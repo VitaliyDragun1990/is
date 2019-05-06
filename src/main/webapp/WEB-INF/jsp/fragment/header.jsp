@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="ishop" tagdir="/WEB-INF/tags" %>
 
  <!-- Header section -->
     <nav class="navbar navbar-default">
@@ -33,16 +34,14 @@
           		<ul class="nav navbar-nav navbar-right">
           			<li><a>Welcome ${CURRENT_USER.description}</a></li>
           			<li><a href='<c:url value="/my-orders" />'>My orders</a></li>
-          			<li><a href='<c:url value="/sign-out" />'>Sign out</a></li>
+          			<li>
+          				<ishop:sign-out/>
+          			</li>
           		</ul>
           	</c:when>
-          	<c:otherwise>
-          		<form action='<c:url value="/sign-in" />' method="post">
-          			<button class="btn btn-primary navbar-btn navbar-right sign-in">
-            			<i class="fa fa-facebook-official" aria-hidden="true"></i> Sign in
-          			</button>
-          		</form>
-          	</c:otherwise>
+          	<c:when test="${CURRENT_REQUEST_URL != '/sign-in' and CURRENT_REQUEST_URL != '/shopping-cart'}">
+          		<ishop:sign-in classes="navbar-btn navbar-right sign-in"/>
+          	</c:when>
           </c:choose>
 
         </div>

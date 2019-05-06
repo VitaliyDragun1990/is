@@ -4,6 +4,7 @@ public final class Constants {
 	public static final int MAX_PRODUCT_COUNT_PER_SHOPPING_CART = 10;
 	public static final int MAX_PRODUCTS_PER_SHOPPING_CART = 20;
 	public static final int MAX_PRODUCTS_PER_HTML_PAGE = 12;
+	public static final int MAX_ORDERS_PER_HTML_PAGE = 5;
 	public static final int SESSION_MAX_INACTIVE_INTERVAL = 30 * 60;
 	public static final String APPLICATION_PROPERTIES = "application.properties";
 
@@ -18,6 +19,16 @@ public final class Constants {
 		public static final String FILTER_PRODUCERS = "filterProducers";
 		public static final String TOTAL_PAGE_COUNT = "totalPageCount";
 		public static final String CURRENT_USER = "CURRENT_USER";
+		public static final String PRODUCTS = "products";
+		public static final String SELECTED_CATEGORY_URL = "selectedCategoryUrl";
+		public static final String PRODUCT_COUNT = "productCount";
+		public static final String SEARCH_FORM = "searchForm";
+		public static final String REDIRECT_URL = "REDIRECT_URL";
+		public static final String REQUEST_URL = "REQUEST_URL";
+		public static final String CURRENT_REQUEST_URL = "CURRENT_REQUEST_URL";
+		public static final String CURRENT_MESSAGE = "CURRENT_MESSAGE";
+		public static final String CURRENT_ORDER = "CURRENT_ORDER";
+		public static final String ORDERS = "orders";
 		
 		
 		private Attribute() {}
@@ -39,14 +50,38 @@ public final class Constants {
 		public static final String SEARCH_RESULT = "search-result.jsp";
 		public static final String SIGN_IN = "sign-in.jsp";
 		public static final String MY_ORDERS = "my-orders.jsp";
+		public static final String ORDER = "order.jsp";
 		
 		private Page() {}
 	}
 	
 	public static class Fragment {
 		public static final String PRODUCT_LIST = "product-list.jsp";
+		public static final String ORDER_LIST = "order-list.jsp";
 		
 		private Fragment() {}
+	}
+	
+	public static class URL {
+		public static final String AJAX_MORE_PRODUCTS = "/ajax/html/more/products";
+		public static final String AJAX_MORE_PRODUCTS_BY_CATEGORY = "/ajax/html/more/products/*";
+		public static final String AJAX_MORE_SEARCH = "/ajax/html/more/search";
+		public static final String AJAX_ADD_PRODUCT_TO_CART = "/ajax/json/cart/product/add";
+		public static final String AJAX_REMOVE_PRODUCT_FROM_CART = "/ajax/json/cart/product/remove";
+		public static final String AJAX_MORE_ORDERS = "/ajax/html/more/my-orders";
+		public static final String ALL_PRODUCTS = "/products";
+		public static final String PRODUCTS_BY_CATEGORY = "/products/*";
+		public static final String MY_ORDERS = "/my-orders";
+		public static final String ORDER = "/order";
+		public static final String SIGN_IN = "/sign-in";
+		public static final String SIGN_OUT = "/sign-out";
+		public static final String ERROR = "/error";
+		public static final String SEARCH = "/search";
+		public static final String SHOPPING_CART = "/shopping-cart";
+		public static final String SOCIAL_LOGIN = "/social-login";
+		public static final String ORDER_WITH_ID = "/order?id=";
+		
+		private URL() {}
 	}
 
 	public enum Cookie {

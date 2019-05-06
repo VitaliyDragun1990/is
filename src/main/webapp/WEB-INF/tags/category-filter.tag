@@ -12,14 +12,14 @@
 				<label>
 					<c:choose>
 						<c:when test="${!empty checked && checked.contains(c.id)}">
-						<input type="checkbox" name="category" value="${c.id}" checked class="search-option">
-						<c:out value="${c.name}"/> (${c.productCount})
+							<input type="checkbox" name="category" value="${c.id}" checked class="search-option">
+							<c:out value="${c.name}"/> (${c.productCount})
 						</c:when>
 						<c:otherwise>
-						<input type="checkbox" name="category" value="${c.id}" class="search-option">
-						<span class="${!empty checked ? 'text-muted' : ''}">
-							<c:out value="${c.name}"/> (${!empty checked && c.productCount > 0 ? '+' : ''} ${c.productCount})
-						</span>
+							<input type="checkbox" name="category" value="${c.id}" class="search-option">
+							<span class="${!empty checked ? 'text-muted' : ''}">
+								<c:out value="${c.name}"/> (${!empty checked && c.productCount > 0 ? '+' : ''} ${c.productCount})
+							</span>
 						</c:otherwise>
 					</c:choose>
 				</label>

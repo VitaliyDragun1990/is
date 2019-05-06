@@ -9,24 +9,24 @@ import com.revenat.ishop.config.Constants;
 import com.revenat.ishop.config.Constants.Attribute;
 import com.revenat.ishop.exception.IllegalStateException;
 import com.revenat.ishop.model.ShoppingCart;
-import com.revenat.ishop.service.ShoppingCartMapper;
+import com.revenat.ishop.service.application.ShoppingCartMapper;
 import com.revenat.ishop.util.web.WebUtils;
 
 public final class ShoppingCartRepository {
 	private final ShoppingCartMapper<String> cartMapper;
-	
+
 	public ShoppingCartRepository(ShoppingCartMapper<String> cartMapper) {
 		this.cartMapper = cartMapper;
 	}
-	
+
 	/**
 	 * Returns {@link ShoppingCart} instance associated with specified client's
 	 * {@link HttpServletRequest} object. To be sure that this method won't throw
 	 * {@link IllegalStateException} {@link #loadShoppingCart(HttpServletRequest)}
 	 * method should be called beforehed as necessary precondition.
 	 * 
-	 * @param clientSession client's session to look for {@link ShoppingCart} associated
-	 *                with.
+	 * @param clientSession client's session to look for {@link ShoppingCart}
+	 *                      associated with.
 	 * @return {@link ShoppingCart} instance associated with specified client's
 	 *         request. If there is no {@link ShoppingCart} instance associated with
 	 *         given request.
@@ -35,6 +35,15 @@ public final class ShoppingCartRepository {
 	 */
 	public ShoppingCart getShoppingCart(HttpSession clientSession) {
 		return (ShoppingCart) clientSession.getAttribute(Attribute.CURRENT_SHOPPING_CART);
+	}
+
+	/**
+	 * Sets provided {@link ShoppingCart} instance as attribute to provided users
+	 * {@link HttpSession} object.
+	 * 
+	 */
+	public void setShoppingCart(HttpSession userSession, ShoppingCart cart) {
+		userSession.setAttribute(Attribute.CURRENT_SHOPPING_CART, cart);
 	}
 
 	/**
@@ -62,27 +71,27 @@ public final class ShoppingCartRepository {
 			request.getSession().setAttribute(Attribute.CURRENT_SHOPPING_CART, cart);
 		}
 	}
-	
+
 	/**
-	 * Saves provided shopping cart state as cookie and place such cookie into specified
-	 * {@link HttpServletResponse} object.
+	 * Saves provided shopping cart state as cookie and place such cookie into
+	 * specified {@link HttpServletResponse} object.
 	 * 
 	 * @param shoppingCart {@link ShoppingCart} instance to persist as cookie.
 	 */
-	public void persistShoppingCart(ShoppingCart shoppingCart, HttpServletResponse response) {
+	public void persistShoppingCartAsCookie(ShoppingCart shoppingCart, HttpServletResponse response) {
 		saveShoppingCartAsCookie(shoppingCart, response);
 	}
 
 	/**
-	 * Sets special 'shopping cart' cookie into
-	 * provided {@link HttpServletResponse} object in a way it makes client to
-	 * delete given cookie from their side when they receive such response.
+	 * Sets special 'shopping cart' cookie into provided {@link HttpServletResponse}
+	 * object in a way it makes client to delete given cookie from their side when
+	 * they receive such response.
 	 * 
 	 * @param response {@link HttpServletResponse} instance associated with
 	 *                 particular client to set 'shopping-cart' cookie to.
 	 */
-	public void removeShoppingCart(HttpServletResponse response) {
-		removeShoppingCartCookie(response);
+	public void removeShoppingCartCookie(HttpServletResponse response) {
+		WebUtils.setCookie(Constants.Cookie.SHOPPING_CART.getName(), null, 0, response);
 	}
 
 	/**
@@ -114,17 +123,6 @@ public final class ShoppingCartRepository {
 	private void saveShoppingCartAsCookie(ShoppingCart shoppingCart, HttpServletResponse response) {
 		String shoppingCartCookie = cartMapper.marshall(shoppingCart);
 		setShoppingCartCookie(shoppingCartCookie, response);
-	}
-
-	/**
-	 * Removes special 'shopping cart' cookie by setting it time-to-live value to
-	 * {@code 0} in the response to client.
-	 * 
-	 * @param response {@link HttpServletResponse} that represents response to the
-	 *                 client.
-	 */
-	private void removeShoppingCartCookie(HttpServletResponse response) {
-		WebUtils.setCookie(Constants.Cookie.SHOPPING_CART.getName(), null, 0, response);
 	}
 
 	/**

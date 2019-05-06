@@ -34,6 +34,16 @@ class SqlQueries {
 			+ "INNER JOIN producer AS pr ON p.producer_id = pr.id "
 			+ " %s "
 			+ "ORDER BY p.id LIMIT ? OFFSET ?";
+	public static final String GET_ORDER_BY_ID = "SELECT * FROM \"order\" WHERE id = ?";
+	public static final String GET_ORDERS_BY_ACCOUNT_ID = "SELECT * FROM \"order\" WHERE account_id = ? "
+			+ "ORDER BY created DESC LIMIT ? OFFSET ?";
+	public static final String GET_ORDER_ITEMS_BY_ORDER_ID = "SELECT item.id AS item_id, item.quantity, item.order_id, p.id, "
+			+ "p.name, p.description, p.image_link, p.price, c.name AS category, pr.name AS producer "
+			+ "FROM order_item AS item "
+			+ "INNER JOIN product AS p ON p.id = item.product_id "
+			+ "INNER JOIN category AS c ON p.category_id = c.id "
+			+ "INNER JOIN producer AS pr ON p.producer_id = pr.id "
+			+ "WHERE item.order_id = ?";
 	public static final String GET_ACCOUNT_BY_EMAIL = "SELECT * FROM account WHERE email = ?";
 	public static final String COUNT_ALL_PRODUCTS = "SELECT count(*) as count FROM product";
 	public static final String COUNT_PRODUCTS_BY_CATEGORY = "SELECT product_count AS count FROM category AS c "
@@ -42,8 +52,14 @@ class SqlQueries {
 				+ "FROM product AS p INNER JOIN category AS c ON p.category_id = c.id "
 				+ "INNER JOIN producer AS pr ON p.producer_id = pr.id "
 				+ "%s";
+	public static final String COUNT_ORDERS_BY_ACCOUNT_ID = "SELECT count(*) AS count "
+			+ "FROM \"order\" WHERE account_id = ?";
 	public static final String INSERT_ACCOUNT = "INSERT INTO account (name, email) "
 			+ "VALUES (?,?)";
+	public static final String INSERT_ORDER = "INSERT INTO \"order\" (account_id, created) "
+			+ "VALUES (?,?)";
+	public static final String INSERT_ORDER_ITEM = "INSERT INTO order_item (order_id, product_id, quantity) "
+			+ "VALUES (?,?,?)";
 	
 	private SqlQueries() {}
 }

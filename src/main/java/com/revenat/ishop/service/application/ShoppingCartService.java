@@ -1,4 +1,4 @@
-package com.revenat.ishop.service;
+package com.revenat.ishop.service.application;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -49,10 +49,25 @@ public class ShoppingCartService {
 	 */
 	public void persistShoppingCart(ShoppingCart shoppingCart, HttpServletResponse response) {
 		if (shoppingCart.getTotalCount() == 0) {
-			cartRepository.removeShoppingCart(response);
+			cartRepository.removeShoppingCartCookie(response);
 		} else {
-			cartRepository.persistShoppingCart(shoppingCart, response);
+			cartRepository.persistShoppingCartAsCookie(shoppingCart, response);
 		}
+	}
+
+	/**
+	 * Clears shopping cart instance (if any) associated with provided user's
+	 * {@link HttpSession} object. Deletes 'shopping cart' cookie using provided
+	 * {@link HttpServletResponse} object.
+	 * 
+	 * @param userSession {@link HttpSession} object that represents serverside
+	 *                    session for particular user.
+	 * @param response    {@link HttpServletResponse} object that may store shopping
+	 *                    cart cookie.
+	 */
+	public void clearShoppingCart(HttpSession userSession, HttpServletResponse response) {
+		cartRepository.setShoppingCart(userSession, new ShoppingCart());
+		cartRepository.removeShoppingCartCookie(response);
 	}
 
 	/**

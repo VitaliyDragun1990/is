@@ -9,12 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.form.ProductForm;
 import com.revenat.ishop.form.SearchForm;
-import com.revenat.ishop.service.AuthenticationService;
-import com.revenat.ishop.service.OrderService;
-import com.revenat.ishop.service.ProductService;
-import com.revenat.ishop.service.ShoppingCartService;
-import com.revenat.ishop.service.SocialService;
-import com.revenat.ishop.service.impl.ServiceManager;
+import com.revenat.ishop.service.ServiceManager;
+import com.revenat.ishop.service.application.AuthenticationService;
+import com.revenat.ishop.service.application.OrderManager;
+import com.revenat.ishop.service.application.ShoppingCartService;
+import com.revenat.ishop.service.application.SocialService;
+import com.revenat.ishop.service.domain.ProductService;
 
 public class AbstractController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -22,27 +22,23 @@ public class AbstractController extends HttpServlet {
 	protected final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
 	private ProductService productService;
-	private OrderService orderService;
 	private ShoppingCartService cartService;
 	private SocialService socialService; // TODO: remove socialService access from here
 	private AuthenticationService authService;
+	private OrderManager orderManager;
 	
 	@Override
 	public void init() throws ServletException {
 		ServiceManager serviceManager = ServiceManager.getInstance(getServletContext());
 		productService = serviceManager.getProductService();
-		orderService = serviceManager.getOrderService();
 		cartService = serviceManager.getShoppingCartService();
 		socialService = serviceManager.getSocialService();
 		authService = serviceManager.getAuthService();
+		orderManager = serviceManager.getOrderManager();
 	}
 
 	protected final ProductService getProductService() {
 		return productService;
-	}
-	
-	protected final OrderService getOrderService() {
-		return orderService;
 	}
 	
 	protected final ShoppingCartService getShoppingCartService() {
@@ -55,6 +51,10 @@ public class AbstractController extends HttpServlet {
 	
 	protected final AuthenticationService getAuthService() {
 		return authService;
+	}
+	
+	protected final OrderManager getOrderManager() {
+		return orderManager;
 	}
 	
 	protected final int getTotalPageCount(int totalItemsCount, int itemsPerPage) {

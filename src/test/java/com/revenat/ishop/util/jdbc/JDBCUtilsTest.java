@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,7 +27,10 @@ public class JDBCUtilsTest {
 	private static final String JDBC_URL = "jdbc:h2:mem:test;INIT=RUNSCRIPT FROM 'classpath:script/create-test.sql'\\;RUNSCRIPT FROM 'classpath:script/populate-test.sql'";
 	private static final String SELECT_ALL = "SELECT * FROM product";
 	private static final String INSERT_NEW_WITH_PARAMS = "INSERT INTO product (name, category, producer) VALUES (?,?,?)";
-	private static final String INSERT_NEW_WITHOUT_PARAMS = "INSERT INTO product (name, category, producer) VALUES ('IPad','Tablet','Apple')";
+	private static final String INSERT_NEW_WITHOUT_PARAMS =
+			"INSERT INTO product (name, category, producer) VALUES ('IPad','Tablet','Apple')";
+	private static final String INSERT_BATCH_WITH_PARAMS =
+			"INSERT INTO product (product_id, name, category, producer) VALUES (?,?,?,?)";
 
 	@Rule
 	public ExpectedException expected = ExpectedException.none();
@@ -208,6 +212,68 @@ public class JDBCUtilsTest {
 			
 			product = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
 			assertNull(product);
+		}
+	}
+	
+	@Test
+	public void shouldNotAllowToInsertInBatchWithNullSqlQuery() throws Exception {
+		expected.expect(NullPointerException.class);
+		expected.expectMessage(containsString("Sql string can not be null"));
+		
+		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
+			JDBCUtils.insertBatch(c, null, Collections.emptyList());
+		}
+	}
+	
+	@Test
+	public void shouldNotAllowToInsertInBatchWithNullConnection() throws Exception {
+		expected.expect(NullPointerException.class);
+		expected.expectMessage(containsString("Connection can not be null"));
+		
+		JDBCUtils.insertBatch(null, INSERT_NEW_WITHOUT_PARAMS, Collections.emptyList());
+	}
+	
+	@Test
+	public void shouldNotAllowToInsertInBatchWithNullParametersList() throws Exception {
+		expected.expect(NullPointerException.class);
+		expected.expectMessage(containsString("parametersList can not be null"));
+		
+		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
+			JDBCUtils.insertBatch(c, INSERT_NEW_WITHOUT_PARAMS, null);
+		}
+	}
+	
+	@Test
+	public void shouldNotAllowToInsertInBatchWithoutParameters() throws Exception {
+		expected.expect(IllegalArgumentException.class);
+		expected.expectMessage(containsString("Can not execute insertBatch with empty parameter list"));
+		
+		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
+			JDBCUtils.insertBatch(c, INSERT_NEW_WITHOUT_PARAMS, Collections.emptyList());
+		}
+	}
+	
+	@Test
+	public void shouldAllowToInsertInBatch() throws Exception {
+		List<Object[]> params = Arrays.asList(
+				new Object[] {999, "IPad+", "Tablet", "Apple"},
+				new Object[] {1999, "IPhone+", "Smartphone", "Apple"}
+				);
+		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
+			JDBCUtils.insertBatch(c, INSERT_BATCH_WITH_PARAMS, params);
+			
+			Product productA = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 999);
+			Product productB = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1999);
+			
+			assertThat(productA.getId(), equalTo(999));
+			assertThat(productA.getName(), equalTo("IPad+"));
+			assertThat(productA.getCategory(), equalTo("Tablet"));
+			assertThat(productA.getProducer(), equalTo("Apple"));
+			
+			assertThat(productB.getId(), equalTo(1999));
+			assertThat(productB.getName(), equalTo("IPhone+"));
+			assertThat(productB.getCategory(), equalTo("Smartphone"));
+			assertThat(productB.getProducer(), equalTo("Apple"));
 		}
 	}
 

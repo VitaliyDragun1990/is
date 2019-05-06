@@ -14,11 +14,6 @@ public class Order extends AbstractEntity<Long> {
 	private LocalDateTime created;
 	
 	public Order() {
-		this(null);
-	}
-	
-	public Order(Integer accountId) {
-		this.accountId = accountId;
 		items = new ArrayList<>();
 		created = LocalDateTime.now();
 	}
@@ -34,7 +29,7 @@ public class Order extends AbstractEntity<Long> {
 	public LocalDateTime getCreated() {
 		return created;
 	}
-
+	
 	public void setCreated(LocalDateTime created) {
 		this.created = created;
 	}
