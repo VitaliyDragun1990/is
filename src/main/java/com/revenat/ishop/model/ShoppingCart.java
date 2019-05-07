@@ -65,10 +65,10 @@ public class ShoppingCart implements Serializable {
 		ShoppingCartItem oldItem = cart.get(product.getId());
 		if (oldItem != null) {
 			int totalQuantity = oldItem.getQuantity() + quantity;
-			validateProductQuantity(totalQuantity);
+			validateTotalProductQuantity(totalQuantity);
 			cart.put(product.getId(), new ShoppingCartItem(product, oldItem.getQuantity() + quantity));
 		} else {
-			validateTotalProductCount();
+			validateTotalCartCapacity();
 			cart.put(product.getId(), new ShoppingCartItem(product, quantity));
 		}
 		recalculateTotalCount();
@@ -135,7 +135,7 @@ public class ShoppingCart implements Serializable {
 		return String.format("ShoppingCart [cart=%s, totalCount=%s, totalCost=%s]", cart, totalCount, totalCost);
 	}
 
-	private void validateTotalProductCount() {
+	private void validateTotalCartCapacity() {
 		if (cart.size() >= Constants.MAX_PRODUCTS_PER_SHOPPING_CART) {
 			throw new ValidationException(String.format("Shopping cart cannot store more than %d different products",
 					Constants.MAX_PRODUCTS_PER_SHOPPING_CART));
@@ -146,6 +146,13 @@ public class ShoppingCart implements Serializable {
 		if (quantity < 1 || quantity > Constants.MAX_PRODUCT_COUNT_PER_SHOPPING_CART) {
 			throw new ValidationException(String.format("valid product quantity should be between 1 and %d inclusive.",
 					Constants.MAX_PRODUCT_COUNT_PER_SHOPPING_CART));
+		}
+	}
+	
+	private static void validateTotalProductQuantity(int totalQuantity) {
+		if (totalQuantity > Constants.MAX_PRODUCT_COUNT_PER_SHOPPING_CART) {
+			throw new ValidationException(String.format("Limit for product count reached: %d.",
+					 Constants.MAX_PRODUCT_COUNT_PER_SHOPPING_CART));
 		}
 	}
 

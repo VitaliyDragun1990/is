@@ -1,13 +1,12 @@
 package com.revenat.ishop.servlet.page;
 
-import static com.revenat.ishop.config.Constants.Page;
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.revenat.ishop.config.Constants.Page;
 import com.revenat.ishop.servlet.AbstractController;
 import com.revenat.ishop.util.web.RoutingUtils;
 

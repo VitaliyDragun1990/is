@@ -1,28 +1,127 @@
 package com.revenat.ishop.filter;
 
-import static com.revenat.ishop.config.Constants.Page;
-
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.json.JSONObject;
+
+import com.revenat.ishop.config.Constants.Attribute;
+import com.revenat.ishop.config.Constants.Page;
+import com.revenat.ishop.exception.AccessDeniedException;
+import com.revenat.ishop.exception.InternalServerException;
+import com.revenat.ishop.exception.ResourceNotFoundException;
+import com.revenat.ishop.exception.ValidationException;
+import com.revenat.ishop.exception.base.ApplicationException;
 import com.revenat.ishop.util.web.RoutingUtils;
+import com.revenat.ishop.util.web.UrlUtils;
 
 public class ErrorHandlerFilter extends AbstractFilter {
+	private static final String INTERNAL_ERROR = "Internal error";
 
 	@Override
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		try {
-			chain.doFilter(request, response);
+			chain.doFilter(request, new ExceptionThrowerHttpServletResponse(response));
 		} catch (Exception e) {
-			String requestUrl = request.getRequestURI();
-			LOGGER.error("Request " + requestUrl + " failed: " + e.getMessage(), e);
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			RoutingUtils.forwardToPage(Page.ERROR, request, response);
+			processException(e, request, response);
+			sendResponse(request, response, e);
+		}
+	}
+
+	private void sendResponse(HttpServletRequest req, HttpServletResponse resp, Exception e)
+			throws IOException, ServletException {
+		String requestUri = req.getRequestURI();
+		if (UrlUtils.isAjaxJsonUrl(requestUri)) {
+			String json = getJsonResponse(e);
+			RoutingUtils.sendJSON(json, resp);
+		} else if (UrlUtils.isAjaxHtmlUrl(requestUri)) {
+			RoutingUtils.sendHtmlFragment(INTERNAL_ERROR, resp);
+		} else {
+			RoutingUtils.forwardToPage(Page.ERROR, req, resp);
+		}
+	}
+
+	private String getJsonResponse(Exception e) {
+		JSONObject json = new JSONObject();
+		json.put("message", getMessage(getStausCode(e), e));
+		return json.toString();
+	}
+
+	private String getMessage(int statusCode, Exception e) {
+		switch (statusCode) {
+		case 400:
+			return e.getMessage();
+		case 401:
+			return "You must be authorized to view this resource";
+		case 403:
+			return "You don't have permissions to view this resource";
+		case 404:
+			return "Resource not found";
+		default:
+			return INTERNAL_ERROR;
+		}
+	}
+
+	private void processException(Exception e, HttpServletRequest req, HttpServletResponse resp) {
+		String requestUri = req.getRequestURI();
+		int statusCode = getStausCode(e);
+		if (statusCode != HttpServletResponse.SC_BAD_REQUEST) {
+			LOGGER.error("Request {} failed: {}", requestUri, e.getMessage(), e);
+		} else {
+			LOGGER.warn("Bad request {}: {}", requestUri, e.getMessage(), e);
+		}
+		req.setAttribute(Attribute.STATUS_CODE, statusCode);
+		resp.setStatus(statusCode);
+	}
+
+	private int getStausCode(Exception e) {
+		if (e instanceof ApplicationException) {
+			return ((ApplicationException) e).getStatusCode();
+		} else {
+			return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+		}
+	}
+
+	/**
+	 * This custom {@link HttpServletResponseWrapper} implementation throws
+	 * exception in case of invalid request (method not implemented, page not exist,
+	 * etc) instead of default behaviour (returning container-specific response
+	 * page). This custom wrapper is needed in order to let our
+	 * {@link ErrorHandlerFilter} filter handle all kind of exceptions application
+	 * can thorw.
+	 * 
+	 * @author Vitaly Dragun
+	 *
+	 */
+	private static class ExceptionThrowerHttpServletResponse extends HttpServletResponseWrapper {
+
+		public ExceptionThrowerHttpServletResponse(HttpServletResponse response) {
+			super(response);
+		}
+
+		@Override
+		public void sendError(int sc) throws IOException {
+			sendError(sc, INTERNAL_ERROR);
+		}
+
+		@Override
+		public void sendError(int sc, String msg) throws IOException {
+			switch (sc) {
+			case 400:
+				throw new ValidationException(msg);
+			case 403:
+				throw new AccessDeniedException(msg);
+			case 404:
+				throw new ResourceNotFoundException(msg);
+			default:
+				throw new InternalServerException(msg);
+			}
 		}
 	}
 }

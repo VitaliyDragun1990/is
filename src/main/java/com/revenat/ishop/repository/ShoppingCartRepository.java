@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import com.revenat.ishop.config.Constants;
 import com.revenat.ishop.config.Constants.Attribute;
-import com.revenat.ishop.exception.IllegalStateException;
+import com.revenat.ishop.exception.InternalServerException;
 import com.revenat.ishop.model.ShoppingCart;
 import com.revenat.ishop.service.application.ShoppingCartMapper;
 import com.revenat.ishop.util.web.WebUtils;
@@ -22,7 +22,7 @@ public final class ShoppingCartRepository {
 	/**
 	 * Returns {@link ShoppingCart} instance associated with specified client's
 	 * {@link HttpServletRequest} object. To be sure that this method won't throw
-	 * {@link IllegalStateException} {@link #loadShoppingCart(HttpServletRequest)}
+	 * {@link InternalServerException} {@link #loadShoppingCart(HttpServletRequest)}
 	 * method should be called beforehed as necessary precondition.
 	 * 
 	 * @param clientSession client's session to look for {@link ShoppingCart}
@@ -30,7 +30,7 @@ public final class ShoppingCartRepository {
 	 * @return {@link ShoppingCart} instance associated with specified client's
 	 *         request. If there is no {@link ShoppingCart} instance associated with
 	 *         given request.
-	 * @throws IllegalStateException if there is no {@link ShoppingCart} object
+	 * @throws InternalServerException if there is no {@link ShoppingCart} object
 	 *                               accosiated with given user's request.
 	 */
 	public ShoppingCart getShoppingCart(HttpSession clientSession) {
