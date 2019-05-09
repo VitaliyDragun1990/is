@@ -15,7 +15,7 @@ public class SignOutController extends AbstractController {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getSession().invalidate();
+		getAuthService().logout(getClientSession(req));
 		RoutingUtils.redirect(URL.ALL_PRODUCTS, resp);
 	}
 }

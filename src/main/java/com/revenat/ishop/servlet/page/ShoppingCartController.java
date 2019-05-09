@@ -18,7 +18,7 @@ public class ShoppingCartController extends AbstractController {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ShoppingCart shoppingCart = getShoppingCartService().getShoppingCart(req.getSession());
+		ShoppingCart shoppingCart = getClientSession(req).getShoppingCart();
 		if (shoppingCart.isEmpty()) {
 			RoutingUtils.redirect(URL.ALL_PRODUCTS, resp);
 		} else {

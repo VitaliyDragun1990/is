@@ -19,7 +19,7 @@ public class SignInController extends AbstractController {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if (getAuthService().isAuthenticated(req.getSession())) {
+		if (getAuthService().isAuthenticated(getClientSession(req))) {
 			RoutingUtils.redirect(URL.ALL_PRODUCTS, resp);
 		} else {
 			RoutingUtils.forwardToPage(Page.SIGN_IN, req, resp);
@@ -28,7 +28,7 @@ public class SignInController extends AbstractController {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if (getAuthService().isAuthenticated(req.getSession())) {
+		if (getAuthService().isAuthenticated(getClientSession(req))) {
 			RoutingUtils.redirect(URL.ALL_PRODUCTS, resp);
 		} else {
 			setRedirectUrl(req);

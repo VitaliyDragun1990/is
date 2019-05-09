@@ -1,8 +1,8 @@
 package com.revenat.ishop.entity;
 
-import com.revenat.ishop.model.CurrentAccount;
+import com.revenat.ishop.model.ClientAccount;
 
-public class Account extends AbstractEntity<Integer> implements CurrentAccount {
+public class Account extends AbstractEntity<Integer> implements ClientAccount {
 	private static final long serialVersionUID = -8951792395607124164L;
 
 	private String name;

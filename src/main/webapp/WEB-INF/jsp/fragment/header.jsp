@@ -15,24 +15,24 @@
           <a class="navbar-brand" href='<c:url value="/products" />'>IShop</a>
         </div>
         <div class="collapse navbar-collapse" id="ishopNav">
-          <ul id="currentShoppingCart" class="nav navbar-nav navbar-right ${CURRENT_SHOPPING_CART.isEmpty() ? 'hidden' : ''}">
+          <ul id="currentShoppingCart" class="nav navbar-nav navbar-right ${clientSession.shoppingCart.isEmpty() ? 'hidden' : ''}">
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                Shopping cart (<span class="cart-total-count">${CURRENT_SHOPPING_CART.totalCount}</span>)
+                Shopping cart (<span class="cart-total-count">${clientSession.shoppingCart.totalCount}</span>)
                 <span class="caret"></span>
               </a>
               <div class="dropdown-menu shopping-cart-desc">
-                Total count: <span class="cart-total-count">${CURRENT_SHOPPING_CART.totalCount}</span><br>
-                Total cost: <span class="cart-total-cost">${CURRENT_SHOPPING_CART.totalCost}</span><br>
+                Total count: <span class="cart-total-count">${clientSession.shoppingCart.totalCount}</span><br>
+                Total cost: <span class="cart-total-cost">${clientSession.shoppingCart.totalCost}</span><br>
                 <a href='<c:url value="/shopping-cart" />' class="btn btn-primary btn-block">View cart</a>
               </div>
             </li>
           </ul>
           <c:choose>
-          	<c:when test="${CURRENT_USER != null}">
+          	<c:when test="${clientSession.account != null}">
           		<ul class="nav navbar-nav navbar-right">
-          			<li><a>Welcome ${CURRENT_USER.description}</a></li>
+          			<li><a>Welcome ${clientSession.account.description}</a></li>
           			<li><a href='<c:url value="/my-orders" />'>My orders</a></li>
           			<li>
           				<ishop:sign-out/>

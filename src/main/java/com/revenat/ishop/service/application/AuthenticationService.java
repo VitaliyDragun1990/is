@@ -2,7 +2,8 @@ package com.revenat.ishop.service.application;
 
 import javax.servlet.http.HttpSession;
 
-import com.revenat.ishop.model.CurrentAccount;
+import com.revenat.ishop.model.ClientAccount;
+import com.revenat.ishop.model.ClientSession;
 
 /**
  * This application service is responsible for managing authentication-related
@@ -21,7 +22,7 @@ public interface AuthenticationService {
 	 *                    user of the application.
 	 * @return {@code true} if user is authenticated, {@code false} otherwise.
 	 */
-	boolean isAuthenticated(HttpSession userSession);
+	boolean isAuthenticated(ClientSession session);
 
 	/**
 	 * Authenticate user which is represented by specified {@link HttpSession}
@@ -31,7 +32,7 @@ public interface AuthenticationService {
 	 * @param userSession {@link HttpSession} object which represents particular
 	 *                    user of the application.
 	 */
-	void authenticate(Credentials credentials, HttpSession userSession);
+	void authenticate(Credentials credentials, ClientSession session);
 
 	/**
 	 * Returns string URL which user should visit to start authentication process.
@@ -41,16 +42,18 @@ public interface AuthenticationService {
 	String getAuthenticationUrl();
 
 	/**
-	 * Returns account in form of {@link CurrentAccount} of the authenticated user
+	 * Returns account in form of {@link ClientAccount} of the authenticated user
 	 * represented by the provided {@link HttpSession} object.
 	 * 
 	 * @param userSession {@link HttpSession} object which represents particular
 	 *                    user of the application.
-	 * @return {@link CurrentAccount} object if the user represented by provided
+	 * @return {@link ClientAccount} object if the user represented by provided
 	 *         {@link HttpSession} object is authenticated, or {@code null}
 	 *         otherwise.
 	 */
-	CurrentAccount getAuthenticatedUserAccount(HttpSession userSession);
+	ClientAccount getAuthenticatedUserAccount(ClientSession session);
+	
+	void logout(ClientSession session);
 	
 	/**
 	 * Represents user-provided credentials for authentication purpose.

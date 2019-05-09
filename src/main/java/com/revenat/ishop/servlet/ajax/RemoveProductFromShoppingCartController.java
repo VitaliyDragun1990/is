@@ -11,6 +11,5 @@ public class RemoveProductFromShoppingCartController extends AbstractProductCont
 	@Override
 	protected void processProductForm(ProductForm form, ShoppingCart cart, HttpServletResponse resp) {
 		getShoppingCartService().removeProductFromShoppingCart(form.getProductId(), form.getQuantity(), cart);
-		getShoppingCartService().persistShoppingCart(cart, resp);
 	}
 }

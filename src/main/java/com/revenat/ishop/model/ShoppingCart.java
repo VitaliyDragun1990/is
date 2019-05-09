@@ -119,7 +119,7 @@ public class ShoppingCart implements Serializable {
 	/**
 	 * Recalculates shopping cart total cost.
 	 */
-	public void recalculateTotalCost() {
+	private void recalculateTotalCost() {
 		totalCost = BigDecimal.ZERO;
 		for (ShoppingCartItem item : cart.values()) {
 			totalCost = totalCost.add(item.getCost());
@@ -128,6 +128,12 @@ public class ShoppingCart implements Serializable {
 	
 	public boolean isEmpty() {
 		return totalCount == 0;
+	}
+	
+	public void clear() {
+		this.cart.clear();
+		recalculateTotalCost();
+		recalculateTotalCount();
 	}
 
 	@Override

@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.revenat.ishop.config.Constants.Attribute;
 import com.revenat.ishop.form.ProductForm;
 import com.revenat.ishop.form.SearchForm;
+import com.revenat.ishop.model.ClientSession;
 import com.revenat.ishop.service.ServiceManager;
 import com.revenat.ishop.service.application.AuthenticationService;
 import com.revenat.ishop.service.application.OrderManager;
@@ -73,6 +75,10 @@ public class AbstractController extends HttpServlet {
 			// If page format not an integer, return 1 page
 			return 1;
 		}
+	}
+	
+	protected final ClientSession getClientSession(HttpServletRequest request) {
+		return (ClientSession) request.getSession().getAttribute(Attribute.CLIENT_SESSION);
 	}
 	
 	protected final SearchForm getSearchForm(HttpServletRequest req) {

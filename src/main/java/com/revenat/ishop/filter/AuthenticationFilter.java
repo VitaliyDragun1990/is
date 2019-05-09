@@ -7,11 +7,11 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.revenat.ishop.config.Constants;
 import com.revenat.ishop.config.Constants.Attribute;
 import com.revenat.ishop.config.Constants.URL;
+import com.revenat.ishop.model.ClientSession;
 import com.revenat.ishop.service.ServiceManager;
 import com.revenat.ishop.service.application.AuthenticationService;
 import com.revenat.ishop.util.web.RoutingUtils;
@@ -39,7 +39,7 @@ public class AuthenticationFilter extends AbstractFilter {
 	@Override
 	void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		HttpSession clientSession = request.getSession();
+		ClientSession clientSession = (ClientSession) request.getSession().getAttribute(Attribute.CLIENT_SESSION);
 		if (authService.isAuthenticated(clientSession)) {
 			chain.doFilter(request, response);
 		} else {

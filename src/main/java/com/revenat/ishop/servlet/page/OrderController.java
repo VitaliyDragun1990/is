@@ -18,7 +18,7 @@ public class OrderController extends AbstractController {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		long orderId = getOrderManager().placeOrder(req.getSession(), resp);
+		long orderId = getOrderManager().placeOrder(getClientSession(req));
 		
 		req.getSession().setAttribute(Attribute.CURRENT_MESSAGE,
 				"Order has been created successfully. Please wait for our reply.");
@@ -28,7 +28,7 @@ public class OrderController extends AbstractController {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		long orderId = Long.parseLong(req.getParameter("id"));
-		Order order = getOrderManager().findById(orderId, req.getSession());
+		Order order = getOrderManager().findById(orderId, getClientSession(req));
 		req.setAttribute(Attribute.CURRENT_ORDER, order);
 		displayMessageIfAny(req);
 		RoutingUtils.forwardToPage(Page.ORDER, req, resp);

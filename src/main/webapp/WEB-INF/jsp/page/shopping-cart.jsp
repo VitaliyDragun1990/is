@@ -4,15 +4,15 @@
 <%@ taglib prefix="ishop" tagdir="/WEB-INF/tags"%>
 
 <div id="shoppingCart">
-	<c:if test="${empty CURRENT_USER}">
+	<c:if test="${empty clientSession.account}">
 		<div class="alert alert-warning hidden-print" role="alert">To place order, please sign in</div>
 	 </c:if>
-     <ishop:product-table items="${CURRENT_SHOPPING_CART.items}" showActionColumn="true" totalCost="${CURRENT_SHOPPING_CART.totalCost}"/>
+     <ishop:product-table items="${clientSession.shoppingCart.items}" showActionColumn="true" totalCost="${clientSession.shoppingCart.totalCost}"/>
           
 	<div class="row hidden-print">
 		<div class="col-md-4 col-md-offset-4 col-lg-2 col-lg-offset-5">
           	<c:choose>
-          		<c:when test="${empty CURRENT_USER}">
+          		<c:when test="${empty clientSession.account}">
              		<ishop:sign-in classes="btn-block"/>
           		</c:when>
           		<c:otherwise>

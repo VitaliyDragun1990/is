@@ -11,6 +11,5 @@ public class AddProductToShoppingCartController extends AbstractProductControlle
 	@Override
 	protected void processProductForm(ProductForm form, ShoppingCart cart, HttpServletResponse resp) {
 		getShoppingCartService().addProductToShoppingCart(form.getProductId(), form.getQuantity(), cart);
-		getShoppingCartService().persistShoppingCart(cart, resp);
 	}
 }

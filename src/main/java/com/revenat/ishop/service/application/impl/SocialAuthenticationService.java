@@ -1,10 +1,8 @@
 package com.revenat.ishop.service.application.impl;
 
-import javax.servlet.http.HttpSession;
-
-import com.revenat.ishop.config.Constants.Attribute;
 import com.revenat.ishop.entity.Account;
-import com.revenat.ishop.model.CurrentAccount;
+import com.revenat.ishop.model.ClientAccount;
+import com.revenat.ishop.model.ClientSession;
 import com.revenat.ishop.model.SocialAccount;
 import com.revenat.ishop.repository.AccountRepository;
 import com.revenat.ishop.service.application.AuthenticationService;
@@ -27,16 +25,16 @@ public class SocialAuthenticationService implements AuthenticationService {
 	}
 
 	@Override
-	public boolean isAuthenticated(HttpSession userSession) {
-		return getCurrentAccount(userSession) != null;
+	public boolean isAuthenticated(ClientSession session) {
+		return session.getAccount() != null;
 	}
 
 	@Override
-	public void authenticate(Credentials credentials, HttpSession userSession) {
+	public void authenticate(Credentials credentials, ClientSession session) {
 		String authToken = ((AuthenticationTokenCredentials) credentials).getAuthToken();
 		SocialAccount socialAccount = getUserSocialAccount(authToken);
 		Account account = getUserAccount(socialAccount);
-		setCurrentAccount(userSession, account);
+		session.setAccount(account);
 	}
 
 	@Override
@@ -45,8 +43,13 @@ public class SocialAuthenticationService implements AuthenticationService {
 	}
 
 	@Override
-	public CurrentAccount getAuthenticatedUserAccount(HttpSession userSession) {
-		return getCurrentAccount(userSession);
+	public ClientAccount getAuthenticatedUserAccount(ClientSession session) {
+		return session.getAccount();
+	}
+	
+	@Override
+	public void logout(ClientSession session) {
+		session.setAccount(null);
 	}
 
 	private SocialAccount getUserSocialAccount(String authToken) {
@@ -60,13 +63,5 @@ public class SocialAuthenticationService implements AuthenticationService {
 			accountRepository.save(account);
 		}
 		return account;
-	}
-
-	private CurrentAccount getCurrentAccount(HttpSession userSession) {
-		return (CurrentAccount) userSession.getAttribute(Attribute.CURRENT_USER);
-	}
-
-	private void setCurrentAccount(HttpSession clientSession, CurrentAccount account) {
-		clientSession.setAttribute(Attribute.CURRENT_USER, account);
 	}
 }

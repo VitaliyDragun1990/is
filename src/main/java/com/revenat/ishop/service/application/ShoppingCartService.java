@@ -1,13 +1,9 @@
 package com.revenat.ishop.service.application;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.revenat.ishop.entity.Product;
 import com.revenat.ishop.exception.ValidationException;
 import com.revenat.ishop.model.ShoppingCart;
 import com.revenat.ishop.repository.ProductRepository;
-import com.revenat.ishop.repository.ShoppingCartRepository;
 
 /**
  * This component incapsulates CRUD shopping cart logic. It contains various
@@ -18,56 +14,10 @@ import com.revenat.ishop.repository.ShoppingCartRepository;
  *
  */
 public class ShoppingCartService {
-	private final ShoppingCartRepository cartRepository;
 	private final ProductRepository productRepository;
 
-	public ShoppingCartService(ShoppingCartRepository cartRepository, ProductRepository productRepository) {
-		this.cartRepository = cartRepository;
+	public ShoppingCartService(ProductRepository productRepository) {
 		this.productRepository = productRepository;
-	}
-
-	/**
-	 * Returns {@link ShoppingCart} instance associated with provided client's
-	 * {@link HttpSession} object.
-	 * 
-	 * @param clientSession {@link HttpSession} object that represents serverside
-	 *                      session for particular client.
-	 * @return {@link ShoppingCart} instance associated with particular client.
-	 */
-	public ShoppingCart getShoppingCart(HttpSession clientSession) {
-		return cartRepository.getShoppingCart(clientSession);
-	}
-
-	/**
-	 * Persists provided shopping cart content as cookie string and store it inside
-	 * provied {@link HttpServletResponse} object. If provided cart is empty one,
-	 * then such cookie would be deleted.
-	 * 
-	 * @param shoppingCart {@link ShoppingCart} instance to persist as cookie
-	 * @param response     {@link HttpServletResponse} object that will store such
-	 *                     shopping cart cookie.
-	 */
-	public void persistShoppingCart(ShoppingCart shoppingCart, HttpServletResponse response) {
-		if (shoppingCart.getTotalCount() == 0) {
-			cartRepository.removeShoppingCartCookie(response);
-		} else {
-			cartRepository.persistShoppingCartAsCookie(shoppingCart, response);
-		}
-	}
-
-	/**
-	 * Clears shopping cart instance (if any) associated with provided user's
-	 * {@link HttpSession} object. Deletes 'shopping cart' cookie using provided
-	 * {@link HttpServletResponse} object.
-	 * 
-	 * @param userSession {@link HttpSession} object that represents serverside
-	 *                    session for particular user.
-	 * @param response    {@link HttpServletResponse} object that may store shopping
-	 *                    cart cookie.
-	 */
-	public void clearShoppingCart(HttpSession userSession, HttpServletResponse response) {
-		cartRepository.setShoppingCart(userSession, new ShoppingCart());
-		cartRepository.removeShoppingCartCookie(response);
 	}
 
 	/**

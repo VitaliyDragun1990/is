@@ -18,7 +18,6 @@ import com.revenat.ishop.repository.OrderItemRepository;
 import com.revenat.ishop.repository.OrderRepository;
 import com.revenat.ishop.repository.ProducerRepository;
 import com.revenat.ishop.repository.ProductRepository;
-import com.revenat.ishop.repository.ShoppingCartRepository;
 import com.revenat.ishop.repository.impl.JdbcAccountRepository;
 import com.revenat.ishop.repository.impl.JdbcCategoryRepository;
 import com.revenat.ishop.repository.impl.JdbcOrderItemRepository;
@@ -27,6 +26,8 @@ import com.revenat.ishop.repository.impl.JdbcProducerRepository;
 import com.revenat.ishop.repository.impl.JdbcProductRepository;
 import com.revenat.ishop.service.application.AuthenticationService;
 import com.revenat.ishop.service.application.OrderManager;
+import com.revenat.ishop.service.application.ShoppingCartCookieSerializer;
+import com.revenat.ishop.service.application.ShoppingCartMapper;
 import com.revenat.ishop.service.application.ShoppingCartService;
 import com.revenat.ishop.service.application.SocialService;
 import com.revenat.ishop.service.application.impl.FacebookSocialService;
@@ -54,20 +55,17 @@ public class ServiceManager {
 	private final ProductRepository productRepository;
 	private final CategoryRepository categoryRepository;
 	private final ProducerRepository producerRepository;
-	private final ShoppingCartRepository shoppingCartRepository;
 	private final AccountRepository accountRepository;
 	private final OrderItemRepository orderItemRepository;
 	private final OrderRepository orderRepository;
+	private final ShoppingCartMapper<String> cartMapper;
 	private final ProductService productService;
 	private final OrderService orderService;
 	private final ShoppingCartService shoppingCartService;
 	private final SocialService socialService;
 	private final AuthenticationService authService;
 	private final OrderManager orderManager;
-
-	public ShoppingCartRepository getShoppingCartRepository() {
-		return shoppingCartRepository;
-	}
+	private final ShoppingCartCookieSerializer cartSerializer;
 
 	public OrderService getOrderService() {
 		return orderService;
@@ -95,6 +93,14 @@ public class ServiceManager {
 	
 	public OrderManager getOrderManager() {
 		return orderManager;
+	}
+	
+	public ShoppingCartMapper<String> getCartMapper() {
+		return cartMapper;
+	}
+	
+	public ShoppingCartCookieSerializer getCartSerializer() {
+		return cartSerializer;
 	}
 
 	public static synchronized ServiceManager getInstance(ServletContext context) {
@@ -124,15 +130,16 @@ public class ServiceManager {
 		producerRepository = new JdbcProducerRepository(dataSource);
 		orderItemRepository = new JdbcOrderItemRepository(dataSource);
 		orderRepository = new JdbcOrderRepository(dataSource, orderItemRepository);
-		shoppingCartRepository = new ShoppingCartRepository(new ShoppingCartCookieStringMapper(productRepository));
+		cartMapper = new ShoppingCartCookieStringMapper(productRepository);
+		cartSerializer = new ShoppingCartCookieSerializer(cartMapper);
 		accountRepository = new JdbcAccountRepository(dataSource);
 		productService = new ProductServiceImpl(productRepository, categoryRepository, producerRepository);
 		orderService = new OrderServiceImpl(orderRepository);
-		shoppingCartService = new ShoppingCartService(shoppingCartRepository, productRepository);
+		shoppingCartService = new ShoppingCartService(productRepository);
 		socialService = new FacebookSocialService(getApplicationProperty("social.facebook.appId"),
 				getApplicationProperty("social.facebook.secret"), getApplicationProperty("app.host") + "/social-login");
 		authService = new SocialAuthenticationService(socialService, accountRepository);
-		orderManager = new OrderManager(shoppingCartService, authService, orderService);
+		orderManager = new OrderManager(authService, orderService);
 	}
 
 	private Properties loadApplicationProperties() {

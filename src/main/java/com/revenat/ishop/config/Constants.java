@@ -36,6 +36,7 @@ public final class Constants {
 		public static final String CURRENT_ORDER = "CURRENT_ORDER";
 		public static final String ORDERS = "orders";
 		public static final String STATUS_CODE = "statusCode";
+		public static final String CLIENT_SESSION = "clientSession";
 
 		private Attribute() {
 		}

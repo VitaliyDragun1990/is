@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author Vitaly Dragun
  *
  */
-public interface CurrentAccount extends Serializable {
+public interface ClientAccount extends Serializable {
 
 	Integer getId();
 

@@ -21,7 +21,7 @@ public class SocialLoginController extends AbstractController {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String authToken = req.getParameter("code");
 		if (authToken != null) {
-			getAuthService().authenticate(CredentialsFactory.fromAuthToken(authToken), req.getSession());
+			getAuthService().authenticate(CredentialsFactory.fromAuthToken(authToken), getClientSession(req));
 			redirectToTargetPage(req, resp);
 		} else {
 			LOGGER.warn("Parameter 'code' not found");

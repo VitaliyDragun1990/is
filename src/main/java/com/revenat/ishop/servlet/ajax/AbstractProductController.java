@@ -21,7 +21,7 @@ public abstract class AbstractProductController extends AbstractController {
 	@Override
 	protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ProductForm form = getProductForm(req);
-		ShoppingCart cart = getShoppingCartService().getShoppingCart(req.getSession());
+		ShoppingCart cart = getClientSession(req).getShoppingCart();
 		processProductForm(form, cart, resp);
 		sendResponse(cart, resp);
 	}
