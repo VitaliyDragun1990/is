@@ -14,7 +14,7 @@ import com.revenat.ishop.config.Constants.URL;
 import com.revenat.ishop.filter.AuthenticationFilter;
 import com.revenat.ishop.filter.CategoryProducerLoaderFilter;
 import com.revenat.ishop.filter.ErrorHandlerFilter;
-import com.revenat.ishop.filter.HTMLMinifierFilter;
+import com.revenat.ishop.filter.HtmlMinificationFilter;
 import com.revenat.ishop.filter.SetCurrentRequestUriFilter;
 import com.revenat.ishop.filter.ShoppingCartDeserializationFilter;
 import com.revenat.ishop.listener.IShopApplicationListener;
@@ -95,17 +95,17 @@ public class ApplicationConfigInitializer implements ServletContainerInitializer
 				false,
 				"/*");
 		
-		filterReg = ctx.addFilter("HTMLMinifierFilter", HTMLMinifierFilter.class);
-		filterReg.addMappingForUrlPatterns(
-				EnumSet.of(DispatcherType.REQUEST),
-				true,
-				"/*");
-		filterReg = ctx.addFilter("CategoryProducerLoaderFilter", CategoryProducerLoaderFilter.class);
+		filterReg = ctx.addFilter("HtmlMinificationFilter", HtmlMinificationFilter.class);
 		filterReg.addMappingForUrlPatterns(
 				EnumSet.of(DispatcherType.REQUEST),
 				true,
 				"/*");
 		
+		filterReg = ctx.addFilter("CategoryProducerLoaderFilter", CategoryProducerLoaderFilter.class);
+		filterReg.addMappingForUrlPatterns(
+				EnumSet.of(DispatcherType.REQUEST),
+				true,
+				"/*");
 		
 		filterReg = ctx.addFilter("ShoppingCartDeserializationFilter",new ShoppingCartDeserializationFilter());
 		filterReg.addMappingForUrlPatterns(

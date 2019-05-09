@@ -1,5 +1,12 @@
 package com.revenat.ishop.config;
 
+/**
+ * This helper class contains all contant values which are used across all
+ * application.
+ * 
+ * @author Vitaly Dragun
+ *
+ */
 public final class Constants {
 	public static final int MAX_PRODUCT_COUNT_PER_SHOPPING_CART = 10;
 	public static final int MAX_PRODUCTS_PER_SHOPPING_CART = 20;
@@ -8,7 +15,6 @@ public final class Constants {
 	public static final int SESSION_MAX_INACTIVE_INTERVAL = 30 * 60;
 	public static final String APPLICATION_PROPERTIES = "application.properties";
 
-	
 	public static class Attribute {
 		public static final String ACCOUNT_REQUEST_STATISTICS = "ACCOUNT_REQUEST_STATISTICS";
 		public static final String SERVICE_MANAGER = "SERVICE_MAMANGER";
@@ -30,19 +36,20 @@ public final class Constants {
 		public static final String CURRENT_ORDER = "CURRENT_ORDER";
 		public static final String ORDERS = "orders";
 		public static final String STATUS_CODE = "statusCode";
-		
-		
-		private Attribute() {}
+
+		private Attribute() {
+		}
 	}
-	
+
 	public static class Directory {
 		public static final String JSP = "/WEB-INF/jsp/";
 		public static final String FRAGMENT = JSP + "fragment/";
 		public static final String PAGE = JSP + "page/";
-		
-		private Directory() {}
+
+		private Directory() {
+		}
 	}
-	
+
 	public static class Page {
 		public static final String TEMPLATE = "page-template.jsp";
 		public static final String ERROR = "error.jsp";
@@ -52,17 +59,19 @@ public final class Constants {
 		public static final String SIGN_IN = "sign-in.jsp";
 		public static final String MY_ORDERS = "my-orders.jsp";
 		public static final String ORDER = "order.jsp";
-		
-		private Page() {}
+
+		private Page() {
+		}
 	}
-	
+
 	public static class Fragment {
 		public static final String PRODUCT_LIST = "product-list.jsp";
 		public static final String ORDER_LIST = "order-list.jsp";
-		
-		private Fragment() {}
+
+		private Fragment() {
+		}
 	}
-	
+
 	public static class URL {
 		public static final String AJAX_MORE_PRODUCTS = "/ajax/html/more/products";
 		public static final String AJAX_MORE_PRODUCTS_BY_CATEGORY = "/ajax/html/more/products/*";
@@ -81,16 +90,17 @@ public final class Constants {
 		public static final String SHOPPING_CART = "/shopping-cart";
 		public static final String SOCIAL_LOGIN = "/social-login";
 		public static final String ORDER_WITH_ID = "/order?id=";
-		
-		private URL() {}
+
+		private URL() {
+		}
 	}
 
 	public enum Cookie {
 		SHOPPING_CART("iSCC", 60 * 60 * 24 * 365);
-		
+
 		private final String name;
 		private final int ttl;
-		
+
 		private Cookie(String name, int ttl) {
 			this.name = name;
 			this.ttl = ttl;
@@ -104,7 +114,7 @@ public final class Constants {
 			return ttl;
 		}
 	}
-	
+
 	private Constants() {
 	}
 }

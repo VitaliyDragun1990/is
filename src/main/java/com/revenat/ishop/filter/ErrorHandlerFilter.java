@@ -20,6 +20,14 @@ import com.revenat.ishop.exception.base.ApplicationException;
 import com.revenat.ishop.util.web.RoutingUtils;
 import com.revenat.ishop.util.web.UrlUtils;
 
+/**
+ * This filter represents top-level error handler, responsible for intercepting
+ * all exceptions that may happen in the application and appropriately handle
+ * them.
+ * 
+ * @author Vitaly Dragun
+ *
+ */
 public class ErrorHandlerFilter extends AbstractFilter {
 	private static final String INTERNAL_ERROR = "Internal error";
 
@@ -31,40 +39,6 @@ public class ErrorHandlerFilter extends AbstractFilter {
 		} catch (Exception e) {
 			processException(e, request, response);
 			sendResponse(request, response, e);
-		}
-	}
-
-	private void sendResponse(HttpServletRequest req, HttpServletResponse resp, Exception e)
-			throws IOException, ServletException {
-		String requestUri = req.getRequestURI();
-		if (UrlUtils.isAjaxJsonUrl(requestUri)) {
-			String json = getJsonResponse(e);
-			RoutingUtils.sendJSON(json, resp);
-		} else if (UrlUtils.isAjaxHtmlUrl(requestUri)) {
-			RoutingUtils.sendHtmlFragment(INTERNAL_ERROR, resp);
-		} else {
-			RoutingUtils.forwardToPage(Page.ERROR, req, resp);
-		}
-	}
-
-	private String getJsonResponse(Exception e) {
-		JSONObject json = new JSONObject();
-		json.put("message", getMessage(getStausCode(e), e));
-		return json.toString();
-	}
-
-	private String getMessage(int statusCode, Exception e) {
-		switch (statusCode) {
-		case 400:
-			return e.getMessage();
-		case 401:
-			return "You must be authorized to view this resource";
-		case 403:
-			return "You don't have permissions to view this resource";
-		case 404:
-			return "Resource not found";
-		default:
-			return INTERNAL_ERROR;
 		}
 	}
 
@@ -80,11 +54,45 @@ public class ErrorHandlerFilter extends AbstractFilter {
 		resp.setStatus(statusCode);
 	}
 
+	private void sendResponse(HttpServletRequest req, HttpServletResponse resp, Exception e)
+			throws IOException, ServletException {
+		String requestUri = req.getRequestURI();
+		if (UrlUtils.isAjaxJsonUrl(requestUri)) {
+			String json = getJsonResponse(e);
+			RoutingUtils.sendJSON(json, resp);
+		} else if (UrlUtils.isAjaxHtmlUrl(requestUri)) {
+			RoutingUtils.sendHtmlFragment(INTERNAL_ERROR, resp);
+		} else {
+			RoutingUtils.forwardToPage(Page.ERROR, req, resp);
+		}
+	}
+
 	private int getStausCode(Exception e) {
 		if (e instanceof ApplicationException) {
 			return ((ApplicationException) e).getStatusCode();
 		} else {
 			return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+		}
+	}
+
+	private String getJsonResponse(Exception e) {
+		JSONObject json = new JSONObject();
+		json.put("message", getMessage(getStausCode(e), e.getMessage()));
+		return json.toString();
+	}
+
+	private String getMessage(int statusCode, String badRequestMessage) {
+		switch (statusCode) {
+		case 400:
+			return badRequestMessage;
+		case 401:
+			return "You must be authorized to view this resource";
+		case 403:
+			return "You don't have permissions to view this resource";
+		case 404:
+			return "Resource not found";
+		default:
+			return INTERNAL_ERROR;
 		}
 	}
 

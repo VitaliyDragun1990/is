@@ -11,7 +11,15 @@ import com.revenat.ishop.repository.OrderRepository;
 import com.revenat.ishop.util.jdbc.JDBCUtils;
 import com.revenat.ishop.util.jdbc.JDBCUtils.ResultSetHandler;
 
-public class JdbcOrderRepository extends JdbcRepository implements OrderRepository {
+/**
+ * This is implementation of the {@link OrderRepository} responsible
+ * for performing CRUD on {@link OrderItem} entities using underlaying
+ * relational database of some sort and a JDBC technology to interract with it.
+ * 
+ * @author Vitaly Dragun
+ *
+ */
+public class JdbcOrderRepository extends AbstractJdbcRepository implements OrderRepository {
 	private static final ResultSetHandler<Long> GENERATED_ID_HANDLER =
 			ResultSetHandlerFactory.GENERATED_LONG_ID_RESULT_SET_HANDLER;
 	private static final ResultSetHandler<Order> ORDER_HANDLER =
@@ -31,10 +39,12 @@ public class JdbcOrderRepository extends JdbcRepository implements OrderReposito
 	@Override
 	public void save(Order order) {
 		// save order and get its generated it
-		Long orderId = executeUpdate(conn -> JDBCUtils.insert(conn, SqlQueries.INSERT_ORDER, GENERATED_ID_HANDLER,
-				order.getAccountId(), order.getCreated()));
+		Long orderId = executeUpdate(conn ->
+			JDBCUtils.insert(conn, SqlQueries.INSERT_ORDER, GENERATED_ID_HANDLER, order.getAccountId(), order.getCreated())
+		);
+		// set newly generated id
 		order.setId(orderId);
-		// save order's order items if any
+		// save order's order-items if any
 		saveOrderItemsIfAny(order.getItems(), orderId);
 	}
 	
@@ -52,7 +62,7 @@ public class JdbcOrderRepository extends JdbcRepository implements OrderReposito
 		// Get order by id
 		Order order = executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.GET_ORDER_BY_ID, ORDER_HANDLER, id));
 		if (order != null) {
-			setOrderItemsForOrder(order);
+			loadOrderItemsForOrder(order);
 		}
 		// Return such order
 		return order;
@@ -61,10 +71,11 @@ public class JdbcOrderRepository extends JdbcRepository implements OrderReposito
 	@Override
 	public List<Order> getByAccountId(int accountId, int offset, int limit) {
 		// Get order by accountId
-		List<Order> orders = executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.GET_ORDERS_BY_ACCOUNT_ID, ORDERS_NANDLER,
-				accountId, limit, offset));
+		List<Order> orders = executeSelect(conn ->
+			JDBCUtils.select(conn, SqlQueries.GET_ORDERS_BY_ACCOUNT_ID, ORDERS_NANDLER, accountId, limit, offset)
+		);
 		for (Order order : orders) {
-			setOrderItemsForOrder(order);
+			loadOrderItemsForOrder(order);
 		}
 		// Return such orders
 		return orders;
@@ -75,7 +86,7 @@ public class JdbcOrderRepository extends JdbcRepository implements OrderReposito
 		return executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.COUNT_ORDERS_BY_ACCOUNT_ID, COUNT_HANDLER, accountId));
 	}
 	
-	private void setOrderItemsForOrder(Order order) {
+	private void loadOrderItemsForOrder(Order order) {
 		// Get all orderItems for such order
 		List<OrderItem> orderItems = orderItemRepo.getByOrderId(order.getId());
 		// Add these orderItems to order

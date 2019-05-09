@@ -81,6 +81,23 @@ public class WebUtilsTest {
 		assertThat(setCookie.getMaxAge(), equalTo(100));
 	}
 	
+	@Test
+	public void shouldAllowToGetCurrentRequestUrl() throws Exception {
+		String requestUri = "/product";
+		when(request.getRequestURI()).thenReturn(requestUri);
+		
+		assertThat(WebUtils.getCurrentRequestUrl(request), equalTo(requestUri));
+	}
+	
+	@Test
+	public void shouldAllowToGetCurrentRequestUrlWithQueryString() throws Exception {
+		String requestUri = "/product";
+		String queryString = "?id=5";
+		when(request.getRequestURI()).thenReturn(requestUri+queryString);
+		
+		assertThat(WebUtils.getCurrentRequestUrl(request), equalTo(requestUri+queryString));
+	}
+	
 	private static Cookie createCookie(String name, String value) {
 		return new Cookie(name, value);
 	}

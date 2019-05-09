@@ -6,8 +6,8 @@ import com.revenat.ishop.entity.Producer;
 import com.revenat.ishop.search.criteria.ProductCriteria;
 
 /**
- * This interface represents repository for managing CRUD operations with
- * {@link Producer} entity.
+ * This interface represents repository responsible for performing CRUD
+ * operations on {@link Producer} entity.
  * 
  * @author Vitaly Dragun
  *
@@ -21,6 +21,6 @@ public interface ProducerRepository {
 	 *         there are no producers in the datastore.
 	 */
 	List<Producer> getAll();
-	
+
 	List<Producer> getByCriteria(ProductCriteria criteria);
 }

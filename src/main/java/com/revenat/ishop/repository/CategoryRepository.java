@@ -6,7 +6,7 @@ import com.revenat.ishop.entity.Category;
 import com.revenat.ishop.search.criteria.ProductCriteria;
 
 /**
- * This interface represents repository for managing CRUD operations with
+ * This interface represents repository responsible for performing CRUD operations on
  * {@link Category} entity.
  * 
  * @author Vitaly Dragun

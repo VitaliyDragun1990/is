@@ -12,10 +12,6 @@ import com.revenat.ishop.exception.base.ApplicationException;
 public class AuthenticationException extends ApplicationException {
 	private static final long serialVersionUID = 25477902049903710L;
 
-	public AuthenticationException(String message) {
-		super(message, 401);
-	}
-
 	public AuthenticationException(String message, Throwable cause) {
 		super(message, cause, 401);
 	}

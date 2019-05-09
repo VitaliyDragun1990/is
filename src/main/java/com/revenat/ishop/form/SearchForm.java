@@ -7,7 +7,7 @@ import java.util.List;
 import com.revenat.ishop.search.criteria.ProductCriteria;
 
 /**
- * This component represents search form user fills in to make complex search
+ * This component represents search form which user fills in to make complex search
  * request.
  * 
  * @author Vitaly Dragun

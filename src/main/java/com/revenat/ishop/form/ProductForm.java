@@ -1,7 +1,7 @@
 package com.revenat.ishop.form;
 
 /**
- * This component represents form user fills in when adds product to shopping
+ * This component represents form which user fills in when adding product to shopping
  * cart.
  * 
  * @author Vitaly Dragun

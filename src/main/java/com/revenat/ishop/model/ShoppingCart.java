@@ -86,7 +86,7 @@ public class ShoppingCart implements Serializable {
 	 * @param quantity  number of product units to remove
 	 * @throws ConfigurationException if quantity to remove is negative.
 	 */
-	public void removeProduct(Integer productId, int quantity) {
+	public void removeProduct(int productId, int quantity) {
 		if (quantity < 0) {
 			throw new ValidationException(
 					"You could not remove negative number of product unit: quantity=" + quantity);

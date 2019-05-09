@@ -15,13 +15,13 @@ import com.revenat.ishop.util.jdbc.JDBCUtils.ResultSetHandler;
 
 /**
  * This is implementation of the {@link CategoryRepository} that is responsible
- * for CRUD management of the {@link Category} entities using underlaying
+ * for performing CRUD on {@link Category} entities using underlaying
  * relational database of some sort and a JDBC technology to interract with it.
  * 
  * @author Vitaly Dragun
  *
  */
-public class JdbcCategoryRepository extends JdbcRepository implements CategoryRepository {
+public class JdbcCategoryRepository extends AbstractJdbcRepository implements CategoryRepository {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcCategoryRepository.class);
 	private static final ResultSetHandler<List<Category>> CATEGORIES_HANDLER =
 			ResultSetHandlerFactory.getListResultSetHandler(ResultSetHandlerFactory.CATEGORY_RESULT_SET_HANDLER);

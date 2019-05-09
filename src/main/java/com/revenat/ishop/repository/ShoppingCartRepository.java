@@ -12,6 +12,13 @@ import com.revenat.ishop.model.ShoppingCart;
 import com.revenat.ishop.service.application.ShoppingCartMapper;
 import com.revenat.ishop.util.web.WebUtils;
 
+/**
+ * This component represents repository responsible for performing CRUD
+ * operations on {@link ShoppingCart} object.
+ * 
+ * @author Vitaly Dragun
+ *
+ */
 public final class ShoppingCartRepository {
 	private final ShoppingCartMapper<String> cartMapper;
 
@@ -31,19 +38,19 @@ public final class ShoppingCartRepository {
 	 *         request. If there is no {@link ShoppingCart} instance associated with
 	 *         given request.
 	 * @throws InternalServerException if there is no {@link ShoppingCart} object
-	 *                               accosiated with given user's request.
+	 *                                 accosiated with given user's request.
 	 */
 	public ShoppingCart getShoppingCart(HttpSession clientSession) {
 		return (ShoppingCart) clientSession.getAttribute(Attribute.CURRENT_SHOPPING_CART);
 	}
 
 	/**
-	 * Sets provided {@link ShoppingCart} instance as attribute to provided users
+	 * Sets provided {@link ShoppingCart} instance as attribute to provided client's
 	 * {@link HttpSession} object.
 	 * 
 	 */
-	public void setShoppingCart(HttpSession userSession, ShoppingCart cart) {
-		userSession.setAttribute(Attribute.CURRENT_SHOPPING_CART, cart);
+	public void setShoppingCart(HttpSession clientSession, ShoppingCart cart) {
+		clientSession.setAttribute(Attribute.CURRENT_SHOPPING_CART, cart);
 	}
 
 	/**

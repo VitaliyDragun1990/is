@@ -1,7 +1,16 @@
 package com.revenat.ishop.repository.impl;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +22,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.revenat.ishop.entity.Order;
-import com.revenat.ishop.entity.OrderItem;
 import com.revenat.ishop.entity.Product;
 import com.revenat.ishop.repository.DataSourceFactory;
 
@@ -65,8 +73,8 @@ public class JdbcOrderRepositoryTest {
 	public void shouldAllowToSaveNewOrder() throws Exception {
 		Order newOrder = new Order();
 		newOrder.setAccountId(2);
-		newOrder.addItem(createItem(1, 10));
-		newOrder.addItem(createItem(2, 5));
+		newOrder.addItem(createProductWithId(1), 10);
+		newOrder.addItem(createProductWithId(2), 5);
 
 		repository.save(newOrder);
 
@@ -79,6 +87,7 @@ public class JdbcOrderRepositoryTest {
 				hasItem(allOf(hasProperty("id", notNullValue()), hasProperty("orderId", equalTo(createdOrder.getId())),
 						hasProperty("product", hasProperty("id", equalTo(2))), hasProperty("quantity", equalTo(5)))));
 	}
+
 
 	@Test
 	public void shouldAllowToGetOrdersByAccountId() throws Exception {
@@ -128,13 +137,9 @@ public class JdbcOrderRepositoryTest {
 		assertThat(count, equalTo(0));
 	}
 
-	private OrderItem createItem(int productId, int quantity) {
+	private Product createProductWithId(int id) {
 		Product p = new Product();
-		p.setId(productId);
-		OrderItem newItem = new OrderItem();
-		newItem.setProduct(p);
-		newItem.setQuantity(quantity);
-
-		return newItem;
+		p.setId(id);
+		return p;
 	}
 }

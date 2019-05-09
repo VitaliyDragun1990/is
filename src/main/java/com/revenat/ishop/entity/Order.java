@@ -39,11 +39,12 @@ public class Order extends AbstractEntity<Long> {
 	}
 	
 	public void setItems(List<OrderItem> items) {
+		this.items = new ArrayList<>();
 		this.items.addAll(items);
 	}
 	
-	public void addItem(OrderItem item) {
-		items.add(item);
+	public void addItem(Product product, int quantity) {
+		items.add(new OrderItem(product, quantity));
 	}
 	
 	public BigDecimal getTotalCost() {

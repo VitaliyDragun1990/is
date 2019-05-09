@@ -9,7 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.revenat.ishop.config.Constants.Attribute;
+import com.revenat.ishop.util.web.WebUtils;
 
+/**
+ * This request listener responsible for storing clients request details
+ * (method, url) into clients' sessions.
+ * 
+ * @author Vitaly Dragun
+ *
+ */
 @WebListener
 public class AccountRequestStatisticsListener implements ServletRequestListener {
 
@@ -21,26 +29,16 @@ public class AccountRequestStatisticsListener implements ServletRequestListener 
 	@Override
 	public void requestInitialized(ServletRequestEvent sre) {
 		HttpServletRequest request = (HttpServletRequest) sre.getServletRequest();
-		
+
 		List<String> userRequests = getUserRequests(request.getSession());
 		userRequests.add(buildRequestRecord(request));
 	}
-	
+
 	private String buildRequestRecord(HttpServletRequest request) {
 		String method = request.getMethod();
-		String requestUrl = request.getRequestURI();
-		String queryString = request.getQueryString();
-		
-		return buildRequestString(method, requestUrl, queryString);
-	}
+		String requestUrl = WebUtils.getCurrentRequestUrl(request);
 
-	private String buildRequestString(String method, String requestUrl, String queryString) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(method).append(" ").append(requestUrl);
-		if (queryString != null) {
-			builder.append("?").append(queryString);
-		}
-		return builder.toString();
+		return String.format("%s %s", method, requestUrl);
 	}
 
 	@SuppressWarnings("unchecked")

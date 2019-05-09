@@ -14,6 +14,13 @@ import org.slf4j.LoggerFactory;
 import com.revenat.ishop.config.Constants;
 import com.revenat.ishop.config.Constants.Attribute;
 
+/**
+ * This session listener is responsible for logging all clients' request
+ * statistic when cleints' {@link HttpSession} is going to be destroyed.
+ * 
+ * @author Vitaly Dragun
+ *
+ */
 @WebListener
 public class AccountSessionStatisticsListener implements HttpSessionListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AccountSessionStatisticsListener.class);

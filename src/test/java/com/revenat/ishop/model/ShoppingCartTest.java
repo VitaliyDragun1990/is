@@ -1,13 +1,9 @@
 package com.revenat.ishop.model;
 
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 
 import org.junit.Before;
@@ -135,6 +131,42 @@ public class ShoppingCartTest {
 	@Test(expected = ValidationException.class)
 	public void shouldNotAllowToStoreMoreThan20DifferentProducts() throws Exception {
 		populateShoppingCart(shoppingCart, 21);
+	}
+	
+	@Test
+	public void shouldBeEmptyIfDoesNotContainAnyProduct() throws Exception {
+		assertTrue(shoppingCart.isEmpty());
+	}
+	
+	@Test
+	public void shouldNotBeEmptyIfContainsAnyProduct() throws Exception {
+		populateShoppingCart(shoppingCart, 2);
+		
+		assertFalse(shoppingCart.isEmpty());
+	}
+	
+	@Test
+	public void emptyShoppingCartShouldHaveTotalCostOfZero() throws Exception {
+		assertTrue(shoppingCart.isEmpty());
+		assertThat(shoppingCart.getTotalCost(), equalTo(BigDecimal.ZERO));
+	}
+	
+	@Test
+	public void shouldAllowToGetCartTotalCost() throws Exception {
+		Product productA = createProductWithId(1);
+		productA.setPrice(BigDecimal.valueOf(10.45));
+		Product productB = createProductWithId(2);
+		productB.setPrice(BigDecimal.valueOf(20.50));
+		
+		shoppingCart.addProduct(productA, 1);
+		shoppingCart.addProduct(productB, 10);
+		
+		BigDecimal expectedTotalCost = 
+				BigDecimal.valueOf(10.45)
+				.add(
+						BigDecimal.valueOf(20.50).multiply(BigDecimal.valueOf(10))
+						);
+		assertThat(shoppingCart.getTotalCost(), equalTo(expectedTotalCost));
 	}
 
 	private static void populateShoppingCart(ShoppingCart cart, int numberOfProducts) {

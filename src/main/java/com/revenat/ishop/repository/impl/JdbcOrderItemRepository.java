@@ -10,7 +10,15 @@ import com.revenat.ishop.repository.OrderItemRepository;
 import com.revenat.ishop.util.jdbc.JDBCUtils;
 import com.revenat.ishop.util.jdbc.JDBCUtils.ResultSetHandler;
 
-public class JdbcOrderItemRepository extends JdbcRepository implements OrderItemRepository {
+/**
+ * This is implementation of the {@link OrderItemRepository} responsible
+ * for performing CRUD on {@link OrderItem} entities using underlaying
+ * relational database of some sort and a JDBC technology to interract with it.
+ * 
+ * @author Vitaly Dragun
+ *
+ */
+public class JdbcOrderItemRepository extends AbstractJdbcRepository implements OrderItemRepository {
 	private static final ResultSetHandler<Long> GENERATED_ID_HANDLER =
 			ResultSetHandlerFactory.GENERATED_LONG_ID_RESULT_SET_HANDLER;
 	private static final ResultSetHandler<List<OrderItem>> ORDER_ITEMS_HANDLER =

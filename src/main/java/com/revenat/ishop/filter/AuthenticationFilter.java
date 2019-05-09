@@ -18,9 +18,17 @@ import com.revenat.ishop.util.web.RoutingUtils;
 import com.revenat.ishop.util.web.UrlUtils;
 import com.revenat.ishop.util.web.WebUtils;
 
+/**
+ * This filter is responsible for authentication checking. If client, who made
+ * such request, is not authenticated, they will be redirected to sing-in page
+ * or get appropriate response.
+ * 
+ * @author Vitaly Dragun
+ *
+ */
 public class AuthenticationFilter extends AbstractFilter {
 	private AuthenticationService authService;
-	
+
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		ServiceManager serviceManager = (ServiceManager) filterConfig.getServletContext()
@@ -31,20 +39,20 @@ public class AuthenticationFilter extends AbstractFilter {
 	@Override
 	void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		HttpSession userSession = request.getSession();
-		if (authService.isAuthenticated(userSession)) {
+		HttpSession clientSession = request.getSession();
+		if (authService.isAuthenticated(clientSession)) {
 			chain.doFilter(request, response);
 		} else {
 			processUnauthorizedRequest(request, response);
 		}
-
 	}
 
-	private void processUnauthorizedRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private void processUnauthorizedRequest(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		String requestUrl = WebUtils.getCurrentRequestUrl(request);
 		if (UrlUtils.isAjaxUrl(requestUrl)) {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.getWriter().print("401");
+			RoutingUtils.sendHtmlFragment("401", response);
 		} else {
 			request.getSession().setAttribute(Attribute.REDIRECT_URL, requestUrl);
 			RoutingUtils.redirect(URL.SIGN_IN, response);

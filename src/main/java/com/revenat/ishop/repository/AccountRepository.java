@@ -3,8 +3,8 @@ package com.revenat.ishop.repository;
 import com.revenat.ishop.entity.Account;
 
 /**
- * This interface represents repository for managing CRUD operations with
- * {@link Account} entity.
+ * This interface represents repository responsible for for performing CRUD
+ * operations on {@link Account} entity.
  * 
  * @author Vitaly Dragun
  *

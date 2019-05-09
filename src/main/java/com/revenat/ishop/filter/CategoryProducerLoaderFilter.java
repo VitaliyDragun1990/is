@@ -23,9 +23,6 @@ import com.revenat.ishop.form.SearchForm;
  * approach is suitable if the criteria by which entities are searched and
  * retrieved can potentially change at each request.
  * 
- * ATTENTION: This filter exists only for demostration. It is not used in
- * current project.
- * 
  * @author Vitaly Dragun
  *
  */

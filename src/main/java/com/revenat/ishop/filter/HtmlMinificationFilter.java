@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
@@ -19,74 +18,52 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
  * This filter responsible for minifying response body in case of type
- * 'text/html' efectivelly removing all \n \r \t symbols from it.
+ * 'text/html' by removing all \n \r \t symbols from it.
  * 
  * @author Vitaly Dragun
  *
  */
-public class HTMLMinifierFilter extends AbstractFilter {
-	private static final String FIND_ALL_SPACES_BETWEEN_TAGS = "(?<=\\s)\\s+(?![^<>]*</pre>)";
-	private static final String FIND_ALL_NEW_LINES_BETWEEN_TAGS = "\\r?\\n(?![^<]*</pre>)";
-
-	private Pattern regex;
-
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-		StringBuilder pattern = new StringBuilder();
-		pattern.append(FIND_ALL_SPACES_BETWEEN_TAGS).append('|').append(FIND_ALL_NEW_LINES_BETWEEN_TAGS);
-		regex = Pattern.compile(pattern.toString(), Pattern.MULTILINE);
-	}
+public class HtmlMinificationFilter extends AbstractFilter {
 
 	@Override
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		SimpleResponseWrapper responseWrapper = new SimpleResponseWrapper(response);
+		HtmlMinificationResponseWrapper responseWrapper = new HtmlMinificationResponseWrapper(response);
 
 		chain.doFilter(request, responseWrapper);
-		if (isHtmlContentType(response.getContentType())) {
-			minifyHtmlContent(response, responseWrapper);
-		} else {
-			writeOriginalContent(responseWrapper);
-		}
-	}
-	
-	private boolean isHtmlContentType(String contentType) {
-		return contentType != null && contentType.startsWith("text/html");
-	}
 
-	private void minifyHtmlContent(HttpServletResponse response, SimpleResponseWrapper responseWrapper)
-			throws IOException {
-		String html = responseWrapper.contentAsString();
-		html = regex.matcher(html).replaceAll("");
-		int contentLength = html.getBytes("UTF-8").length;
-		response.setContentLength(contentLength);
-		PrintWriter out = response.getWriter();
-		out.write(html);
-		out.close();
-	}
-	
-	private void writeOriginalContent(SimpleResponseWrapper responseWrapper) throws IOException {
-		responseWrapper.flushContentToWrappedResponse();
+		responseWrapper.processResponse();
 	}
 
 	/**
 	 * Simple implementation of the {@link HttpServletResponseWrapper} aimed to
-	 * store input into separate buffers to allow
-	 * to retrieve it and provide some sort of processing on it content.
+	 * store input into separate buffers to allow to retrieve it later and provide
+	 * and provide minification process on it in case of HTML content type.
 	 * 
 	 * @author Vitaly Dragun
 	 *
 	 */
-	static class SimpleResponseWrapper extends HttpServletResponseWrapper {
+	static class HtmlMinificationResponseWrapper extends HttpServletResponseWrapper {
+		private static final String FIND_ALL_SPACES_BETWEEN_TAGS = "(?<=\\s)\\s+(?![^<>]*</pre>)";
+		private static final String FIND_ALL_NEW_LINES_BETWEEN_TAGS = "\\r?\\n(?![^<]*</pre>)";
+
+		private Pattern regex;
 		private CharArrayWriter charBuffer;
 		private ByteArrayOutputStream byteBuffer;
 		private PrintWriter printWriter;
 
-		public SimpleResponseWrapper(HttpServletResponse response) {
+		public HtmlMinificationResponseWrapper(HttpServletResponse response) {
 			super(response);
+			initPattern();
 		}
 
-		public String contentAsString() throws UnsupportedEncodingException {
+		private void initPattern() {
+			StringBuilder pattern = new StringBuilder();
+			pattern.append(FIND_ALL_SPACES_BETWEEN_TAGS).append('|').append(FIND_ALL_NEW_LINES_BETWEEN_TAGS);
+			regex = Pattern.compile(pattern.toString(), Pattern.MULTILINE);
+		}
+
+		private String contentAsString() throws UnsupportedEncodingException {
 			if (byteBuffer != null) {
 				return byteBuffer.toString(getResponse().getCharacterEncoding());
 			} else if (charBuffer != null) {
@@ -95,9 +72,36 @@ public class HTMLMinifierFilter extends AbstractFilter {
 				return "";
 			}
 		}
-		
-		public void flushContentToWrappedResponse() throws IOException {
+
+		/**
+		 * Processes response body content in such was that if content type is HTML,
+		 * than such HTML will be minified and written to underlying
+		 * {@link ServletResponse} object. If content type is not the HTML, then such
+		 * content will be written to underlying response as is without any modification.
+		 * 
+		 * @throws IOException
+		 */
+		public void processResponse() throws IOException {
 			ServletResponse wrappedResponse = getResponse();
+
+			if (isHtmlContentType(wrappedResponse.getContentType())) {
+				writeMinifiedHtml(wrappedResponse);
+			} else {
+				writeOriginalContent(wrappedResponse);
+			}
+		}
+
+		private void writeMinifiedHtml(ServletResponse wrappedResponse) throws IOException {
+			String html = contentAsString();
+			html = regex.matcher(html).replaceAll("");
+			int contentLength = html.getBytes("UTF-8").length;
+			wrappedResponse.setContentLength(contentLength);
+			PrintWriter out = wrappedResponse.getWriter();
+			out.write(html);
+			out.close();
+		}
+
+		private void writeOriginalContent(ServletResponse wrappedResponse) throws IOException {
 			if (byteBuffer != null) {
 				wrappedResponse.getOutputStream().write(byteBuffer.toByteArray());
 				wrappedResponse.setContentLength(byteBuffer.size());
@@ -109,6 +113,10 @@ public class HTMLMinifierFilter extends AbstractFilter {
 			} else {
 				wrappedResponse.setContentLength(0);
 			}
+		}
+
+		private boolean isHtmlContentType(String contentType) {
+			return contentType != null && contentType.startsWith("text/html");
 		}
 
 		@Override

@@ -38,16 +38,12 @@ public class ShoppingCartDeserializationFilter extends AbstractFilter {
 	@Override
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		HttpSession session = request.getSession();
+		HttpSession clientSession = request.getSession();
 
-		if (session.getAttribute(SHOPPING_CART_DESERIALIZATION_DONE) == null) {
+		if (clientSession.getAttribute(SHOPPING_CART_DESERIALIZATION_DONE) == null) {
 			shoppingCartRepository.loadShoppingCart(request);
-			session.setAttribute(SHOPPING_CART_DESERIALIZATION_DONE, Boolean.TRUE);
+			clientSession.setAttribute(SHOPPING_CART_DESERIALIZATION_DONE, Boolean.TRUE);
 		}
 		chain.doFilter(request, response);
-	}
-
-	@Override
-	public void destroy() {
 	}
 }

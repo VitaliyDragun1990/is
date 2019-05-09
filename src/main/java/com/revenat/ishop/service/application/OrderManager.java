@@ -1,16 +1,21 @@
 package com.revenat.ishop.service.application;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.revenat.ishop.entity.Order;
+import com.revenat.ishop.entity.OrderItem;
 import com.revenat.ishop.exception.AccessDeniedException;
 import com.revenat.ishop.exception.ResourceNotFoundException;
+import com.revenat.ishop.exception.ValidationException;
 import com.revenat.ishop.model.CurrentAccount;
 import com.revenat.ishop.model.ShoppingCart;
+import com.revenat.ishop.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.service.domain.OrderService;
 
 public class OrderManager {
@@ -28,7 +33,11 @@ public class OrderManager {
 	public long placeOrder(HttpSession userSession, HttpServletResponse resp) {
 		CurrentAccount userAccount = authService.getAuthenticatedUserAccount(userSession);
 		ShoppingCart cart = shoppingCartService.getShoppingCart(userSession);
-		long orderId = orderService.createOrder(cart, userAccount.getId()).getId();
+		if (cart == null || cart.isEmpty()) {
+			throw new ValidationException("Can not create new order: provided shopping cart is null or empty");
+		}
+		
+		long orderId = orderService.createOrder(toOrderItems(cart.getItems()), userAccount.getId()).getId();
 		
 		shoppingCartService.clearShoppingCart(userSession, resp);
 		
@@ -58,5 +67,21 @@ public class OrderManager {
 	public int coundByUser(HttpSession userSession) {
 		CurrentAccount userAccount = authService.getAuthenticatedUserAccount(userSession);
 		return orderService.countByAccountId(userAccount.getId());
+	}
+
+	private List<OrderItem> toOrderItems(Collection<ShoppingCartItem> cartItems) {
+		List<OrderItem> orderItems = new ArrayList<>();
+		for (ShoppingCartItem cartItem : cartItems) {
+			OrderItem orderItem = toOrderItem(cartItem);
+			orderItems.add(orderItem);
+		}
+		return orderItems;
+	}
+
+	private OrderItem toOrderItem(ShoppingCartItem cartItem) {
+		OrderItem orderItem = new OrderItem();
+		orderItem.setProduct(cartItem.getProduct());
+		orderItem.setQuantity(cartItem.getQuantity());
+		return orderItem;
 	}
 }

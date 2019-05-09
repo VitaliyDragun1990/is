@@ -14,14 +14,14 @@ import com.revenat.ishop.util.jdbc.JDBCUtils;
 import com.revenat.ishop.util.jdbc.JDBCUtils.ResultSetHandler;
 
 /**
- * This is implementation of the {@link ProducerRepository} that is responsible
- * for CRUD management of the {@link Producer} entities using underlaying
+ * This is implementation of the {@link ProducerRepository} responsible
+ * for performing CRUD operations on {@link Producer} entities using underlaying
  * relational database of some sort and a JDBC technology to interract with it.
  * 
  * @author Vitaly Dragun
  *
  */
-public class JdbcProducerRepository extends JdbcRepository implements ProducerRepository {
+public class JdbcProducerRepository extends AbstractJdbcRepository implements ProducerRepository {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcProducerRepository.class);
 	private static final ResultSetHandler<List<Producer>> PRODUCERS_HANDLER =
 			ResultSetHandlerFactory.getListResultSetHandler(ResultSetHandlerFactory.PRODUCER_RESULT_SET_HANDLER);
