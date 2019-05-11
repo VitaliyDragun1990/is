@@ -3,7 +3,7 @@ package com.revenat.ishop.exception;
 import com.revenat.ishop.exception.base.ApplicationException;
 
 /**
- * This exception represents situation when user does not have required
+ * This exception represents situation when client does not have required
  * permissions to get requested resource.
  * 
  * @author Vitaly Dragun

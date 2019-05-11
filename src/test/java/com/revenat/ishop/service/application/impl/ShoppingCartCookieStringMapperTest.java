@@ -1,4 +1,4 @@
-package com.revenat.ishop.service;
+package com.revenat.ishop.service.application.impl;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -22,7 +22,7 @@ import com.revenat.ishop.repository.ProductRepository;
 import com.revenat.ishop.service.application.impl.ShoppingCartCookieStringMapper;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class ShoppingCartCookieMapperTest {
+public class ShoppingCartCookieStringMapperTest {
 	
 	@Mock
 	private ProductRepository productRepository;

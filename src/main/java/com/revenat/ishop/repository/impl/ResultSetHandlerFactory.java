@@ -11,7 +11,7 @@ import com.revenat.ishop.entity.Order;
 import com.revenat.ishop.entity.OrderItem;
 import com.revenat.ishop.entity.Producer;
 import com.revenat.ishop.entity.Product;
-import com.revenat.ishop.exception.DataStorageException;
+import com.revenat.ishop.exception.PersistenceException;
 import com.revenat.ishop.util.jdbc.JDBCUtils.ResultSetHandler;
 
 /**
@@ -107,7 +107,7 @@ final class ResultSetHandlerFactory {
 		if (rs.next()) {
 			return rs.getInt("id");
 		} else {
-			throw new DataStorageException("Error while retrieving auto-generated key value: no key has been generated");
+			throw new PersistenceException("Error while retrieving auto-generated key value: no key has been generated");
 		}
 	};
 	
@@ -119,7 +119,7 @@ final class ResultSetHandlerFactory {
 		if (rs.next()) {
 			return rs.getLong("id");
 		} else {
-			throw new DataStorageException("Error while retrieving auto-generated key value: no key has been generated");
+			throw new PersistenceException("Error while retrieving auto-generated key value: no key has been generated");
 		}
 	};
 	

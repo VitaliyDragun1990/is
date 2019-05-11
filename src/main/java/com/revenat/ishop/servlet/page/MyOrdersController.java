@@ -19,8 +19,8 @@ public class MyOrdersController extends AbstractController {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<Order> userOrders = getOrderManager().findByUser(getClientSession(req), 1, Constants.MAX_ORDERS_PER_HTML_PAGE);
-		int totalOrderCount = getOrderManager().coundByUser(getClientSession(req));
+		List<Order> userOrders = getOrderManager().findByClient(getClientSession(req), 1, Constants.MAX_ORDERS_PER_HTML_PAGE);
+		int totalOrderCount = getOrderManager().coundByClient(getClientSession(req));
 		int totalPageCount = getTotalPageCount(totalOrderCount, Constants.MAX_ORDERS_PER_HTML_PAGE);
 		
 		req.setAttribute(Attribute.ORDERS, userOrders);

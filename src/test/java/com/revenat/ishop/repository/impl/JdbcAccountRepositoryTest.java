@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.revenat.ishop.entity.Account;
-import com.revenat.ishop.exception.DataStorageException;
+import com.revenat.ishop.exception.PersistenceException;
 import com.revenat.ishop.repository.DataSourceFactory;
 
 public class JdbcAccountRepositoryTest {
@@ -67,7 +67,7 @@ public class JdbcAccountRepositoryTest {
 	
 	@Test
 	public void shouldNotAllowToSaveAccountIfEmailAlreadyOccupied() throws Exception {
-		expected.expect(DataStorageException.class);
+		expected.expect(PersistenceException.class);
 		String occupiedEmail = "jack@test.com";
 		Account newAccount = new Account("jack smith", occupiedEmail);
 		

@@ -28,8 +28,8 @@ import com.revenat.ishop.service.ServiceManager;
  * @author Vitaly Dragun
  *
  */
-public class IShopApplicationListener implements ServletContextListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(IShopApplicationListener.class);
+public class ApplicationListener implements ServletContextListener {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationListener.class);
 
 	private ServiceManager serviceManager;
 

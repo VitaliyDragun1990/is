@@ -26,7 +26,7 @@ import com.revenat.ishop.form.SearchForm;
  * @author Vitaly Dragun
  *
  */
-public class CategoryProducerLoaderFilter extends AbstractFilter {
+public class CategoriesAndProducersLoaderFilter extends AbstractFilter {
 
 	private ProductService productService;
 

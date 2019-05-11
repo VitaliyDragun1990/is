@@ -168,6 +168,21 @@ public class ShoppingCartTest {
 						);
 		assertThat(shoppingCart.getTotalCost(), equalTo(expectedTotalCost));
 	}
+	
+	@Test
+	public void shouldAllowToClearShoppingCart() throws Exception {
+		Product productA = createProductWithId(1);
+		productA.setPrice(BigDecimal.valueOf(10.45));
+		Product productB = createProductWithId(2);
+		productB.setPrice(BigDecimal.valueOf(20.50));
+		shoppingCart.addProduct(productA, 1);
+		shoppingCart.addProduct(productB, 10);
+		assertFalse(shoppingCart.isEmpty());
+		
+		shoppingCart.clear();
+		
+		assertTrue(shoppingCart.isEmpty());
+	}
 
 	private static void populateShoppingCart(ShoppingCart cart, int numberOfProducts) {
 		for (int i = 1; i <= numberOfProducts; i++) {

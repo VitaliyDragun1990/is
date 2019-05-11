@@ -18,7 +18,7 @@ import com.revenat.ishop.util.web.WebUtils;
  * @author Vitaly Dragun
  *
  */
-public class SetCurrentRequestUriFilter extends AbstractFilter {
+public class RequestUrlMemorizerFilter extends AbstractFilter {
 
 	@Override
 	void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

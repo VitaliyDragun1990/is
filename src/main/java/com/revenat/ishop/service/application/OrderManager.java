@@ -32,11 +32,11 @@ public class OrderManager {
 			throw new ValidationException("Can not create new order: provided shopping cart is null or empty");
 		}
 		
-		long orderId = orderService.createOrder(toOrderItems(cart.getItems()), userAccount.getId()).getId();
+		Order order = orderService.createOrder(toOrderItems(cart.getItems()), userAccount.getId());
 		
 		cart.clear();
 		
-		return orderId;
+		return order.getId();
 	}
 	
 	public Order findById(long id, ClientSession clientSession) {
@@ -54,12 +54,12 @@ public class OrderManager {
 		return order;
 	}
 	
-	public List<Order> findByUser(ClientSession clientSession, int page, int limit) {
+	public List<Order> findByClient(ClientSession clientSession, int page, int limit) {
 		ClientAccount userAccount = authService.getAuthenticatedUserAccount(clientSession);
 		return orderService.getByAccountId(userAccount.getId(), page, limit);
 	}
 	
-	public int coundByUser(ClientSession clientSession) {
+	public int coundByClient(ClientSession clientSession) {
 		ClientAccount userAccount = authService.getAuthenticatedUserAccount(clientSession);
 		return orderService.countByAccountId(userAccount.getId());
 	}

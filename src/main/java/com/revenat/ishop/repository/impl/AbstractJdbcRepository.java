@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.revenat.ishop.exception.DataStorageException;
+import com.revenat.ishop.exception.PersistenceException;
 import com.revenat.ishop.search.criteria.ProductCriteria;
 
 /**
@@ -105,7 +105,7 @@ abstract class AbstractJdbcRepository {
 		try (Connection con = dataSource.getConnection()) {
 			return func.execute(con);
 		} catch (SQLException e) {
-			throw new DataStorageException("Error while executing sql query", e);
+			throw new PersistenceException("Error while executing sql query", e);
 		}
 	}
 
@@ -115,7 +115,7 @@ abstract class AbstractJdbcRepository {
 			con.commit();
 			return result;
 		} catch (SQLException e) {
-			throw new DataStorageException("Error while executing sql query", e);
+			throw new PersistenceException("Error while executing sql query", e);
 		}
 	}
 

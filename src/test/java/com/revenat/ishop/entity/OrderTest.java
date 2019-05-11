@@ -31,7 +31,7 @@ public class OrderTest {
 	
 	@Test
 	public void newlyCreatedOrderShouldHaveCreatedDate() throws Exception {
-		assertThat(order.getCreated(), LocalDateTimeMatchers.before(LocalDateTime.now()));
+		assertThat(order.getCreated(), LocalDateTimeMatchers.sameOrBefore(LocalDateTime.now()));
 	}
 	
 	@Test

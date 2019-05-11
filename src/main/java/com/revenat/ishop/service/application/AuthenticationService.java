@@ -52,9 +52,14 @@ public interface AuthenticationService {
 	 *         otherwise.
 	 */
 	ClientAccount getAuthenticatedUserAccount(ClientSession session);
-	
+
+	/**
+	 * Logs out client specified by {@link ClientSession} {@code session} parameter.
+	 * 
+	 * @param session {@link ClientSession} object representing particular client.
+	 */
 	void logout(ClientSession session);
-	
+
 	/**
 	 * Represents user-provided credentials for authentication purpose.
 	 * 

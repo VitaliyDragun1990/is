@@ -12,12 +12,12 @@ import javax.servlet.ServletRegistration;
 
 import com.revenat.ishop.config.Constants.URL;
 import com.revenat.ishop.filter.AuthenticationFilter;
-import com.revenat.ishop.filter.CategoryProducerLoaderFilter;
+import com.revenat.ishop.filter.CategoriesAndProducersLoaderFilter;
 import com.revenat.ishop.filter.ErrorHandlerFilter;
 import com.revenat.ishop.filter.HtmlMinificationFilter;
-import com.revenat.ishop.filter.SetCurrentRequestUriFilter;
+import com.revenat.ishop.filter.RequestUrlMemorizerFilter;
 import com.revenat.ishop.filter.ShoppingCartDeserializationFilter;
-import com.revenat.ishop.listener.IShopApplicationListener;
+import com.revenat.ishop.listener.ApplicationListener;
 import com.revenat.ishop.servlet.ajax.AddProductToShoppingCartController;
 import com.revenat.ishop.servlet.ajax.LoadMoreOrdersController;
 import com.revenat.ishop.servlet.ajax.LoadMoreProductsByCategoryController;
@@ -35,7 +35,7 @@ import com.revenat.ishop.servlet.page.SignInController;
 import com.revenat.ishop.servlet.page.SignOutController;
 import com.revenat.ishop.servlet.page.SocialLoginController;
 
-public class ApplicationConfigInitializer implements ServletContainerInitializer {
+public class ApplicationInitializer implements ServletContainerInitializer {
 	//TODO: refactor: creating ServiceManager in onStartup and injecting dep from it into each component
 	//TODO: pass ServiceManager instance into ISopApplicationListener to close when destroy
 	
@@ -101,7 +101,7 @@ public class ApplicationConfigInitializer implements ServletContainerInitializer
 				true,
 				"/*");
 		
-		filterReg = ctx.addFilter("CategoryProducerLoaderFilter", CategoryProducerLoaderFilter.class);
+		filterReg = ctx.addFilter("CategoryProducerLoaderFilter", CategoriesAndProducersLoaderFilter.class);
 		filterReg.addMappingForUrlPatterns(
 				EnumSet.of(DispatcherType.REQUEST),
 				true,
@@ -113,7 +113,7 @@ public class ApplicationConfigInitializer implements ServletContainerInitializer
 				true,
 				"/*");
 		
-		filterReg = ctx.addFilter("SetCurrentRequestUriFilter",new SetCurrentRequestUriFilter());
+		filterReg = ctx.addFilter("SetCurrentRequestUriFilter",new RequestUrlMemorizerFilter());
 		filterReg.addMappingForUrlPatterns(
 				EnumSet.of(DispatcherType.REQUEST),
 				true,
@@ -125,6 +125,6 @@ public class ApplicationConfigInitializer implements ServletContainerInitializer
 				true,
 				URL.MY_ORDERS, URL.ORDER, URL.AJAX_MORE_ORDERS);
 		
-		ctx.addListener(new IShopApplicationListener());
+		ctx.addListener(new ApplicationListener());
 	}
 }

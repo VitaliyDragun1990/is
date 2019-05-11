@@ -20,7 +20,7 @@ public class LoadMoreOrdersController extends AbstractController {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		int requestedPage = getPage(req);
-		List<Order> orders = getOrderManager().findByUser(getClientSession(req), requestedPage, Constants.MAX_ORDERS_PER_HTML_PAGE);
+		List<Order> orders = getOrderManager().findByClient(getClientSession(req), requestedPage, Constants.MAX_ORDERS_PER_HTML_PAGE);
 		
 		req.setAttribute(Attribute.ORDERS, orders);
 		
