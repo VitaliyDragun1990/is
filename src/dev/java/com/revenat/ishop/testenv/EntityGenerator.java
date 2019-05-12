@@ -12,9 +12,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import com.revenat.ishop.entity.Category;
-import com.revenat.ishop.entity.Producer;
-import com.revenat.ishop.entity.Product;
+import com.revenat.ishop.application.domain.entity.Category;
+import com.revenat.ishop.application.domain.entity.Producer;
+import com.revenat.ishop.application.domain.entity.Product;
 
 public class EntityGenerator {
 	private static final int MAX_MODEL_NUMBER = 10000;

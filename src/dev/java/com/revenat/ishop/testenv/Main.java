@@ -5,10 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.revenat.ishop.entity.Category;
-import com.revenat.ishop.entity.Producer;
-import com.revenat.ishop.entity.Product;
-import com.revenat.ishop.util.jdbc.JDBCUtils;
+import com.revenat.ishop.application.domain.entity.Category;
+import com.revenat.ishop.application.domain.entity.Producer;
+import com.revenat.ishop.application.domain.entity.Product;
+import com.revenat.ishop.persistence.infra.util.JDBCUtils;
 
 public class Main {
 

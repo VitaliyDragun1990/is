@@ -1,1 +1,1 @@
-com.revenat.ishop.config.ApplicationConfigInitializer
+com.revenat.ishop.presentation.infra.config.ApplicationInitializer
