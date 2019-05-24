@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.revenat.ishop.application.domain.entity.Category;
 import com.revenat.ishop.application.domain.entity.Producer;
-import com.revenat.ishop.application.service.ProductService;
+import com.revenat.ishop.application.service.CategoryService;
+import com.revenat.ishop.application.service.ProducerService;
 import com.revenat.ishop.presentation.form.SearchForm;
 import com.revenat.ishop.presentation.infra.config.Constants.Attribute;
 
@@ -26,10 +27,12 @@ import com.revenat.ishop.presentation.infra.config.Constants.Attribute;
  */
 public class CategoriesAndProducersLoaderFilter extends AbstractFilter {
 
-	private final ProductService productService;
-
-	public CategoriesAndProducersLoaderFilter(ProductService productService) {
-		this.productService = productService;
+	private final CategoryService categoryService;
+	private final ProducerService producerService;
+	
+	public CategoriesAndProducersLoaderFilter(CategoryService categoryService, ProducerService producerService) {
+		this.categoryService = categoryService;
+		this.producerService = producerService;
 	}
 
 	@Override
@@ -39,11 +42,11 @@ public class CategoriesAndProducersLoaderFilter extends AbstractFilter {
 		List<Category> allCategories;
 		List<Producer> allProducers;
 		if (searchForm.isEmpty()) {
-			allCategories = productService.getAllCategories();
-			allProducers = productService.getAllProducers();
+			allCategories = categoryService.getAllCategories();
+			allProducers = producerService.getAllProducers();
 		} else {
-			allCategories = productService.getCategoriesByCriteria(searchForm.toProductCriteria());
-			allProducers = productService.getProducersByCriteria(searchForm.toProductCriteria());
+			allCategories = categoryService.getCategoriesByCriteria(searchForm.toProductCriteria());
+			allProducers = producerService.getProducersByCriteria(searchForm.toProductCriteria());
 		}
 		request.setAttribute(Attribute.FILTER_CATEGORIES, allCategories);
 		request.setAttribute(Attribute.FILTER_PRODUCERS, allProducers);

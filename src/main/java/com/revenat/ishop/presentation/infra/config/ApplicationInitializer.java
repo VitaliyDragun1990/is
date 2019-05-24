@@ -10,7 +10,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
-import com.revenat.ishop.application.service.ServiceManager;
+import com.revenat.ishop.application.service.impl.ServiceManager;
 import com.revenat.ishop.presentation.controller.ajax.AddProductToShoppingCartController;
 import com.revenat.ishop.presentation.controller.ajax.LoadMoreAllProductsController;
 import com.revenat.ishop.presentation.controller.ajax.LoadMoreOrdersController;
@@ -113,7 +113,7 @@ public class ApplicationInitializer implements ServletContainerInitializer {
 				"/*");
 		
 		filterReg = ctx.addFilter("CategoriesAndProducersLoaderFilter",
-				new CategoriesAndProducersLoaderFilter(serviceManager.getProductService()));
+				new CategoriesAndProducersLoaderFilter(serviceManager.getCategoryService(), serviceManager.getProducerService()));
 		filterReg.addMappingForUrlPatterns(
 				EnumSet.of(DispatcherType.REQUEST),
 				true,

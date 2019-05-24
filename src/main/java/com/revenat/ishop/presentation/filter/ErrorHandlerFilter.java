@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import com.revenat.ishop.application.infra.exception.ResourceNotFoundException;
 import com.revenat.ishop.application.infra.exception.base.ApplicationException;
 import com.revenat.ishop.application.infra.exception.flow.FlowException;
-import com.revenat.ishop.application.infra.exception.flow.ValidationException;
+import com.revenat.ishop.application.infra.exception.flow.InvalidParameterException;
 import com.revenat.ishop.application.infra.exception.security.AccessDeniedException;
 import com.revenat.ishop.presentation.infra.config.Constants.Attribute;
 import com.revenat.ishop.presentation.infra.config.Constants.Page;
@@ -122,7 +122,7 @@ public class ErrorHandlerFilter extends AbstractFilter {
 		public void sendError(int sc, String msg) throws IOException {
 			switch (sc) {
 			case 400:
-				throw new ValidationException(msg);
+				throw new InvalidParameterException(msg);
 			case 403:
 				throw new AccessDeniedException(msg);
 			case 404:

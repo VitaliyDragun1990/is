@@ -1,4 +1,4 @@
-package com.revenat.ishop.application.service;
+package com.revenat.ishop.application.service.impl;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -15,7 +15,7 @@ import org.junit.rules.ExpectedException;
 
 import com.revenat.ishop.application.infra.exception.ConfigurationException;
 import com.revenat.ishop.application.infra.exception.flow.InvalidParameterException;
-import com.revenat.ishop.application.service.PropertiesLoader;
+import com.revenat.ishop.application.service.impl.PropertiesLoader;
 
 public class PropertiesLoaderTest {
 	

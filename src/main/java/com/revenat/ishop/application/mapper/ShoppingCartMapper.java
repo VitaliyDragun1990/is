@@ -5,8 +5,8 @@ import com.revenat.ishop.application.infra.exception.flow.InvalidParameterExcept
 
 /**
  * This interface represents contract with responsibility of marshalling
- * {@link ShoppingCart} instance to string object and unmarshalling
- * {@link ShoppingCart} instance from sting object.
+ * {@link ShoppingCart} instance to <T> object and unmarshalling
+ * {@link ShoppingCart} instance from <T> object.
  * 
  * @author Vitaly Dragun
  *

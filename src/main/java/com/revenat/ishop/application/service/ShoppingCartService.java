@@ -3,8 +3,7 @@ package com.revenat.ishop.application.service;
 import com.revenat.ishop.application.domain.entity.Product;
 import com.revenat.ishop.application.domain.model.ShoppingCart;
 import com.revenat.ishop.application.infra.exception.ResourceNotFoundException;
-import com.revenat.ishop.application.infra.exception.flow.InvalidParameterException;
-import com.revenat.ishop.application.infra.exception.flow.ValidationException;
+import com.revenat.ishop.application.infra.util.Checks;
 import com.revenat.ishop.persistence.repository.ProductRepository;
 
 /**
@@ -31,7 +30,7 @@ public class ShoppingCartService {
 	 * @param quantity     amount of product units to add
 	 * @param shoppingCart {@link ShoppingCart} object to which product will be
 	 *                     added
-	 * @throws ValidationException if there is no product with provided
+	 * @throws ResourceNotFoundException if there is no product with provided
 	 *                             {@code productId}
 	 */
 	public void addProductToShoppingCart(int productId, int quantity, ShoppingCart shoppingCart) {
@@ -59,9 +58,8 @@ public class ShoppingCartService {
 	}
 	
 	private static void validateProductQuantity(int quantity) {
-		if (quantity < 1 || quantity > ShoppingCart.MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART) {
-			throw new InvalidParameterException(String.format("valid product quantity should be between 1 and %d inclusive.",
-					ShoppingCart.MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART));
-		}
+		Checks.checkParam(quantity > 0 && quantity <= ShoppingCart.MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART,
+				"valid product quantity should be between 1 and %d inclusive.",
+				ShoppingCart.MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART);
 	}
 }

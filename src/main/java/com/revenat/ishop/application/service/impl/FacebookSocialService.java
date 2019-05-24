@@ -20,7 +20,7 @@ import com.revenat.ishop.application.service.SocialService;
  * @author Vitaly Dragun
  *
  */
-public class FacebookSocialService implements SocialService {
+class FacebookSocialService implements SocialService {
 	private final String appId;
 	private final String secret;
 	private final String redirectUrl;

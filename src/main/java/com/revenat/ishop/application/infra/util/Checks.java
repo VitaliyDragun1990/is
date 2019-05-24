@@ -20,7 +20,7 @@ public class Checks {
 	}
 
 	/**
-	 * Verifies that specified condition not reached and throws exception otherwise
+	 * Verifies that specified condition is reached and throws exception otherwise
 	 * 
 	 * @param condition specific condition to verify
 	 * @param message   specific message to pass to posiible exception
@@ -28,7 +28,7 @@ public class Checks {
 	 * @throws ValidationException
 	 */
 	public static void validateCondition(boolean condition, String message, Object... args) throws ValidationException {
-		if (condition) {
+		if (!condition) {
 			throw new ValidationException(String.format(message, args));
 		}
 	}

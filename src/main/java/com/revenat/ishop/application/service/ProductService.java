@@ -2,8 +2,6 @@ package com.revenat.ishop.application.service;
 
 import java.util.List;
 
-import com.revenat.ishop.application.domain.entity.Category;
-import com.revenat.ishop.application.domain.entity.Producer;
 import com.revenat.ishop.application.domain.entity.Product;
 import com.revenat.ishop.application.domain.search.criteria.ProductCriteria;
 
@@ -14,14 +12,6 @@ public interface ProductService {
 	List<Product> getProductsByCategory(String categoryUrl, int page, int limit);
 	
 	List<Product> getProductsByCriteria(ProductCriteria criteria, int page, int limit);
-	
-	List<Category> getAllCategories();
-	
-	List<Category> getCategoriesByCriteria(ProductCriteria criteria);
-	
-	List<Producer> getAllProducers();
-	
-	List<Producer> getProducersByCriteria(ProductCriteria criteria);
 	
 	int countAllProducts();
 	

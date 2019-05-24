@@ -2,26 +2,17 @@ package com.revenat.ishop.application.service.impl;
 
 import java.util.List;
 
-import com.revenat.ishop.application.domain.entity.Category;
-import com.revenat.ishop.application.domain.entity.Producer;
 import com.revenat.ishop.application.domain.entity.Product;
 import com.revenat.ishop.application.domain.search.criteria.ProductCriteria;
 import com.revenat.ishop.application.infra.util.Checks;
 import com.revenat.ishop.application.service.ProductService;
-import com.revenat.ishop.persistence.repository.CategoryRepository;
-import com.revenat.ishop.persistence.repository.ProducerRepository;
 import com.revenat.ishop.persistence.repository.ProductRepository;
 
-public class ProductServiceImpl implements ProductService {
+class ProductServiceImpl implements ProductService {
 	private final ProductRepository productRepository;
-	private final CategoryRepository categoryRepository;
-	private final ProducerRepository producerRepository;
 	
-	public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository,
-			ProducerRepository producerRepository) {
+	public ProductServiceImpl(ProductRepository productRepository) {
 		this.productRepository = productRepository;
-		this.categoryRepository = categoryRepository;
-		this.producerRepository = producerRepository;
 	}
 
 	@Override
@@ -48,31 +39,7 @@ public class ProductServiceImpl implements ProductService {
 	private int calculateOffset(int page, int productsPerPage) {
 		return (page - 1) * productsPerPage;
 	}
-
-	@Override
-	public List<Category> getAllCategories() {
-		return categoryRepository.getAll();
-	}
 	
-	@Override
-	public List<Category> getCategoriesByCriteria(ProductCriteria criteria) {
-		return categoryRepository.getByCriteria(
-				ProductCriteria.byProducers(criteria.getQuery(), criteria.getProducerIds())
-				);
-	}
-
-	@Override
-	public List<Producer> getAllProducers() {
-		return producerRepository.getAll();
-	}
-	
-	@Override
-	public List<Producer> getProducersByCriteria(ProductCriteria criteria) {
-		return producerRepository.getByCriteria(
-				ProductCriteria.byCategories(criteria.getQuery(), criteria.getCategoryIds())
-				);
-	}
-
 	@Override
 	public int countAllProducts() {
 		return productRepository.countAll();

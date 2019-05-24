@@ -8,7 +8,7 @@ import com.revenat.ishop.application.service.AuthenticationService.Credentials;
  * @author Vitaly Dragun
  *
  */
-public class AuthenticationTokenCredentials implements Credentials {
+class AuthenticationTokenCredentials implements Credentials {
 
 	private final String authToken;
 

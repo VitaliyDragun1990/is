@@ -15,7 +15,7 @@ import com.revenat.ishop.persistence.repository.AccountRepository;
  * @author Vitaly Dragun
  *
  */
-public class SocialAuthenticationService implements AuthenticationService {
+class SocialAuthenticationService implements AuthenticationService {
 	private final SocialService socialService;
 	private final AccountRepository accountRepository;
 

@@ -1,4 +1,4 @@
-package com.revenat.ishop.application.service;
+package com.revenat.ishop.application.service.impl;
 
 import java.sql.SQLException;
 import java.util.Properties;
@@ -11,10 +11,14 @@ import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.application.mapper.ShoppingCartMapper;
 import com.revenat.ishop.application.mapper.impl.ShoppingCartStringMapper;
-import com.revenat.ishop.application.service.impl.FacebookSocialService;
-import com.revenat.ishop.application.service.impl.OrderServiceImpl;
-import com.revenat.ishop.application.service.impl.ProductServiceImpl;
-import com.revenat.ishop.application.service.impl.SocialAuthenticationService;
+import com.revenat.ishop.application.service.AuthenticationService;
+import com.revenat.ishop.application.service.CategoryService;
+import com.revenat.ishop.application.service.OrderManager;
+import com.revenat.ishop.application.service.OrderService;
+import com.revenat.ishop.application.service.ProducerService;
+import com.revenat.ishop.application.service.ProductService;
+import com.revenat.ishop.application.service.ShoppingCartService;
+import com.revenat.ishop.application.service.SocialService;
 import com.revenat.ishop.persistence.repository.ProductRepository;
 import com.revenat.ishop.persistence.repository.RepositoryFactory;
 
@@ -36,6 +40,8 @@ public class ServiceManager {
 	private final BasicDataSource dataSource;
 	private final ShoppingCartMapper<String> cartMapper;
 	private final ProductService productService;
+	private final CategoryService categoryService;
+	private final ProducerService producerService;
 	private final OrderService orderService;
 	private final ShoppingCartService shoppingCartService;
 	private final SocialService socialService;
@@ -48,6 +54,14 @@ public class ServiceManager {
 
 	public ProductService getProductService() {
 		return productService;
+	}
+	
+	public CategoryService getCategoryService() {
+		return categoryService;
+	}
+	
+	public ProducerService getProducerService() {
+		return producerService;
 	}
 
 	public ShoppingCartService getShoppingCartService() {
@@ -96,10 +110,9 @@ public class ServiceManager {
 				getApplicationProperty("db.pool.maxSize"));
 
 		ProductRepository productRepo = RepositoryFactory.createProductRepository(dataSource);
-		productService = new ProductServiceImpl(
-				productRepo,
-				RepositoryFactory.createCategoryRepository(dataSource),
-				RepositoryFactory.createProducerRepository(dataSource));
+		categoryService = new CategoryServiceImpl(RepositoryFactory.createCategoryRepository(dataSource));
+		producerService = new ProducerServiceImpl(RepositoryFactory.createProducerRepository(dataSource));
+		productService = new ProductServiceImpl(productRepo);
 		orderService = new OrderServiceImpl(
 				RepositoryFactory.createOrderRepository(dataSource,  RepositoryFactory.createOrderItemRepository(dataSource)));
 		shoppingCartService = new ShoppingCartService(productRepo);

@@ -88,7 +88,7 @@ public class OrderManager {
 	}
 
 	private static void validateShoppingCart(ShoppingCart cart) {
-		Checks.validateCondition(cart == null || cart.isEmpty(),
+		Checks.validateCondition(cart != null && !cart.isEmpty(),
 				"Can not create new order: provided shopping cart is null or empty");
 	}
 	

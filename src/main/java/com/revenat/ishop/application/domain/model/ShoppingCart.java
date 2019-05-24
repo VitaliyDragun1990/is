@@ -134,13 +134,13 @@ public class ShoppingCart implements Serializable {
 	}
 
 	private static void validateCartSize(int cartSize) {
-		Checks.validateCondition(cartSize >= MAX_PRODUCTS_PER_SHOPPING_CART,
+		Checks.validateCondition(cartSize < MAX_PRODUCTS_PER_SHOPPING_CART,
 				"Shopping cart cannot store more than %d different products",
 				MAX_PRODUCTS_PER_SHOPPING_CART);
 	}
 
 	private static void validateCartItemNumberOfProducts(int cartItemNumberOfProducts) {
-		Checks.validateCondition(cartItemNumberOfProducts > MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART,
+		Checks.validateCondition(cartItemNumberOfProducts <= MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART,
 				"Limit for max instances per product reached: %d.",
 				MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART);
 	}

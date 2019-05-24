@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.application.domain.entity.Category;
-import com.revenat.ishop.application.service.ServiceManager;
+import com.revenat.ishop.application.service.impl.ServiceManager;
 import com.revenat.ishop.presentation.infra.config.Constants.Attribute;
 
 /**
@@ -50,7 +50,7 @@ public class ApplicationInitializationListener implements ServletContextListener
 	}
 
 	private void setInitAttributes(ServletContext servletContext) {
-		List<Category> categories = serviceManager.getProductService().getAllCategories();
+		List<Category> categories = serviceManager.getCategoryService().getAllCategories();
 		servletContext.setAttribute(Attribute.ALL_CATEGORIES, categories);
 	}
 

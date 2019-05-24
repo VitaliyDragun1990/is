@@ -1,7 +1,5 @@
 package com.revenat.ishop.application.service;
 
-import javax.servlet.http.HttpSession;
-
 import com.revenat.ishop.application.domain.model.ClientAccount;
 import com.revenat.ishop.application.domain.model.ClientSession;
 
@@ -15,21 +13,21 @@ import com.revenat.ishop.application.domain.model.ClientSession;
 public interface AuthenticationService {
 
 	/**
-	 * Checks whether the user of the application represented by {@link HttpSession}
+	 * Checks whether the user of the application represented by {@link ClientSession}
 	 * object is currently authenticated.
 	 * 
-	 * @param userSession {@link HttpSession} object which represents particular
+	 * @param session {@link ClientSession} object which represents particular
 	 *                    user of the application.
 	 * @return {@code true} if user is authenticated, {@code false} otherwise.
 	 */
 	boolean isAuthenticated(ClientSession session);
 
 	/**
-	 * Authenticate user which is represented by specified {@link HttpSession}
-	 * instance inside application using provided {@code authToken} parameter.
+	 * Authenticate user which is represented by specified {@link ClientSession}
+	 * instance inside application using provided {@code credentials} parameter.
 	 * 
 	 * @param credentials user provided credentials.
-	 * @param userSession {@link HttpSession} object which represents particular
+	 * @param session {@link ClientSession} object which represents particular
 	 *                    user of the application.
 	 */
 	void authenticate(Credentials credentials, ClientSession session);
@@ -43,12 +41,12 @@ public interface AuthenticationService {
 
 	/**
 	 * Returns account in form of {@link ClientAccount} of the authenticated user
-	 * represented by the provided {@link HttpSession} object.
+	 * represented by the provided {@link ClientSession} object.
 	 * 
-	 * @param userSession {@link HttpSession} object which represents particular
+	 * @param userSession {@link ClientSession} object which represents particular
 	 *                    user of the application.
 	 * @return {@link ClientAccount} object if the user represented by provided
-	 *         {@link HttpSession} object is authenticated, or {@code null}
+	 *         {@link ClientSession} object is authenticated, or {@code null}
 	 *         otherwise.
 	 */
 	ClientAccount getAuthenticatedUserAccount(ClientSession session);

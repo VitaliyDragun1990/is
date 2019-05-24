@@ -41,31 +41,40 @@ public class ShoppingCartStringMapper implements ShoppingCartMapper<String> {
 	 */
 	public String marshall(ShoppingCart shoppingCart) {
 		checkParam(shoppingCart);
-		StringBuilder string = new StringBuilder();
+		
+		return mapCartToString(shoppingCart);
+	}
+
+	private String mapCartToString(ShoppingCart shoppingCart) {
+		StringBuilder cartString = new StringBuilder();
 
 		for (ShoppingCartItem item : shoppingCart.getItems()) {
-			string.append(String.format(CART_ITEM_CODING_FORMAT, item.getProduct().getId(), item.getQuantity()));
+			cartString.append(String.format(CART_ITEM_CODING_FORMAT, item.getProduct().getId(), item.getQuantity()));
 		}
-		if (string.length() > 0) {
-			return string.substring(0, string.length() - 1);
+		
+		if (cartString.length() > 0) {
+			return cartString.substring(0, cartString.length() - 1);
+		} else {
+			return "";
 		}
-
-		return "";
 	}
 
 	/**
-	 * Unmarshals given string into {@link ShoppingCart} instance.
+	 * Unmarshals given {@code shoppingCartString} into {@link ShoppingCart}
+	 * instance.
 	 * 
-	 * @param shoppingCartString string representing {@link ShoppingCart}
-	 * @return {@link ShoppingCart} instance obtained by unmarshalling
-	 *         string. If specified string contains fragment with invalid
-	 *         format, it will be ommited, if entire string has invalid
-	 *         format then empty {@link ShoppingCart} instance will be returning
-	 *         without throwing exception.
+	 * @param shoppingCartString string representing {@link ShoppingCart}. If
+	 *                           specified string contains fragment with invalid
+	 *                           format, it will be ommited, if entire string has
+	 *                           invalid format then empty {@link ShoppingCart}
+	 *                           instance will be returning without throwing
+	 *                           exception.
+	 * @return {@link ShoppingCart} instance obtained by unmarshalling string.
 	 * @throws InvalidParameterException if specified string is {@code null}
 	 */
 	public ShoppingCart unmarshall(String shoppingCartString) {
 		checkParam(shoppingCartString);
+		
 		String[] tokens = shoppingCartString.split("\\|");
 		return unmarshallShoppingCart(tokens);
 	}
@@ -88,10 +97,10 @@ public class ShoppingCartStringMapper implements ShoppingCartMapper<String> {
 			quantity = Integer.parseInt(cartItemTokens[1]);
 			cartService.addProductToShoppingCart(productId, quantity, cart);
 		} catch (ResourceNotFoundException | ValidationException e) {
-			LOGGER.warn("{} Incorrect cart item has been ommited.", e.getMessage());
+			LOGGER.warn("{} Incorrect cart item will be ommited.", e.getMessage());
 		} catch (Exception e) {
 			LOGGER.warn("shopping cart string fragment is invalid: {}. Valid format is 'productId-quantity'."
-					+ " Invalid fragment would be ommited.", cartItemString);
+					+ " Invalid fragment will be ommited.", cartItemString);
 		}
 	}
 	

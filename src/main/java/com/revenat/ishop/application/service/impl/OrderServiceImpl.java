@@ -8,7 +8,7 @@ import com.revenat.ishop.application.infra.util.Checks;
 import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.persistence.repository.OrderRepository;
 
-public class OrderServiceImpl implements OrderService {
+class OrderServiceImpl implements OrderService {
 	private final OrderRepository orderRepository;
 
 	public OrderServiceImpl(OrderRepository orderRepository) {
