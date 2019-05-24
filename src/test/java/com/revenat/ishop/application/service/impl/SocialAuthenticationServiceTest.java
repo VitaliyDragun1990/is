@@ -17,15 +17,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.revenat.ishop.application.domain.entity.Account;
-import com.revenat.ishop.application.domain.model.ClientAccount;
-import com.revenat.ishop.application.domain.model.ClientSession;
-import com.revenat.ishop.application.service.SocialAccount;
-import com.revenat.ishop.application.service.SocialService;
+import com.revenat.ishop.application.model.ClientAccount;
+import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.application.service.AuthenticationService.Credentials;
 import com.revenat.ishop.application.service.impl.CredentialsFactory;
 import com.revenat.ishop.application.service.impl.SocialAuthenticationService;
-import com.revenat.ishop.persistence.repository.AccountRepository;
+import com.revenat.ishop.domain.entity.Account;
+import com.revenat.ishop.infrastructure.repository.AccountRepository;
+import com.revenat.ishop.infrastructure.service.SocialAccount;
+import com.revenat.ishop.infrastructure.service.SocialService;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class SocialAuthenticationServiceTest {

@@ -8,8 +8,8 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.revenat.ishop.application.infra.exception.ConfigurationException;
-import com.revenat.ishop.application.infra.util.Checks;
+import com.revenat.ishop.infrastructure.exception.ConfigurationException;
+import com.revenat.ishop.infrastructure.util.Checks;
 
 /**
  * This component is responsible for loading configuration in form of

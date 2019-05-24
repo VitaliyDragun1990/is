@@ -2,11 +2,11 @@ package com.revenat.ishop.application.service.impl;
 
 import java.util.List;
 
-import com.revenat.ishop.application.domain.entity.Order;
-import com.revenat.ishop.application.domain.entity.OrderItem;
-import com.revenat.ishop.application.infra.util.Checks;
 import com.revenat.ishop.application.service.OrderService;
-import com.revenat.ishop.persistence.repository.OrderRepository;
+import com.revenat.ishop.domain.entity.Order;
+import com.revenat.ishop.domain.entity.OrderItem;
+import com.revenat.ishop.infrastructure.repository.OrderRepository;
+import com.revenat.ishop.infrastructure.util.Checks;
 
 class OrderServiceImpl implements OrderService {
 	private final OrderRepository orderRepository;

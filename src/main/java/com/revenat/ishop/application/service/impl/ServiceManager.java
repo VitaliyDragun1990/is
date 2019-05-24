@@ -18,9 +18,10 @@ import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.application.service.ProducerService;
 import com.revenat.ishop.application.service.ProductService;
 import com.revenat.ishop.application.service.ShoppingCartService;
-import com.revenat.ishop.application.service.SocialService;
-import com.revenat.ishop.persistence.repository.ProductRepository;
-import com.revenat.ishop.persistence.repository.RepositoryFactory;
+import com.revenat.ishop.infrastructure.repository.ProductRepository;
+import com.revenat.ishop.infrastructure.repository.RepositoryFactory;
+import com.revenat.ishop.infrastructure.service.SocialService;
+import com.revenat.ishop.infrastructure.service.impl.ServiceFactory;
 
 /**
  * This component exists as single instance and resides in the
@@ -117,7 +118,7 @@ public class ServiceManager {
 				RepositoryFactory.createOrderRepository(dataSource,  RepositoryFactory.createOrderItemRepository(dataSource)));
 		shoppingCartService = new ShoppingCartService(productRepo);
 		cartMapper = new ShoppingCartStringMapper(shoppingCartService);
-		socialService = new FacebookSocialService(
+		socialService = ServiceFactory.createSocialSevice(
 				getApplicationProperty("social.facebook.appId"),
 				getApplicationProperty("social.facebook.secret"),
 				getApplicationProperty("app.host") + "/social-login");

@@ -2,10 +2,10 @@ package com.revenat.ishop.application.service.impl;
 
 import java.util.List;
 
-import com.revenat.ishop.application.domain.entity.Producer;
-import com.revenat.ishop.application.domain.search.criteria.ProductCriteria;
 import com.revenat.ishop.application.service.ProducerService;
-import com.revenat.ishop.persistence.repository.ProducerRepository;
+import com.revenat.ishop.domain.entity.Producer;
+import com.revenat.ishop.domain.search.criteria.ProductCriteria;
+import com.revenat.ishop.infrastructure.repository.ProducerRepository;
 
 class ProducerServiceImpl implements ProducerService {
 	private final ProducerRepository producerRepository;

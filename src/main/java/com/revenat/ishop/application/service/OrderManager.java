@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.revenat.ishop.application.domain.entity.Order;
-import com.revenat.ishop.application.domain.entity.OrderItem;
-import com.revenat.ishop.application.domain.model.ClientAccount;
-import com.revenat.ishop.application.domain.model.ClientSession;
-import com.revenat.ishop.application.domain.model.ShoppingCart;
-import com.revenat.ishop.application.domain.model.ShoppingCart.ShoppingCartItem;
-import com.revenat.ishop.application.infra.exception.ResourceNotFoundException;
-import com.revenat.ishop.application.infra.exception.security.AccessDeniedException;
-import com.revenat.ishop.application.infra.util.Checks;
+import com.revenat.ishop.application.model.ClientAccount;
+import com.revenat.ishop.application.model.ClientSession;
+import com.revenat.ishop.domain.entity.Order;
+import com.revenat.ishop.domain.entity.OrderItem;
+import com.revenat.ishop.domain.model.ShoppingCart;
+import com.revenat.ishop.domain.model.ShoppingCart.ShoppingCartItem;
+import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
+import com.revenat.ishop.infrastructure.exception.security.AccessDeniedException;
+import com.revenat.ishop.infrastructure.util.Checks;
 
 public class OrderManager {
 	private final AuthenticationService authService;

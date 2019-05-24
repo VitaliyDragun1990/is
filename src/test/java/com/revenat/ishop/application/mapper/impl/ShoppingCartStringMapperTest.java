@@ -15,13 +15,13 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import com.revenat.ishop.application.domain.entity.Product;
-import com.revenat.ishop.application.domain.model.ShoppingCart;
-import com.revenat.ishop.application.domain.model.ShoppingCart.ShoppingCartItem;
-import com.revenat.ishop.application.infra.exception.flow.InvalidParameterException;
 import com.revenat.ishop.application.mapper.impl.ShoppingCartStringMapper;
 import com.revenat.ishop.application.service.ShoppingCartService;
-import com.revenat.ishop.persistence.repository.ProductRepository;
+import com.revenat.ishop.domain.entity.Product;
+import com.revenat.ishop.domain.model.ShoppingCart;
+import com.revenat.ishop.domain.model.ShoppingCart.ShoppingCartItem;
+import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
+import com.revenat.ishop.infrastructure.repository.ProductRepository;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ShoppingCartStringMapperTest {

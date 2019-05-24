@@ -1,10 +1,10 @@
 package com.revenat.ishop.application.service;
 
-import com.revenat.ishop.application.domain.entity.Product;
-import com.revenat.ishop.application.domain.model.ShoppingCart;
-import com.revenat.ishop.application.infra.exception.ResourceNotFoundException;
-import com.revenat.ishop.application.infra.util.Checks;
-import com.revenat.ishop.persistence.repository.ProductRepository;
+import com.revenat.ishop.domain.entity.Product;
+import com.revenat.ishop.domain.model.ShoppingCart;
+import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
+import com.revenat.ishop.infrastructure.repository.ProductRepository;
+import com.revenat.ishop.infrastructure.util.Checks;
 
 /**
  * This component incapsulates CRUD shopping cart logic. It contains various

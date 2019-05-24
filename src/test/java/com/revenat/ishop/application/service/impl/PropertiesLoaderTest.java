@@ -13,9 +13,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.revenat.ishop.application.infra.exception.ConfigurationException;
-import com.revenat.ishop.application.infra.exception.flow.InvalidParameterException;
 import com.revenat.ishop.application.service.impl.PropertiesLoader;
+import com.revenat.ishop.infrastructure.exception.ConfigurationException;
+import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
 
 public class PropertiesLoaderTest {
 	

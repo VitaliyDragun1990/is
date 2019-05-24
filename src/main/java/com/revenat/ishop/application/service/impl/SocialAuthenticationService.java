@@ -1,12 +1,12 @@
 package com.revenat.ishop.application.service.impl;
 
-import com.revenat.ishop.application.domain.entity.Account;
-import com.revenat.ishop.application.domain.model.ClientAccount;
-import com.revenat.ishop.application.domain.model.ClientSession;
+import com.revenat.ishop.application.model.ClientAccount;
+import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.application.service.AuthenticationService;
-import com.revenat.ishop.application.service.SocialAccount;
-import com.revenat.ishop.application.service.SocialService;
-import com.revenat.ishop.persistence.repository.AccountRepository;
+import com.revenat.ishop.domain.entity.Account;
+import com.revenat.ishop.infrastructure.repository.AccountRepository;
+import com.revenat.ishop.infrastructure.service.SocialAccount;
+import com.revenat.ishop.infrastructure.service.SocialService;
 
 /**
  * Default implementation of the {@link AuthenticationService} interface which

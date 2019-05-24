@@ -1,7 +1,7 @@
 package com.revenat.ishop.application.service;
 
-import com.revenat.ishop.application.domain.model.ClientAccount;
-import com.revenat.ishop.application.domain.model.ClientSession;
+import com.revenat.ishop.application.model.ClientAccount;
+import com.revenat.ishop.application.model.ClientSession;
 
 /**
  * This application service is responsible for managing authentication-related
