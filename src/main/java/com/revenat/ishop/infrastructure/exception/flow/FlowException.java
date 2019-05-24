@@ -14,6 +14,10 @@ public class FlowException extends ApplicationException {
 	public FlowException(String message, Throwable cause, int code) {
 		super(message, cause, code);
 	}
+	
+	public FlowException(String message, Throwable cause) {
+		super(message, cause, 500);
+	}
 
 	public FlowException(String message, int code) {
 		super(message, code);

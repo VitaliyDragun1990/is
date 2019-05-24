@@ -1,6 +1,6 @@
 package com.revenat.ishop.application.service;
 
-import com.revenat.ishop.application.model.ClientAccount;
+import com.revenat.ishop.application.dto.ClientAccount;
 import com.revenat.ishop.application.model.ClientSession;
 
 /**

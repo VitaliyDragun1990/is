@@ -1,16 +1,21 @@
 package com.revenat.ishop.domain.entity;
 
-import com.revenat.ishop.application.model.ClientAccount;
-
-public class Account extends AbstractEntity<Integer> implements ClientAccount {
+public class Account extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = -8951792395607124164L;
 
 	private String name;
 	private String email;
+	private String avatarUrl;
 	
 	public Account() {
 	}
 	
+	public Account(String name, String email, String avatarUrl) {
+		this.name = name;
+		this.email = email;
+		this.avatarUrl = avatarUrl;
+	}
+
 	public Account(String name, String email) {
 		this.name = name;
 		this.email = email;
@@ -32,9 +37,12 @@ public class Account extends AbstractEntity<Integer> implements ClientAccount {
 		this.email = email;
 	}
 	
-	@Override
-	public String getDescription() {
-		return String.format("%s(%s)", name, email);
+	public String getAvatarUrl() {
+		return avatarUrl;
+	}
+
+	public void setAvatarUrl(String avatarUrl) {
+		this.avatarUrl = avatarUrl;
 	}
 
 	@Override

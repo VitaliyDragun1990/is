@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.revenat.ishop.application.model.ClientAccount;
+import com.revenat.ishop.application.dto.ClientAccount;
 import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.domain.entity.OrderItem;
@@ -18,12 +18,15 @@ import com.revenat.ishop.infrastructure.util.Checks;
 public class OrderManager {
 	private final AuthenticationService authService;
 	private final OrderService orderService;
+	private final FeedbackService feedbackService;
 	
-	public OrderManager(AuthenticationService authService, OrderService orderService) {
+	public OrderManager(AuthenticationService authService, OrderService orderService,
+			FeedbackService feedbackService) {
 		this.authService = authService;
 		this.orderService = orderService;
+		this.feedbackService = feedbackService;
 	}
-	
+
 	public long placeOrder(ClientSession clientSession) {
 		ClientAccount userAccount = authService.getAuthenticatedUserAccount(clientSession);
 		ShoppingCart cart = clientSession.getShoppingCart();
@@ -32,6 +35,7 @@ public class OrderManager {
 		Order order = orderService.createOrder(toOrderItems(cart.getItems()), userAccount.getId());
 		
 		cart.clear();
+		feedbackService.sendNewOrderNotification(userAccount.getEmail(), order.getId());
 		
 		return order.getId();
 	}

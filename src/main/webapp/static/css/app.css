@@ -92,6 +92,10 @@
     padding: 0 15px;
 }
 
+.avatar {
+	border-radius: 50%;
+}
+
 @media (min-width: 1600px) {
     .col-xlg-2 {
         float: left;

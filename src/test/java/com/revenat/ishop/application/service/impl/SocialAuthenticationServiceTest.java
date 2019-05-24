@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,20 +16,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
-import com.revenat.ishop.application.model.ClientAccount;
+import com.revenat.ishop.application.dto.ClientAccount;
 import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.application.service.AuthenticationService.Credentials;
-import com.revenat.ishop.application.service.impl.CredentialsFactory;
-import com.revenat.ishop.application.service.impl.SocialAuthenticationService;
 import com.revenat.ishop.domain.entity.Account;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
+import com.revenat.ishop.infrastructure.service.AvatarService;
 import com.revenat.ishop.infrastructure.service.SocialAccount;
 import com.revenat.ishop.infrastructure.service.SocialService;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class SocialAuthenticationServiceTest {
+	private static final int ACCOUNT_ID = 1;
 	private static final String AUTHENTICATION_URL = "auth_url";
 	private static final String AUTHENTICATION_TOKEN = "auth_token";
 	private static final String CLIENT_NAME = "Jack";
@@ -39,19 +42,30 @@ public class SocialAuthenticationServiceTest {
 	private SocialService socialService;
 	@Mock
 	private AccountRepository accountRepository;
+	@Mock
+	private AvatarService avatarService;
 
 	private SocialAuthenticationService service;
 
 	@Before
 	public void setUp() {
-		service = new SocialAuthenticationService(socialService, accountRepository);
-		when(socialService.getSocialAccount(AUTHENTICATION_TOKEN)).thenReturn(new SocialAccount(CLIENT_NAME, CLIENT_EMAIL));
+		service = new SocialAuthenticationService(socialService,avatarService, accountRepository);
+		when(socialService.getSocialAccount(AUTHENTICATION_TOKEN)).thenReturn(new SocialAccount(CLIENT_NAME, CLIENT_EMAIL, null));
+		doAnswer(new Answer<Void>() {
+
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				Account a = invocation.getArgument(0);
+				a.setId(ACCOUNT_ID);
+				return null;
+			}
+		}).when(accountRepository).save(Mockito.any(Account.class));
 	}
 
 	@Test
 	public void shouldTellClientIsAuthenticatedIfAccountPropertyNotNull() throws Exception {
 		ClientSession session = new ClientSession();
-		session.setAccount(new Account());
+		session.setAccount(new ClientAccount());
 
 		boolean isAuthenticated = service.isAuthenticated(session);
 
@@ -97,8 +111,9 @@ public class SocialAuthenticationServiceTest {
 	}
 	
 	@Test
-	public void shouldNowCreateAccountIfClientHasAlreadyAuthenticatedBefore() throws Exception {
+	public void shouldNotCreateAccountIfClientHasAlreadyAuthenticatedBefore() throws Exception {
 		Account account = new Account(CLIENT_NAME, CLIENT_EMAIL);
+		account.setId(ACCOUNT_ID);
 		Credentials credentials = CredentialsFactory.fromAuthToken(AUTHENTICATION_TOKEN);
 		ClientSession session = new ClientSession();
 		when(accountRepository.getByEmail(CLIENT_EMAIL)).thenReturn(account);

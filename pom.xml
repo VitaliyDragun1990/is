@@ -16,9 +16,12 @@
 		<jstl.version>1.2</jstl.version>
 		<commons-lang3.version>3.8.1</commons-lang3.version>
 		<commons-dbcp2.version>2.6.0</commons-dbcp2.version>
+		<commons-email.version>1.5</commons-email.version>
+		<javax.mail.version>1.6.2</javax.mail.version>
 		<postgresql.version>42.2.5</postgresql.version>
 		<json.version>20180813</json.version>
 		<restfb.version>2.20.0</restfb.version>
+		<thumbnailator.version>0.4.8</thumbnailator.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>2.13.0</mockito.version>
 		<hamcrest.version>2.1</hamcrest.version>
@@ -70,6 +73,22 @@
 			<version>${commons-dbcp2.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>${commons-email.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.mail</groupId>
+					<artifactId>javax.mail</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>${javax.mail.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>${json.version}</version>
@@ -78,6 +97,11 @@
 			<groupId>com.restfb</groupId>
 			<artifactId>restfb</artifactId>
 			<version>${restfb.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>${thumbnailator.version}</version>
 		</dependency>
 
 		<dependency>
@@ -128,7 +152,7 @@
 			<artifactId>h2</artifactId>
 			<version>${h2.version}</version>
 			<scope>test</scope>
-		</dependency>		
+		</dependency>
 	</dependencies>
 
 	<build>

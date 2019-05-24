@@ -46,7 +46,8 @@ class FacebookSocialService implements SocialService {
 			AccessToken accessToken = client.obtainUserAccessToken(appId, secret, redirectUrl, authToken);
 			client = new DefaultFacebookClient(accessToken.getAccessToken(), Version.LATEST);
 			User user = client.fetchObject("me", User.class, Parameter.with("fields", "name,email,first_name,last_name"));
-			return new SocialAccount(user.getFirstName(), user.getEmail());
+			String avatarUrl = String.format("https://graph.facebook.com/v3.3/%s/picture?type=small", user.getId());
+			return new SocialAccount(user.getFirstName(), user.getEmail(), avatarUrl);
 		} catch (FacebookException e) {
 			throw new AuthenticationException("Error while retrieving data from user's Facebook account", e);
 		}

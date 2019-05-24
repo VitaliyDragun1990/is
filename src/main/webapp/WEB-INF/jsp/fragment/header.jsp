@@ -32,6 +32,7 @@
           <c:choose>
           	<c:when test="${clientSession.account != null}">
           		<ul class="nav navbar-nav navbar-right">
+          			<li><img class="avatar" src="${clientSession.account.avatarUrl }" alt="user avatar" /></li>
           			<li><a>Welcome ${clientSession.account.description}</a></li>
           			<li><a href='<c:url value="/my-orders" />'>My orders</a></li>
           			<li>

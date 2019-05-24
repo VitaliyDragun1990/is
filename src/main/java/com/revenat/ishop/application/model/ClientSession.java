@@ -2,6 +2,7 @@ package com.revenat.ishop.application.model;
 
 import java.io.Serializable;
 
+import com.revenat.ishop.application.dto.ClientAccount;
 import com.revenat.ishop.domain.model.ShoppingCart;
 
 /**

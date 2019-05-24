@@ -33,7 +33,7 @@ public class JdbcAccountRepository extends AbstractJdbcRepository implements Acc
 	@Override
 	public void save(Account account) {
 		Integer id = executeUpdate(conn -> 
-			JDBCUtils.insert(conn, SqlQueries.INSERT_ACCOUNT, GENERATED_ID_HANDLER, account.getName(), account.getEmail())
+			JDBCUtils.insert(conn, SqlQueries.INSERT_ACCOUNT, GENERATED_ID_HANDLER, account.getName(), account.getEmail(), account.getAvatarUrl())
 		);
 		account.setId(id);
 	}

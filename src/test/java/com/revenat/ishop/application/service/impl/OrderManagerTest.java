@@ -1,7 +1,11 @@
 package com.revenat.ishop.application.service.impl;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -16,8 +20,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import com.revenat.ishop.application.dto.ClientAccount;
 import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.application.service.AuthenticationService;
+import com.revenat.ishop.application.service.FeedbackService;
 import com.revenat.ishop.application.service.OrderManager;
 import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.domain.entity.Account;
@@ -41,13 +47,16 @@ public class OrderManagerTest {
 	private AuthenticationService authService;
 	@Mock
 	private OrderService orderService;
+	@Mock
+	private FeedbackService feedbackService;
 
 	private OrderManager orderManager;
 
 	@Before
 	public void setUp() {
-		orderManager = new OrderManager(authService, orderService);
-		Account clientAccount = new Account(CLIENT_NAME, CLIENT_EMAIL);
+		orderManager = new OrderManager(authService, orderService, feedbackService);
+//		Account clientAccount = new Account(CLIENT_NAME, CLIENT_EMAIL);
+		ClientAccount clientAccount = new ClientAccount(1, CLIENT_NAME, CLIENT_EMAIL, "");
 		clientAccount.setId(1);
 		when(authService.getAuthenticatedUserAccount(Mockito.any(ClientSession.class))).thenReturn(clientAccount);
 		Order order = new Order();
@@ -89,6 +98,15 @@ public class OrderManagerTest {
 		orderManager.placeOrder(session);
 
 		assertTrue(session.getShoppingCart().isEmpty());
+	}
+	
+	@Test
+	public void shouldSendNotificationAfterOrderWasPlaced() throws Exception {
+		ClientSession session = createSessionWithShoppingCartWithProduct();
+
+		orderManager.placeOrder(session);
+
+		verify(feedbackService).sendNewOrderNotification(CLIENT_EMAIL, ORDER_ID);
 	}
 
 	@Test
@@ -190,7 +208,8 @@ public class OrderManagerTest {
 	}
 
 	private void returnAccount(Account account) {
-		when(authService.getAuthenticatedUserAccount(Mockito.any(ClientSession.class))).thenReturn(account);
+		ClientAccount a = new ClientAccount(account.getId(), account.getName(), account.getEmail(), account.getAvatarUrl());
+		when(authService.getAuthenticatedUserAccount(Mockito.any(ClientSession.class))).thenReturn(a);
 	}
 
 	private Account createAccountWithId(int id) {

@@ -20,6 +20,7 @@ import com.revenat.ishop.application.service.ProductService;
 import com.revenat.ishop.application.service.ShoppingCartService;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.repository.RepositoryFactory;
+import com.revenat.ishop.infrastructure.service.NotificationService;
 import com.revenat.ishop.infrastructure.service.SocialService;
 import com.revenat.ishop.infrastructure.service.impl.ServiceFactory;
 
@@ -47,6 +48,7 @@ public class ServiceManager {
 	private final ShoppingCartService shoppingCartService;
 	private final SocialService socialService;
 	private final AuthenticationService authService;
+	private final NotificationService notificationService;
 	private final OrderManager orderManager;
 
 	public OrderService getOrderService() {
@@ -70,7 +72,12 @@ public class ServiceManager {
 	}
 
 	public String getApplicationProperty(String propertyName) {
-		return applicationProperties.getProperty(propertyName);
+		String value =  applicationProperties.getProperty(propertyName);
+		if (value.startsWith("${sysEnv.")) {
+			value = value.replace("${sysEnv.", "").replace("}", "");
+			return System.getenv(value);
+		}
+		return value;
 	}
 
 	public AuthenticationService getAuthService() {
@@ -85,9 +92,9 @@ public class ServiceManager {
 		return cartMapper;
 	}
 
-	public static synchronized ServiceManager getInstance() {
+	public static synchronized ServiceManager getInstance(String applicationRootDir) {
 		if (instance == null) {
-			instance = new ServiceManager();
+			instance = new ServiceManager(applicationRootDir);
 		}
 		return instance;
 	}
@@ -95,12 +102,13 @@ public class ServiceManager {
 	public void close() {
 		try {
 			dataSource.close();
+			notificationService.shutdown();
 		} catch (SQLException e) {
 			LOGGER.error("Error while closing datasource: " + e.getMessage(), e);
 		}
 	}
 
-	private ServiceManager() {
+	private ServiceManager(String applicationRootDir) {
 		applicationProperties = loadApplicationProperties();
 		dataSource = createDataSource(
 				getApplicationProperty("db.url"),
@@ -122,8 +130,26 @@ public class ServiceManager {
 				getApplicationProperty("social.facebook.appId"),
 				getApplicationProperty("social.facebook.secret"),
 				getApplicationProperty("app.host") + "/social-login");
-		authService = new SocialAuthenticationService(socialService, RepositoryFactory.createAccountRepository(dataSource));
-		orderManager = new OrderManager(authService, orderService);
+		authService = new SocialAuthenticationService(socialService,
+				ServiceFactory.createAvatarService(applicationRootDir),
+				RepositoryFactory.createAccountRepository(dataSource));
+		notificationService = ServiceFactory.createNotificationService(getEmailProperties());
+		orderManager = new OrderManager(
+				authService,
+				orderService,
+				new FeedbackServiceImpl(notificationService, getApplicationProperty("app.host"))
+				);
+	}
+	
+	private Properties getEmailProperties() {
+		Properties emailProps = new Properties();
+		emailProps.setProperty("email.fromEmail", getApplicationProperty("email.fromEmail"));
+		emailProps.setProperty("email.sendTryAttempts", getApplicationProperty("email.sendTryAttempts"));
+		emailProps.setProperty("email.smtp.server", getApplicationProperty("email.smtp.server"));
+		emailProps.setProperty("email.smtp.port", getApplicationProperty("email.smtp.port"));
+		emailProps.setProperty("email.smtp.username", getApplicationProperty("email.smtp.username"));
+		emailProps.setProperty("email.smtp.password", getApplicationProperty("email.smtp.password"));
+		return emailProps;
 	}
 
 	private Properties loadApplicationProperties() {

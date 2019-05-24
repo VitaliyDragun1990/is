@@ -83,6 +83,7 @@ final class ResultSetHandlerFactory {
 		a.setId(rs.getInt("id"));
 		a.setName(rs.getString("name"));
 		a.setEmail(rs.getString("email"));
+		a.setAvatarUrl(rs.getString("avatar_url"));
 		
 		return a;
 	};

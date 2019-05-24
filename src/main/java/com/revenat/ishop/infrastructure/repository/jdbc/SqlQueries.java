@@ -69,8 +69,8 @@ class SqlQueries {
 	
 	/********************** Account related SQL Queries *********************************************************/
 	public static final String GET_ACCOUNT_BY_EMAIL = "SELECT * FROM account WHERE email = ?";
-	public static final String INSERT_ACCOUNT = "INSERT INTO account (name, email) "
-			+ "VALUES (?,?)";
+	public static final String INSERT_ACCOUNT = "INSERT INTO account (name, email, avatar_url) "
+			+ "VALUES (?,?,?)";
 	
 	
 	private SqlQueries() {}
