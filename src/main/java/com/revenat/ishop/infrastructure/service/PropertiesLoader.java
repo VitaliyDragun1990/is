@@ -1,4 +1,4 @@
-package com.revenat.ishop.application.service.impl;
+package com.revenat.ishop.infrastructure.service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +18,7 @@ import com.revenat.ishop.infrastructure.util.Checks;
  * @author Vitaly Dragun
  *
  */
-class PropertiesLoader {
+public class PropertiesLoader {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesLoader.class);
 
 	private final Function<String, InputStream> resourceInputStreamBuilder;

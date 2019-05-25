@@ -21,6 +21,7 @@ import com.revenat.ishop.application.service.ShoppingCartService;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.repository.RepositoryFactory;
 import com.revenat.ishop.infrastructure.service.NotificationService;
+import com.revenat.ishop.infrastructure.service.PropertiesLoader;
 import com.revenat.ishop.infrastructure.service.SocialService;
 import com.revenat.ishop.infrastructure.service.impl.ServiceFactory;
 
