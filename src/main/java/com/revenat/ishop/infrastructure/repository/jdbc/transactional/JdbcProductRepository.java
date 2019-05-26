@@ -71,19 +71,19 @@ public class JdbcProductRepository extends AbstractJdbcRepository implements Pro
 	}
 	
 	@Override
-	public Product getById(Integer id) {
+	public Product findById(Integer id) {
 		return execute(conn -> FrameworkJDBCUtils.select(conn, GET_PRODUCT_BY_ID, PRODUCT_HANDLER, id));
 	}
 
 	@Override
-	public List<Product> getByCategory(String categoryUrl, int offset, int limit) {
+	public List<Product> findByCategory(String categoryUrl, int offset, int limit) {
 		return execute(
 				conn -> FrameworkJDBCUtils.select(conn, GET_PRODUCTS_BY_CATEGORY, PRODUCTS_HANDLER, categoryUrl, limit, offset)
 				);
 	}
 	
 	@Override
-	public List<Product> getByCriteria(ProductCriteria criteria, int offset, int limit) {
+	public List<Product> findByCriteria(ProductCriteria criteria, int offset, int limit) {
 		SqlQuery sqlQuery = buildSqlQuery(criteria, GET_PRODUCTS_BY_CRITERIA_TEMPLATE, limit, offset);
 		LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());
 		return execute(
@@ -93,7 +93,7 @@ public class JdbcProductRepository extends AbstractJdbcRepository implements Pro
 	}
 	
 	@Override
-	public List<Product> getAll(int offset, int limit) {
+	public List<Product> findAll(int offset, int limit) {
 		return execute(conn -> FrameworkJDBCUtils.select(conn, GET_ALL_PRODUCTS, PRODUCTS_HANDLER, limit, offset));
 	}
 }

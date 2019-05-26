@@ -41,7 +41,7 @@ public interface ProductRepository {
 	 * 
 	 * @param id unique {@code id} property value
 	 */
-	Product getById(Integer id);
+	Product findById(Integer id);
 
 	/**
 	 * Returns list of {@link Product} entities which belongs to some category
@@ -56,7 +56,7 @@ public interface ProductRepository {
 	 *                    return all matches.
 	 * @return list of matching product or an empty list if there is no matches.
 	 */
-	List<Product> getByCategory(String categoryUrl, int offset, int limit);
+	List<Product> findByCategory(String categoryUrl, int offset, int limit);
 
 	/**
 	 * Returns list of {@link Product} entities which satisfy some search criteria
@@ -71,7 +71,7 @@ public interface ProductRepository {
 	 *                 return all matches.
 	 * @return list of matching product or an empty list if there is no matches.
 	 */
-	List<Product> getByCriteria(ProductCriteria criteria, int offset, int limit);
+	List<Product> findByCriteria(ProductCriteria criteria, int offset, int limit);
 
 	/**
 	 * Returns list of {@link Product} entities using specified {@code offset} and
@@ -84,5 +84,5 @@ public interface ProductRepository {
 	 * @return list with products or an empty list if there is no products that
 	 *         satisfy specified {@code offset} and/or {@code limit} parameters.
 	 */
-	List<Product> getAll(int offset, int limit);
+	List<Product> findAll(int offset, int limit);
 }

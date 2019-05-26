@@ -7,7 +7,7 @@ import com.revenat.ishop.domain.search.criteria.ProductCriteria;
 
 public interface CategoryService {
 
-	List<Category> getAllCategories();
+	List<Category> findAllCategories();
 
-	List<Category> getCategoriesByCriteria(ProductCriteria criteria);
+	List<Category> findCategoriesByCriteria(ProductCriteria criteria);
 }

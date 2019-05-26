@@ -1,0 +1,9 @@
+<categories>
+	<category id="1" name="Tablet" url="/tablet" product-count="160" />
+	<category id="2" name="Smartphone" url="/smartphone" product-count="183" />
+	<category id="3" name="E-book" url="/e-book" product-count="156" />
+	<category id="4" name="Notebook" url="/notebook" product-count="180" />
+	<category id="5" name="Smartwatch" url="/smartwatch" product-count="185" />
+	<category id="6" name="MP3-player" url="/mp3-player" product-count="180" />
+	<category id="7" name="TV" url="/tv" product-count="156" />
+</categories>

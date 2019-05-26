@@ -29,15 +29,15 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	@Override
-	public Order getById(long id) {
-		return orderRepository.getById(id);
+	public Order findById(long id) {
+		return orderRepository.findById(id);
 	}
 	
 	@Override
-	public List<Order> getByAccountId(int accountId, int page, int limit) {
+	public List<Order> findByAccountId(int accountId, int page, int limit) {
 		validate(page, limit);
 		int offset = calculateOffset(page, limit);
-		return orderRepository.getByAccountId(accountId, offset, limit);
+		return orderRepository.findByAccountId(accountId, offset, limit);
 	}
 	
 	@Override

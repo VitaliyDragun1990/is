@@ -17,13 +17,13 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public List<Category> getAllCategories() {
-		return categoryRepository.getAll();
+	public List<Category> findAllCategories() {
+		return categoryRepository.findAll();
 	}
 	
 	@Override
-	public List<Category> getCategoriesByCriteria(ProductCriteria criteria) {
-		return categoryRepository.getByCriteria(
+	public List<Category> findCategoriesByCriteria(ProductCriteria criteria) {
+		return categoryRepository.findByCriteria(
 				ProductCriteria.byProducers(criteria.getQuery(), criteria.getProducerIds())
 				);
 	}

@@ -7,7 +7,7 @@ import com.revenat.ishop.domain.search.criteria.ProductCriteria;
 
 public interface ProducerService {
 
-	List<Producer> getAllProducers();
+	List<Producer> findAllProducers();
 
-	List<Producer> getProducersByCriteria(ProductCriteria criteria);
+	List<Producer> findProducersByCriteria(ProductCriteria criteria);
 }

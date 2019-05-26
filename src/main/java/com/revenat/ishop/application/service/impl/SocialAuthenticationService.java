@@ -8,6 +8,7 @@ import com.revenat.ishop.application.service.AuthenticationService;
 import com.revenat.ishop.domain.entity.Account;
 import com.revenat.ishop.infrastructure.exception.PersistenceException;
 import com.revenat.ishop.infrastructure.exception.flow.FlowException;
+import com.revenat.ishop.infrastructure.exception.security.AuthenticationException;
 import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Transactional;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
 import com.revenat.ishop.infrastructure.service.AvatarService;
@@ -54,7 +55,12 @@ public class SocialAuthenticationService implements AuthenticationService {
 
 	@Override
 	public ClientAccount getAuthenticatedUserAccount(ClientSession session) {
-		return session.getAccount();
+		if (isAuthenticated(session)) {
+			return session.getAccount();
+		} else {
+			throw new AuthenticationException(" Can not get clientAccount: "
+					+ "user with specified client session is not authenticated: " + session);
+		}
 	}
 	
 	@Override
@@ -67,7 +73,7 @@ public class SocialAuthenticationService implements AuthenticationService {
 	}
 
 	private ClientAccount getClientAccount(SocialAccount socialAccount) {
-		Account account = accountRepository.getByEmail(socialAccount.getEmail());
+		Account account = accountRepository.findByEmail(socialAccount.getEmail());
 		if (account == null) {
 			account = createNewAccount(socialAccount);
 		}

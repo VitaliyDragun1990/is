@@ -65,7 +65,7 @@ public class JdbcOrderRepository extends AbstractJdbcRepository implements Order
 	}
 
 	@Override
-	public Order getById(long id) {
+	public Order findById(long id) {
 		// Get order by id
 		Order order = executeSelect(conn -> FrameworkJDBCUtils.select(conn, GET_ORDER_BY_ID, ORDER_HANDLER, id));
 		if (order != null) {
@@ -76,7 +76,7 @@ public class JdbcOrderRepository extends AbstractJdbcRepository implements Order
 	}
 
 	@Override
-	public List<Order> getByAccountId(int accountId, int offset, int limit) {
+	public List<Order> findByAccountId(int accountId, int offset, int limit) {
 		// Get order by accountId
 		List<Order> orders = executeSelect(conn ->
 			FrameworkJDBCUtils.select(conn, GET_ORDERS_BY_ACCOUNT_ID, ORDERS_HANDLER, accountId, limit, offset)
@@ -95,7 +95,7 @@ public class JdbcOrderRepository extends AbstractJdbcRepository implements Order
 	
 	private void loadOrderItemsForOrder(Order order) {
 		// Get all orderItems for such order
-		List<OrderItem> orderItems = orderItemRepo.getByOrderId(order.getId());
+		List<OrderItem> orderItems = orderItemRepo.findByOrderId(order.getId());
 		// Add these orderItems to order
 		order.setItems(orderItems);
 	}

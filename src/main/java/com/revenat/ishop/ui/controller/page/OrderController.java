@@ -33,7 +33,7 @@ public class OrderController extends AbstractOrderController {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		long orderId = Long.parseLong(req.getParameter("id"));
-		Order order = orderManager.findById(orderId, getClientSession(req));
+		Order order = orderManager.getById(orderId, getClientSession(req));
 		
 		req.setAttribute(Attribute.CURRENT_ORDER, order);
 		displayMessageIfAny(req);

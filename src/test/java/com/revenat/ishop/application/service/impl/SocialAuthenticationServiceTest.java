@@ -24,6 +24,7 @@ import com.revenat.ishop.application.dto.ClientAccount;
 import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.application.service.AuthenticationService.Credentials;
 import com.revenat.ishop.domain.entity.Account;
+import com.revenat.ishop.infrastructure.exception.security.AuthenticationException;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
 import com.revenat.ishop.infrastructure.service.AvatarService;
 import com.revenat.ishop.infrastructure.service.SocialAccount;
@@ -116,7 +117,7 @@ public class SocialAuthenticationServiceTest {
 		account.setId(ACCOUNT_ID);
 		Credentials credentials = CredentialsFactory.fromAuthToken(AUTHENTICATION_TOKEN);
 		ClientSession session = new ClientSession();
-		when(accountRepository.getByEmail(CLIENT_EMAIL)).thenReturn(account);
+		when(accountRepository.findByEmail(CLIENT_EMAIL)).thenReturn(account);
 		
 		service.authenticate(credentials, session);
 		
@@ -145,8 +146,8 @@ public class SocialAuthenticationServiceTest {
 		assertNotNull(account);
 	}
 	
-	@Test
-	public void shouldReturnNullIfAskForAccountOfUnauthenticatedClient() throws Exception {
+	@Test(expected = AuthenticationException.class)
+	public void shouldnotAllowToGetClientAccountForUnauthenticatedClient() throws Exception {
 		ClientSession session = new ClientSession();
 		
 		

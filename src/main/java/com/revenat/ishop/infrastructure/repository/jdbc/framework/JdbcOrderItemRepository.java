@@ -61,7 +61,7 @@ public class JdbcOrderItemRepository extends AbstractJdbcRepository implements O
 	}
 
 	@Override
-	public List<OrderItem> getByOrderId(long orderId) {
+	public List<OrderItem> findByOrderId(long orderId) {
 		return executeSelect(conn -> FrameworkJDBCUtils.select(conn, GET_ORDER_ITEMS_BY_ORDER_ID, ORDER_ITEMS_HANDLER, orderId));
 	}
 }

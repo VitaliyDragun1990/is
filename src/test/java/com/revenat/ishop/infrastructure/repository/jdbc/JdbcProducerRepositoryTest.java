@@ -41,7 +41,7 @@ public class JdbcProducerRepositoryTest {
 	
 	@Test
 	public void shouldAllowToGetAllProducers() throws Exception {
-		List<Producer> producers = repository.getAll();
+		List<Producer> producers = repository.findAll();
 		
 		assertThat(producers, hasSize(4));
 	}
@@ -50,7 +50,7 @@ public class JdbcProducerRepositoryTest {
 	public void shouldAllowToGetProducersByCriteria() throws Exception {
 		ProductCriteria criteria = ProductCriteria.byCategories("desc", Arrays.asList(TABLET_CATEGORY_ID, SMARTPHONE_CATEGORY_ID));
 		
-		List<Producer> producers = repository.getByCriteria(criteria);
+		List<Producer> producers = repository.findByCriteria(criteria);
 		
 		assertThat(producers, hasSize(4));
 		assertThat(producers, hasItem(

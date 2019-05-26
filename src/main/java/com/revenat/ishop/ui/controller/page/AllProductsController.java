@@ -24,7 +24,7 @@ public class AllProductsController extends AbstractProductController {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<Product> products = productService.getProducts(1, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
+		List<Product> products = productService.findProducts(1, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
 		int totalProductCount = productService.countAllProducts();
 		int totalPageCount = getTotalPageCount(totalProductCount, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
 		

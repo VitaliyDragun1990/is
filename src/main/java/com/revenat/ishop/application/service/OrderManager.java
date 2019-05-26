@@ -40,16 +40,16 @@ public class OrderManager {
 		return order.getId();
 	}
 	
-	public Order findById(long id, ClientSession clientSession) {
-		Order order = findOrder(id);
+	public Order getById(long id, ClientSession clientSession) {
+		Order order = getOrder(id);
 		ClientAccount userAccount = authService.getAuthenticatedUserAccount(clientSession);
 		validateOrderOwnership(order, userAccount);
 		
 		return order;
 	}
 	
-	private Order findOrder(long id) {
-		Order order = orderService.getById(id);
+	private Order getOrder(long id) {
+		Order order = orderService.findById(id);
 		if (order == null) {
 			throw new ResourceNotFoundException(String.format("Order with id: %d not found", id));
 		}
@@ -59,7 +59,7 @@ public class OrderManager {
 	public List<Order> findByClient(ClientSession clientSession, int page, int limit) {
 		validateParams(page, limit);
 		ClientAccount userAccount = authService.getAuthenticatedUserAccount(clientSession);
-		return orderService.getByAccountId(userAccount.getId(), page, limit);
+		return orderService.findByAccountId(userAccount.getId(), page, limit);
 	}
 
 	public int coundByClient(ClientSession clientSession) {

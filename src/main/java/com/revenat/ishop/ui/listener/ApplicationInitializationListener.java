@@ -50,7 +50,7 @@ public class ApplicationInitializationListener implements ServletContextListener
 	}
 
 	private void setInitAttributes(ServletContext servletContext) {
-		List<Category> categories = serviceManager.getCategoryService().getAllCategories();
+		List<Category> categories = serviceManager.getCategoryService().findAllCategories();
 		servletContext.setAttribute(Attribute.ALL_CATEGORIES, categories);
 	}
 

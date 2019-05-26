@@ -35,12 +35,12 @@ public class JdbcProducerRepository extends AbstractJdbcRepository implements Pr
 	private static final ResultSetHandler<List<Producer>> PRODUCERS_HANDLER = new DefaultListResultSetHandler<>(Producer.class);
 
 	@Override
-	public List<Producer> getAll() {
+	public List<Producer> findAll() {
 		return execute(conn -> FrameworkJDBCUtils.select(conn, GET_ALL_PRODUCERS, PRODUCERS_HANDLER));
 	}
 	
 	@Override
-	public List<Producer> getByCriteria(ProductCriteria criteria) {
+	public List<Producer> findByCriteria(ProductCriteria criteria) {
 		return execute(conn -> {
 			SqlQuery sqlQuery = buildSqlQuery(criteria, GET_PRODUCERS_BY_CRITERIA_TEMPLATE);
 			LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());

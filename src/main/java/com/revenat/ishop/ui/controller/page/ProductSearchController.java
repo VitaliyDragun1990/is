@@ -33,7 +33,7 @@ public class ProductSearchController extends AbstractProductController {
 		ProductCriteria productCriteria = searchForm.toProductCriteria();
 		
 		List<Product> products = productService
-				.getProductsByCriteria(productCriteria, 1, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
+				.findProductsByCriteria(productCriteria, 1, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
 		int totalProductCount = productService.countProductsByCriteria(productCriteria);
 		int totalPageCount = getTotalPageCount(totalProductCount, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
 		

@@ -42,12 +42,12 @@ public class JdbcCategoryRepository extends AbstractJdbcRepository implements Ca
 	}
 
 	@Override
-	public List<Category> getAll() {
+	public List<Category> findAll() {
 		return executeSelect(conn -> FrameworkJDBCUtils.select(conn, GET_ALL_CATEGORIES, CATEGORIES_HANDLER));
 	}
 
 	@Override
-	public List<Category> getByCriteria(ProductCriteria criteria) {
+	public List<Category> findByCriteria(ProductCriteria criteria) {
 		return executeSelect(conn -> {
 			SqlQuery sqlQuery = buildSqlQuery(criteria, GET_CATEGORIES_BY_CRITERIA_TEMPLATE);
 			LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());

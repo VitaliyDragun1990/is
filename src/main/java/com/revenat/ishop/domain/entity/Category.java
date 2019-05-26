@@ -1,7 +1,11 @@
 package com.revenat.ishop.domain.entity;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Column;
 
+@XmlRootElement(name ="category")
 public class Category extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = -1834996509365201052L;
 	
@@ -30,15 +34,25 @@ public class Category extends AbstractEntity<Integer> {
 	public int getProductCount() {
 		return productCount;
 	}
+	
 
+	@XmlAttribute
+	@Override
+	public void setId(Integer id) {
+		super.setId(id);
+	}
+
+	@XmlAttribute
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@XmlAttribute
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
+	@XmlAttribute(name="product-count")
 	public void setProductCount(int productCount) {
 		this.productCount = productCount;
 	}

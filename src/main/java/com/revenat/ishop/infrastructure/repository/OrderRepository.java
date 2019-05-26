@@ -15,9 +15,9 @@ public interface OrderRepository {
 
 	Order save(Order order);
 
-	Order getById(long id);
+	Order findById(long id);
 
-	List<Order> getByAccountId(int accountId, int offset, int limit);
+	List<Order> findByAccountId(int accountId, int offset, int limit);
 
 	int countByAccountId(int accountId);
 }

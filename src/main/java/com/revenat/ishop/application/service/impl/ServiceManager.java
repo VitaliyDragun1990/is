@@ -121,21 +121,20 @@ public class ServiceManager {
 				getApplicationProperty("db.pool.initSize"),
 				getApplicationProperty("db.pool.maxSize"));
 
-		ProductRepository productRepo = RepositoryFactory.createProductRepository(dataSource);
+		ProductRepository productRepo = RepositoryFactory.createProductRepository();
 		categoryService = createProxyService(
 				dataSource,
-				new CategoryServiceImpl(RepositoryFactory.createCategoryRepository(dataSource)));
+				new CategoryServiceImpl(RepositoryFactory.createCategoryRepository()));
 		producerService = createProxyService(
 				dataSource,
-				new ProducerServiceImpl(RepositoryFactory.createProducerRepository(dataSource)));
+				new ProducerServiceImpl(RepositoryFactory.createProducerRepository()));
 		productService = createProxyService(
 				dataSource,
 				new ProductServiceImpl(productRepo));
 		orderService = createProxyService(
 				dataSource,
 				new OrderServiceImpl(
-						RepositoryFactory.createOrderRepository(dataSource,
-						RepositoryFactory.createOrderItemRepository(dataSource))));
+						RepositoryFactory.createOrderRepository(RepositoryFactory.createOrderItemRepository())));
 		shoppingCartService = createProxyService(
 				dataSource,
 				new ShoppingCartServiceImpl(productRepo));
@@ -149,7 +148,7 @@ public class ServiceManager {
 				new SocialAuthenticationService(
 						socialService,
 						ServiceFactory.createAvatarService(applicationRootDir),
-						RepositoryFactory.createAccountRepository(dataSource)));
+						RepositoryFactory.createAccountRepository()));
 		notificationService = ServiceFactory.createNotificationService(getEmailProperties());
 		orderManager = new OrderManager(
 				authService,

@@ -18,7 +18,7 @@ public interface AccountRepository {
 	 * @return {@link Account} entity with given email or null if no account with
 	 *         such email.
 	 */
-	Account getByEmail(String email);
+	Account findByEmail(String email);
 
 	/**
 	 * Saves specified {@link Account} object into datastore.

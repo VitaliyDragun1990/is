@@ -29,7 +29,7 @@ public class LoadMoreProductsByCategoryController extends AbstractProductControl
 		String categoryUrl = getCategoryName(req.getRequestURI());
 		int requestedPage = getPage(req);
 		List<Product> products =
-				productService.getProductsByCategory(categoryUrl, requestedPage, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
+				productService.findProductsByCategory(categoryUrl, requestedPage, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
 		
 		req.setAttribute(Attribute.PRODUCTS, products);
 		

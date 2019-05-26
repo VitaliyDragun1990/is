@@ -42,11 +42,11 @@ public class CategoriesAndProducersLoaderFilter extends AbstractFilter {
 		List<Category> allCategories;
 		List<Producer> allProducers;
 		if (searchForm.isEmpty()) {
-			allCategories = categoryService.getAllCategories();
-			allProducers = producerService.getAllProducers();
+			allCategories = categoryService.findAllCategories();
+			allProducers = producerService.findAllProducers();
 		} else {
-			allCategories = categoryService.getCategoriesByCriteria(searchForm.toProductCriteria());
-			allProducers = producerService.getProducersByCriteria(searchForm.toProductCriteria());
+			allCategories = categoryService.findCategoriesByCriteria(searchForm.toProductCriteria());
+			allProducers = producerService.findProducersByCriteria(searchForm.toProductCriteria());
 		}
 		request.setAttribute(Attribute.FILTER_CATEGORIES, allCategories);
 		request.setAttribute(Attribute.FILTER_PRODUCERS, allProducers);

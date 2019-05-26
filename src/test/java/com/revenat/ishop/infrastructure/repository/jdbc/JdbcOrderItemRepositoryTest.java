@@ -37,7 +37,7 @@ public class JdbcOrderItemRepositoryTest {
 	public void allowToGetOrderItemsForParticularOrder() throws Exception {
 		long orderId = 1L;
 		
-		List<OrderItem> orderItems = repository.getByOrderId(orderId);
+		List<OrderItem> orderItems = repository.findByOrderId(orderId);
 		
 		assertThat(orderItems, hasSize(2));
 		assertThat(orderItems, everyItem(hasProperty("orderId", equalTo(orderId))));
@@ -47,7 +47,7 @@ public class JdbcOrderItemRepositoryTest {
 	public void shouldReturnEmptyListIfNoOrderItemsForParticularOrder() throws Exception {
 		long orderId = 2L; // order id for order without order items
 		
-		List<OrderItem> orderItems = repository.getByOrderId(orderId);
+		List<OrderItem> orderItems = repository.findByOrderId(orderId);
 		
 		assertThat(orderItems, empty());
 	}
@@ -61,7 +61,7 @@ public class JdbcOrderItemRepositoryTest {
 		
 		repository.save(newItem);
 		
-		List<OrderItem> orderItems = repository.getByOrderId(orderId);
+		List<OrderItem> orderItems = repository.findByOrderId(orderId);
 		assertThat(orderItems, hasItem(
 				allOf(
 						hasProperty("quantity", equalTo(quantity)),
@@ -78,7 +78,7 @@ public class JdbcOrderItemRepositoryTest {
 		
 		repository.saveAll(items);
 		
-		List<OrderItem> orderItems = repository.getByOrderId(orderId);
+		List<OrderItem> orderItems = repository.findByOrderId(orderId);
 		assertThat(orderItems, hasSize(2));
 		assertThat(orderItems, hasItem(
 				allOf(

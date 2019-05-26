@@ -116,7 +116,7 @@ public class OrderManagerTest {
 		expected.expect(ResourceNotFoundException.class);
 		expected.expectMessage(containsString("Order with id: 10 not found"));
 
-		orderManager.findById(wrongId, session);
+		orderManager.getById(wrongId, session);
 	}
 
 	@Test
@@ -128,7 +128,7 @@ public class OrderManagerTest {
 		expected.expect(AccessDeniedException.class);
 		expected.expectMessage(containsString("Account with id=5 is not the owner for the order with id=3"));
 
-		orderManager.findById(orderId, session);
+		orderManager.getById(orderId, session);
 	}
 
 	@Test
@@ -139,7 +139,7 @@ public class OrderManagerTest {
 		returnOrder(createOrderWithIdAndAccountId(orderId, accountId));
 		ClientSession session = createSessionWithShoppingCartWithProduct();
 
-		Order order = orderManager.findById(orderId, session);
+		Order order = orderManager.getById(orderId, session);
 
 		assertThat(order.getId(), equalTo(orderId));
 	}
@@ -200,11 +200,11 @@ public class OrderManagerTest {
 	}
 
 	private void returnOrdersByAccountId(List<Order> orders, int accountId) {
-		when(orderService.getByAccountId(Mockito.eq(accountId), Mockito.anyInt(), Mockito.anyInt())).thenReturn(orders);
+		when(orderService.findByAccountId(Mockito.eq(accountId), Mockito.anyInt(), Mockito.anyInt())).thenReturn(orders);
 	}
 
 	private void returnOrder(Order order) {
-		when(orderService.getById(Mockito.anyLong())).thenReturn(order);
+		when(orderService.findById(Mockito.anyLong())).thenReturn(order);
 	}
 
 	private void returnAccount(Account account) {

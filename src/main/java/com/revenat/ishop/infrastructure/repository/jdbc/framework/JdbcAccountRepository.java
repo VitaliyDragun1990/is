@@ -27,7 +27,7 @@ public class JdbcAccountRepository extends AbstractJdbcRepository implements Acc
 	}
 
 	@Override
-	public Account getByEmail(String email) {
+	public Account findByEmail(String email) {
 		return executeSelect(conn -> FrameworkJDBCUtils.select(conn, GET_ACCOUNT_BY_EMAIL, ACCOUNT_HANDLER, email));
 	}
 	

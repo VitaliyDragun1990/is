@@ -34,7 +34,7 @@ public class ShoppingCartStringMapperTest {
 	@Before
 	public void setup() {
 		mapper = new ShoppingCartStringMapper(new ShoppingCartServiceImpl(productRepository));
-		when(productRepository.getById(Mockito.any(Integer.class))).thenAnswer(new Answer<Product>() {
+		when(productRepository.findById(Mockito.any(Integer.class))).thenAnswer(new Answer<Product>() {
 			@Override
 			public Product answer(InvocationOnMock invocation) throws Throwable {
 				int productId = invocation.getArgument(0);

@@ -15,4 +15,8 @@ public class AuthenticationException extends ApplicationException {
 	public AuthenticationException(String message, Throwable cause) {
 		super(message, cause, 401);
 	}
+	
+	public AuthenticationException(String message) {
+		super(message, 401);
+	}
 }

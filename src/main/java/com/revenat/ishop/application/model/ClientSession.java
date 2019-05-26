@@ -41,4 +41,10 @@ public class ClientSession implements Serializable {
 	public void setAccount(ClientAccount account) {
 		this.account = account;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("ClientSession [shoppingCart=%s, account=%s]", shoppingCart, account);
+	}
+	
 }

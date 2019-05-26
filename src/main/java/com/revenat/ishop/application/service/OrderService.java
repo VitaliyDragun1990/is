@@ -9,9 +9,9 @@ public interface OrderService {
 	
 	Order createOrder(List<OrderItem> orderItems, int accountId);
 	
-	Order getById(long id);
+	Order findById(long id);
 	
-	List<Order> getByAccountId(int accountId, int page, int limit);
+	List<Order> findByAccountId(int accountId, int page, int limit);
 	
 	int countByAccountId(int accountId);
 }

@@ -45,7 +45,7 @@ public class JdbcCategoryRepositoryTest {
 
 	@Test
 	public void shouldAllowToGetAllCategories() throws Exception {
-		List<Category> categories = repository.getAll();
+		List<Category> categories = repository.findAll();
 		
 		assertThat(categories, hasSize(3));
 	}
@@ -55,7 +55,7 @@ public class JdbcCategoryRepositoryTest {
 		ProductCriteria criteria = ProductCriteria.byCategoriesAndProducers("tab", Collections.emptyList(),
 				Arrays.asList(APPLE_PRODUCER_ID, SONY_PRODUCER_ID));
 		
-		List<Category> categories = repository.getByCriteria(criteria);
+		List<Category> categories = repository.findByCriteria(criteria);
 		
 		assertThat(categories, hasSize(3));
 		assertThat(categories, hasItem(

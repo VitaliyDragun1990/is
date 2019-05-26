@@ -20,7 +20,12 @@ public interface ProducerRepository {
 	 * @return {@link List} containing {@link Producer} entities or empty list if
 	 *         there are no producers in the datastore.
 	 */
-	List<Producer> getAll();
+	List<Producer> findAll();
 
-	List<Producer> getByCriteria(ProductCriteria criteria);
+	/**
+	 * Returns all {@link Producer} entites which satisfy specified {@code criteria}
+	 * 
+	 * @param criteria search criteria producers should satisfy
+	 */
+	List<Producer> findByCriteria(ProductCriteria criteria);
 }

@@ -20,7 +20,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	@Override
 	public void addProductToShoppingCart(int productId, int quantity, ShoppingCart shoppingCart) {
 		validateProductQuantity(quantity);
-		Product product = productRepository.getById(productId);
+		Product product = productRepository.findById(productId);
 		if (product == null) {
 			throw new ResourceNotFoundException(
 					"Error during adding product to shopping cart: " + "product with id: " + productId + " not found.");

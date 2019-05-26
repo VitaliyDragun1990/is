@@ -17,13 +17,13 @@ public class ProducerServiceImpl implements ProducerService {
 	}
 
 	@Override
-	public List<Producer> getAllProducers() {
-		return producerRepository.getAll();
+	public List<Producer> findAllProducers() {
+		return producerRepository.findAll();
 	}
 	
 	@Override
-	public List<Producer> getProducersByCriteria(ProductCriteria criteria) {
-		return producerRepository.getByCriteria(
+	public List<Producer> findProducersByCriteria(ProductCriteria criteria) {
+		return producerRepository.findByCriteria(
 				ProductCriteria.byCategories(criteria.getQuery(), criteria.getCategoryIds())
 				);
 	}

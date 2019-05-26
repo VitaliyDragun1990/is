@@ -20,7 +20,10 @@ public interface CategoryRepository {
 	 * @return {@link List} containing {@link Category} entities or empty list if
 	 *         there are no categories in the datastore.
 	 */
-	List<Category> getAll();
+	List<Category> findAll();
 	
-	List<Category> getByCriteria(ProductCriteria criteria);
+	/**
+	 * Returns all {@link Category} entities which satisfy specified {@code criteria}
+	 */
+	List<Category> findByCriteria(ProductCriteria criteria);
 }

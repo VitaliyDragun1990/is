@@ -34,7 +34,7 @@ public class LoadMoreProductsForSearchResultController extends AbstractProductCo
 		
 		int requestedPage = getPage(req);
 		List<Product> products = productService
-				.getProductsByCriteria(productCriteria, requestedPage, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
+				.findProductsByCriteria(productCriteria, requestedPage, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
 		
 		req.setAttribute(Attribute.PRODUCTS, products);
 		

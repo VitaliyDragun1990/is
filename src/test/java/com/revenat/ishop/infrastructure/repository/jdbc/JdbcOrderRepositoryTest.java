@@ -48,14 +48,14 @@ public class JdbcOrderRepositoryTest {
 	@Test
 	public void shouldAllowToGetOrderById() throws Exception {
 		long orderId = 1L;
-		Order order = repository.getById(orderId);
+		Order order = repository.findById(orderId);
 
 		assertThat(order.getId(), equalTo(orderId));
 	}
 
 	@Test
 	public void shouldReturnNullIfNoOrderWithSuchId() throws Exception {
-		Order order = repository.getById(999L);
+		Order order = repository.findById(999L);
 
 		assertNull(order);
 	}
@@ -63,7 +63,7 @@ public class JdbcOrderRepositoryTest {
 	@Test
 	public void shouldReturnOrderWithAllOrderItems() throws Exception {
 		long orderId = 1L;
-		Order order = repository.getById(orderId);
+		Order order = repository.findById(orderId);
 
 		assertThat(order.getItems(), hasSize(2));
 		assertThat(order.getItems(),
@@ -80,7 +80,7 @@ public class JdbcOrderRepositoryTest {
 
 		newOrder = repository.save(newOrder);
 
-		Order createdOrder = repository.getById(newOrder.getId());
+		Order createdOrder = repository.findById(newOrder.getId());
 		assertThat(createdOrder.getItems(), hasSize(2));
 		assertThat(createdOrder.getItems(),
 				hasItem(allOf(hasProperty("id", notNullValue()), hasProperty("orderId", equalTo(createdOrder.getId())),
@@ -95,7 +95,7 @@ public class JdbcOrderRepositoryTest {
 	public void shouldAllowToGetOrdersByAccountId() throws Exception {
 		int accountId = 1;
 
-		List<Order> orders = repository.getByAccountId(accountId, 0, 5);
+		List<Order> orders = repository.findByAccountId(accountId, 0, 5);
 
 		assertThat(orders, hasSize(5));
 	}
@@ -104,7 +104,7 @@ public class JdbcOrderRepositoryTest {
 	public void shouldReturnEmptyListIfNoOrdersForSuchAccountId() throws Exception {
 		int accountId = 999;
 
-		List<Order> orders = repository.getByAccountId(accountId, 0, 5);
+		List<Order> orders = repository.findByAccountId(accountId, 0, 5);
 
 		assertThat(orders, empty());
 	}
@@ -113,7 +113,7 @@ public class JdbcOrderRepositoryTest {
 	public void shouldReturnOrdersInDescendingChronologicalOrder() throws Exception {
 		int accountId = 1;
 
-		List<Order> orders = repository.getByAccountId(accountId, 0, 5);
+		List<Order> orders = repository.findByAccountId(accountId, 0, 5);
 
 		assertThat(orders.get(0).getCreated(), LocalDateTimeMatchers.after(orders.get(1).getCreated()));
 		assertThat(orders.get(1).getCreated(), LocalDateTimeMatchers.after(orders.get(2).getCreated()));

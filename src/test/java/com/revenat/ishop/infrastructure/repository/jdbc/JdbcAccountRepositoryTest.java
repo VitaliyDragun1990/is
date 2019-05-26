@@ -41,14 +41,14 @@ public class JdbcAccountRepositoryTest {
 	@Test
 	public void shouldAllowToGetAccountByEmail() throws Exception {
 		String email = "jack@test.com";
-		Account account = repository.getByEmail(email);
+		Account account = repository.findByEmail(email);
 		
 		assertThat(account.getEmail(), equalTo(email));
 	}
 	
 	@Test
 	public void shouldReturnNullIfNoAccountWithGivenEmail() throws Exception {
-		Account account = repository.getByEmail("unknown@test.com");
+		Account account = repository.findByEmail("unknown@test.com");
 		
 		assertNull(account);
 	}
@@ -62,7 +62,7 @@ public class JdbcAccountRepositoryTest {
 		
 		repository.save(newAccount);
 		
-		Account savedAccount = repository.getByEmail(email);
+		Account savedAccount = repository.findByEmail(email);
 		assertNotNull(savedAccount);
 	}
 	

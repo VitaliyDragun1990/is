@@ -18,24 +18,24 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<Product> getProducts(int page, int limit) {
+	public List<Product> findProducts(int page, int limit) {
 		validate(page, limit);
 		int offset = calculateOffset(page, limit);
-		return productRepository.getAll(offset, limit);
+		return productRepository.findAll(offset, limit);
 	}
 
 	@Override
-	public List<Product> getProductsByCategory(String categoryUrl, int page, int limit) {
+	public List<Product> findProductsByCategory(String categoryUrl, int page, int limit) {
 		validate(page, limit);
 		int offset = calculateOffset(page, limit);
-		return productRepository.getByCategory(categoryUrl, offset, limit);
+		return productRepository.findByCategory(categoryUrl, offset, limit);
 	}
 	
 	@Override
-	public List<Product> getProductsByCriteria(ProductCriteria criteria, int page, int limit) {
+	public List<Product> findProductsByCriteria(ProductCriteria criteria, int page, int limit) {
 		validate(page, limit);
 		int offset = calculateOffset(page, limit);
-		return productRepository.getByCriteria(criteria, offset, limit);
+		return productRepository.findByCriteria(criteria, offset, limit);
 	}
 
 	private static int calculateOffset(int page, int productsPerPage) {

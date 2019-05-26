@@ -20,7 +20,7 @@ public class JdbcAccountRepository extends AbstractJdbcRepository implements Acc
 	private static final ResultSetHandler<Account> ACCOUNT_HANDLER = new DefaultUniqueResultSetHandler<>(Account.class);
 
 	@Override
-	public Account getByEmail(String email) {
+	public Account findByEmail(String email) {
 		return execute(conn -> FrameworkJDBCUtils.select(conn, GET_ACCOUNT_BY_EMAIL, ACCOUNT_HANDLER, email));
 	}
 	

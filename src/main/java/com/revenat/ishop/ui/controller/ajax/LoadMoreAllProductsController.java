@@ -25,7 +25,7 @@ public class LoadMoreAllProductsController extends AbstractProductController {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		int requestedPage = getPage(req);
-		List<Product> page = productService.getProducts(requestedPage, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
+		List<Product> page = productService.findProducts(requestedPage, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
 
 		req.setAttribute(Attribute.PRODUCTS, page);
 
