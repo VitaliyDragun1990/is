@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.repository.jdbc;
+package com.revenat.ishop.infrastructure.repository.jdbc.plain;
 
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import com.revenat.ishop.domain.entity.OrderItem;
 import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.infrastructure.exception.PersistenceException;
-import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
 
 /**
  * This factory class responsible for creating different
@@ -100,29 +100,21 @@ final class ResultSetHandlerFactory {
 		}
 	};
 	
-	/**
-	 * This implementation of the {@link ResultSetHandlerFactory} responsible for
-	 * extracting {@code count} field from {@link ResultSet} row data.
-	 */
-	public static final ResultSetHandler<Integer> GENERATED_INT_ID_RESULT_SET_HANDLER = rs -> {
-		if (rs.next()) {
-			return rs.getInt("id");
-		} else {
-			throw new PersistenceException("Error while retrieving auto-generated key value: no key has been generated");
-		}
-	};
 	
 	/**
 	 * This implementation of the {@link ResultSetHandlerFactory} responsible for
-	 * extracting {@code count} field from {@link ResultSet} row data.
+	 * extracting id field from {@link ResultSet} row data.
 	 */
-	public static final ResultSetHandler<Long> GENERATED_LONG_ID_RESULT_SET_HANDLER = rs -> {
-		if (rs.next()) {
-			return rs.getLong("id");
-		} else {
+	@SuppressWarnings("unchecked")
+	public static final <T> ResultSetHandler<T> getIdResultSetHandler(
+			final String idColumnName) {
+		return rs -> {
+			if (rs.next()) {
+				return (T) rs.getObject(idColumnName);
+			}
 			throw new PersistenceException("Error while retrieving auto-generated key value: no key has been generated");
-		}
-	};
+		};
+	}
 	
 	/**
 	 * This implementation of the {@link ResultSetHandler} interface responsible for

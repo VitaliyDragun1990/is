@@ -1,6 +1,6 @@
-package com.revenat.ishop.infrastructure.repository.jdbc;
+package com.revenat.ishop.infrastructure.repository.jdbc.plain;
 
-import static com.revenat.ishop.infrastructure.repository.jdbc.ResultSetHandlerFactory.PRODUCT_RESULT_SET_HANDLER;
+import static com.revenat.ishop.infrastructure.repository.jdbc.plain.ResultSetHandlerFactory.PRODUCT_RESULT_SET_HANDLER;
 
 import java.util.List;
 
@@ -11,9 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
-import com.revenat.ishop.infrastructure.util.JDBCUtils;
-import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 
 /**
  * This is implementation of the {@link ProductRepository} responsible

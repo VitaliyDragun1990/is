@@ -2,12 +2,17 @@ package com.revenat.ishop.domain.entity;
 
 import java.math.BigDecimal;
 
+import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Child;
+import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Column;
+
 public class OrderItem extends AbstractEntity<Long> {
 	private static final long serialVersionUID = -4694344400417048155L;
 	
+	@Column("order_id")
 	private Long orderId;
+	@Child(idColumnName="product_id")
 	private Product product;
-	private int quantity;
+	private Integer quantity;
 	
 	public OrderItem() {
 	}

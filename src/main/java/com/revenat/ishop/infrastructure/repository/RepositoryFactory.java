@@ -2,12 +2,12 @@ package com.revenat.ishop.infrastructure.repository;
 
 import javax.sql.DataSource;
 
-import com.revenat.ishop.infrastructure.repository.jdbc.JdbcAccountRepository;
-import com.revenat.ishop.infrastructure.repository.jdbc.JdbcCategoryRepository;
-import com.revenat.ishop.infrastructure.repository.jdbc.JdbcOrderItemRepository;
-import com.revenat.ishop.infrastructure.repository.jdbc.JdbcOrderRepository;
-import com.revenat.ishop.infrastructure.repository.jdbc.JdbcProducerRepository;
-import com.revenat.ishop.infrastructure.repository.jdbc.JdbcProductRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcAccountRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcCategoryRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcOrderItemRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcOrderRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcProducerRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcProductRepository;
 
 public final class RepositoryFactory {
 

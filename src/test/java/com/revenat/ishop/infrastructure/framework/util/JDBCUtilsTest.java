@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.util;
+package com.revenat.ishop.infrastructure.framework.util;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -17,8 +17,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
-import com.revenat.ishop.infrastructure.util.JDBCUtils;
-import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
 
 public class JDBCUtilsTest {
 	private static final String DELETE_ALL = "DELETE FROM product";

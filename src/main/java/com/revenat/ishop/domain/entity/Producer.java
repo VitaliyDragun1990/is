@@ -1,10 +1,13 @@
 package com.revenat.ishop.domain.entity;
 
+import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Column;
+
 public class Producer extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = -4130535481455511674L;
 	
 	private String name;
-	private int productCount;
+	@Column("product_count")
+	private Integer productCount;
 	
 	public Producer() {
 	}

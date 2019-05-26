@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.repository.jdbc;
+package com.revenat.ishop.infrastructure.repository.jdbc.plain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,10 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import com.revenat.ishop.domain.entity.OrderItem;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
-import com.revenat.ishop.infrastructure.util.JDBCUtils;
-import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 
 /**
  * This is implementation of the {@link OrderItemRepository} responsible
@@ -20,7 +21,7 @@ import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
  */
 public class JdbcOrderItemRepository extends AbstractJdbcRepository implements OrderItemRepository {
 	private static final ResultSetHandler<Long> GENERATED_ID_HANDLER =
-			ResultSetHandlerFactory.GENERATED_LONG_ID_RESULT_SET_HANDLER;
+			ResultSetHandlerFactory.getIdResultSetHandler("id");
 	private static final ResultSetHandler<List<OrderItem>> ORDER_ITEMS_HANDLER =
 			ResultSetHandlerFactory.getListResultSetHandler(ResultSetHandlerFactory.ORDER_ITEM_RESULT_SET_HANDLER);
 
@@ -29,10 +30,11 @@ public class JdbcOrderItemRepository extends AbstractJdbcRepository implements O
 	}
 
 	@Override
-	public void save(OrderItem orderItem) {
+	public OrderItem save(OrderItem orderItem) {
 		Long id = executeUpdate(conn -> JDBCUtils.insert(conn, SqlQueries.INSERT_ORDER_ITEM, GENERATED_ID_HANDLER,
 				orderItem.getOrderId(), orderItem.getProduct().getId(), orderItem.getQuantity()));
 		orderItem.setId(id);
+		return orderItem;
 	}
 
 	@Override

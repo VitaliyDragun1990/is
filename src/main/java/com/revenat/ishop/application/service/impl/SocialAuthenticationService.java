@@ -79,8 +79,7 @@ class SocialAuthenticationService implements AuthenticationService {
 		try {
 			avatarUrl = avatarService.downloadAvatar(socialAccount.getAvatarUrl());
 			Account account = new Account(socialAccount.getName(), socialAccount.getEmail(), avatarUrl);
-			accountRepository.save(account);
-			return account;
+			return accountRepository.save(account);
 		} catch (PersistenceException | IOException e) {
 			avatarService.deleteAvatarIfExists(avatarUrl);
 			throw new FlowException("Error while creating new user's account", e);

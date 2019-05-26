@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.util;
+package com.revenat.ishop.infrastructure.framework.util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+
+import com.revenat.ishop.infrastructure.util.Checks;
 
 /**
  * Contains helper methods to work with JDBC.

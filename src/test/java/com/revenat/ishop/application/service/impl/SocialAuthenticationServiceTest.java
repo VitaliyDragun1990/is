@@ -51,13 +51,13 @@ public class SocialAuthenticationServiceTest {
 	public void setUp() {
 		service = new SocialAuthenticationService(socialService,avatarService, accountRepository);
 		when(socialService.getSocialAccount(AUTHENTICATION_TOKEN)).thenReturn(new SocialAccount(CLIENT_NAME, CLIENT_EMAIL, null));
-		doAnswer(new Answer<Void>() {
+		doAnswer(new Answer<Account>() {
 
 			@Override
-			public Void answer(InvocationOnMock invocation) throws Throwable {
+			public Account answer(InvocationOnMock invocation) throws Throwable {
 				Account a = invocation.getArgument(0);
 				a.setId(ACCOUNT_ID);
-				return null;
+				return a;
 			}
 		}).when(accountRepository).save(Mockito.any(Account.class));
 	}

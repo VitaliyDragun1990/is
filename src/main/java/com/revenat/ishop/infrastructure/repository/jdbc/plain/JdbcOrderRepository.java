@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.repository.jdbc;
+package com.revenat.ishop.infrastructure.repository.jdbc.plain;
 
 import java.util.List;
 
@@ -6,10 +6,11 @@ import javax.sql.DataSource;
 
 import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.domain.entity.OrderItem;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
 import com.revenat.ishop.infrastructure.repository.OrderRepository;
-import com.revenat.ishop.infrastructure.util.JDBCUtils;
-import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 
 /**
  * This is implementation of the {@link OrderRepository} responsible
@@ -21,7 +22,7 @@ import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
  */
 public class JdbcOrderRepository extends AbstractJdbcRepository implements OrderRepository {
 	private static final ResultSetHandler<Long> GENERATED_ID_HANDLER =
-			ResultSetHandlerFactory.GENERATED_LONG_ID_RESULT_SET_HANDLER;
+			ResultSetHandlerFactory.getIdResultSetHandler("id");
 	private static final ResultSetHandler<Order> ORDER_HANDLER =
 			ResultSetHandlerFactory.getSingleResultSetHandler(ResultSetHandlerFactory.ORDER_RESULT_SET_HANDLER);
 	private static final ResultSetHandler<List<Order>> ORDERS_NANDLER =
@@ -37,7 +38,7 @@ public class JdbcOrderRepository extends AbstractJdbcRepository implements Order
 	}
 
 	@Override
-	public void save(Order order) {
+	public Order save(Order order) {
 		// save order and get its generated it
 		Long orderId = executeUpdate(conn ->
 			JDBCUtils.insert(conn, SqlQueries.INSERT_ORDER, GENERATED_ID_HANDLER, order.getAccountId(), order.getCreated())
@@ -46,6 +47,7 @@ public class JdbcOrderRepository extends AbstractJdbcRepository implements Order
 		order.setId(orderId);
 		// save order's order-items if any
 		saveOrderItemsIfAny(order.getItems(), orderId);
+		return order;
 	}
 	
 	private void saveOrderItemsIfAny(List<OrderItem> orderItems, Long orderId) {

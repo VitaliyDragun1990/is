@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.repository.jdbc;
+package com.revenat.ishop.infrastructure.repository.jdbc.framework;
 
 import java.util.List;
 
@@ -9,9 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
+import com.revenat.ishop.infrastructure.framework.handler.DefaultListResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.ProducerRepository;
-import com.revenat.ishop.infrastructure.util.JDBCUtils;
-import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 
 /**
  * This is implementation of the {@link ProducerRepository} responsible
@@ -23,8 +25,17 @@ import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
  */
 public class JdbcProducerRepository extends AbstractJdbcRepository implements ProducerRepository {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcProducerRepository.class);
-	private static final ResultSetHandler<List<Producer>> PRODUCERS_HANDLER =
-			ResultSetHandlerFactory.getListResultSetHandler(ResultSetHandlerFactory.PRODUCER_RESULT_SET_HANDLER);
+	
+	private static final String GET_ALL_PRODUCERS = "SELECT * FROM producer ORDER BY name";
+	private static final String GET_PRODUCERS_BY_CRITERIA_TEMPLATE = "SELECT pr.id, pr.name, "
+			+ "CAST(count(prod.id) AS INTEGER) AS product_count "
+			+ "FROM producer AS pr LEFT OUTER JOIN "
+			+ "(SELECT p.id, p.producer_id FROM product AS p INNER JOIN category AS c ON p.category_id = c.id "
+			+ "%s) "
+			+ "AS prod ON pr.id = prod.producer_id "
+			+ "GROUP BY pr.id, pr.name "
+			+ "ORDER BY pr.name";
+	private static final ResultSetHandler<List<Producer>> PRODUCERS_HANDLER = new DefaultListResultSetHandler<>(Producer.class);
 	
 	public JdbcProducerRepository(DataSource dataSource) {
 		super(dataSource);
@@ -32,13 +43,13 @@ public class JdbcProducerRepository extends AbstractJdbcRepository implements Pr
 
 	@Override
 	public List<Producer> getAll() {
-		return executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.GET_ALL_PRODUCERS, PRODUCERS_HANDLER));
+		return executeSelect(conn -> JDBCUtils.select(conn, GET_ALL_PRODUCERS, PRODUCERS_HANDLER));
 	}
 	
 	@Override
 	public List<Producer> getByCriteria(ProductCriteria criteria) {
 		return executeSelect(conn -> {
-			SqlQuery sqlQuery = buildSqlQuery(criteria, SqlQueries.GET_PRODUCERS_BY_CRITERIA_TEMPLATE);
+			SqlQuery sqlQuery = buildSqlQuery(criteria, GET_PRODUCERS_BY_CRITERIA_TEMPLATE);
 			LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());
 			return JDBCUtils.select(conn, sqlQuery.getQuery(), PRODUCERS_HANDLER, sqlQuery.getParameters());
 		});

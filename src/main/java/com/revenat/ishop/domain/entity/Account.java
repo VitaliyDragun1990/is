@@ -1,10 +1,13 @@
 package com.revenat.ishop.domain.entity;
 
+import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Column;
+
 public class Account extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = -8951792395607124164L;
 
 	private String name;
 	private String email;
+	@Column("avatar_url")
 	private String avatarUrl;
 	
 	public Account() {

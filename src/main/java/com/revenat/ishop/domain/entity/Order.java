@@ -6,10 +6,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Column;
+import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Transient;
+
 public class Order extends AbstractEntity<Long> {
 	private static final long serialVersionUID = 4243683635737044229L;
 
+	@Column("account_id")
 	private Integer accountId;
+	@Transient
 	private List<OrderItem> items;
 	private LocalDateTime created;
 	

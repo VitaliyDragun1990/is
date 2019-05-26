@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.repository.jdbc;
+package com.revenat.ishop.infrastructure.repository.jdbc.base;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,7 +16,7 @@ import com.revenat.ishop.infrastructure.exception.PersistenceException;
  * @author Vitaly Dragun
  *
  */
-abstract class AbstractJdbcRepository {
+public abstract class AbstractJdbcRepository {
 	private final DataSource dataSource;
 
 	protected AbstractJdbcRepository(DataSource dataSource) {
@@ -110,12 +110,25 @@ abstract class AbstractJdbcRepository {
 	}
 
 	protected <T> T executeUpdate(Function<T> func) {
-		try (Connection con = dataSource.getConnection()) {
-			T result = func.execute(con);
-			con.commit();
+		Connection ref = null;
+		try (Connection conn = dataSource.getConnection()) {
+			ref = conn;
+			T result =  func.execute(conn);
+			conn.commit();
 			return result;
 		} catch (SQLException e) {
+			rollback(ref, e);
 			throw new PersistenceException("Error while executing sql query", e);
+		}
+	}
+
+	private void rollback(Connection conn, SQLException mainExc) {
+		if (conn != null) {
+			try {
+				conn.rollback();
+			} catch (SQLException e) {
+				mainExc.addSuppressed(e);
+			}
 		}
 	}
 

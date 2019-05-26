@@ -21,10 +21,10 @@ public interface AccountRepository {
 	Account getByEmail(String email);
 
 	/**
-	 * Saves specified {@link Account} object into datastore. Generates and sets
-	 * unique identifier at specified instance.
+	 * Saves specified {@link Account} object into datastore.
 	 * 
 	 * @param account {@link Account} instance to save.
+	 * @return saved {@link Account} object
 	 */
-	void save(Account account);
+	Account save(Account account);
 }

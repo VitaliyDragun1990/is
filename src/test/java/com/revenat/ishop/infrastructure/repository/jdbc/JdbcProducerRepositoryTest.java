@@ -15,7 +15,7 @@ import org.junit.Test;
 import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
 import com.revenat.ishop.infrastructure.repository.DataSourceFactory;
-import com.revenat.ishop.infrastructure.repository.jdbc.JdbcProducerRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcProducerRepository;
 
 public class JdbcProducerRepositoryTest {
 	private static final int TABLET_CATEGORY_ID = 1;

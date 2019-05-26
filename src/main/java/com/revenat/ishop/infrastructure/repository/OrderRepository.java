@@ -13,7 +13,7 @@ import com.revenat.ishop.domain.entity.Order;
  */
 public interface OrderRepository {
 
-	void save(Order order);
+	Order save(Order order);
 
 	Order getById(long id);
 

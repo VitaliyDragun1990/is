@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.repository.jdbc;
+package com.revenat.ishop.infrastructure.repository.jdbc.plain;
 
 class SqlQueries {
 	/********************** Category related SQL Queries *********************************************************/

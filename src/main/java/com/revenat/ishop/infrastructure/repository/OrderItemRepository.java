@@ -13,7 +13,7 @@ import com.revenat.ishop.domain.entity.OrderItem;
  */
 public interface OrderItemRepository {
 
-	void save(OrderItem orderItem);
+	OrderItem save(OrderItem orderItem);
 	
 	void saveAll(Iterable<OrderItem> orderItems);
 	

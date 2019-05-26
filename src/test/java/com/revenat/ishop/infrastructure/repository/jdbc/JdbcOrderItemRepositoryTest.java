@@ -15,7 +15,7 @@ import org.junit.Test;
 import com.revenat.ishop.domain.entity.OrderItem;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.infrastructure.repository.DataSourceFactory;
-import com.revenat.ishop.infrastructure.repository.jdbc.JdbcOrderItemRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcOrderItemRepository;
 
 public class JdbcOrderItemRepositoryTest {
 	

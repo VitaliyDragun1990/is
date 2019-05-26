@@ -1,11 +1,14 @@
 package com.revenat.ishop.domain.entity;
 
+import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Column;
+
 public class Category extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = -1834996509365201052L;
 	
 	private String name;
 	private String url;
-	private int productCount;
+	@Column("product_count")
+	private Integer productCount;
 	
 	public Category() {
 	}

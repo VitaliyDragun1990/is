@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.repository.jdbc;
+package com.revenat.ishop.infrastructure.repository.jdbc.framework;
 
 import java.util.List;
 
@@ -9,9 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.domain.entity.Category;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
+import com.revenat.ishop.infrastructure.framework.handler.DefaultListResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils;
+import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.CategoryRepository;
-import com.revenat.ishop.infrastructure.util.JDBCUtils;
-import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 
 /**
  * This is implementation of the {@link CategoryRepository} that is responsible
@@ -23,8 +25,17 @@ import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
  */
 public class JdbcCategoryRepository extends AbstractJdbcRepository implements CategoryRepository {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcCategoryRepository.class);
-	private static final ResultSetHandler<List<Category>> CATEGORIES_HANDLER =
-			ResultSetHandlerFactory.getListResultSetHandler(ResultSetHandlerFactory.CATEGORY_RESULT_SET_HANDLER);
+	
+	private static final String GET_ALL_CATEGORIES = "SELECT * FROM category ORDER BY name";
+	private static final String GET_CATEGORIES_BY_CRITERIA_TEMPLATE = "SELECT c.id, c.name, c.url,"
+			+ " CAST(count(prod.id) AS INTEGER) AS product_count "
+			+ "FROM category AS c LEFT OUTER JOIN "
+			+ "(SELECT p.id, p.category_id FROM product AS p INNER JOIN producer AS pr ON p.producer_id = pr.id "
+			+ "%s) "
+			+ "AS prod ON c.id = prod.category_id "
+			+ "GROUP BY c.id, c.name, c.url "
+			+ "ORDER BY c.name";
+	private static final ResultSetHandler<List<Category>> CATEGORIES_HANDLER = new DefaultListResultSetHandler<>(Category.class);
 	
 	public JdbcCategoryRepository(DataSource dataSource) {
 		super(dataSource);
@@ -32,13 +43,13 @@ public class JdbcCategoryRepository extends AbstractJdbcRepository implements Ca
 
 	@Override
 	public List<Category> getAll() {
-		return executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.GET_ALL_CATEGORIES, CATEGORIES_HANDLER));
+		return executeSelect(conn -> JDBCUtils.select(conn, GET_ALL_CATEGORIES, CATEGORIES_HANDLER));
 	}
 
 	@Override
 	public List<Category> getByCriteria(ProductCriteria criteria) {
 		return executeSelect(conn -> {
-			SqlQuery sqlQuery = buildSqlQuery(criteria, SqlQueries.GET_CATEGORIES_BY_CRITERIA_TEMPLATE);
+			SqlQuery sqlQuery = buildSqlQuery(criteria, GET_CATEGORIES_BY_CRITERIA_TEMPLATE);
 			LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());
 			return JDBCUtils.select(conn, sqlQuery.getQuery(), CATEGORIES_HANDLER, sqlQuery.getParameters());
 		});

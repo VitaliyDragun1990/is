@@ -24,8 +24,8 @@ import org.junit.Test;
 import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.infrastructure.repository.DataSourceFactory;
-import com.revenat.ishop.infrastructure.repository.jdbc.JdbcOrderItemRepository;
-import com.revenat.ishop.infrastructure.repository.jdbc.JdbcOrderRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcOrderItemRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcOrderRepository;
 
 public class JdbcOrderRepositoryTest {
 
@@ -78,7 +78,7 @@ public class JdbcOrderRepositoryTest {
 		newOrder.addItem(createProductWithId(1), 10);
 		newOrder.addItem(createProductWithId(2), 5);
 
-		repository.save(newOrder);
+		newOrder = repository.save(newOrder);
 
 		Order createdOrder = repository.getById(newOrder.getId());
 		assertThat(createdOrder.getItems(), hasSize(2));
