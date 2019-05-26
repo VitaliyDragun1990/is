@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.util;
+package com.revenat.ishop.infrastructure.util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

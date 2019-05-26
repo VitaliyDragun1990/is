@@ -16,7 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import com.revenat.ishop.application.mapper.impl.ShoppingCartStringMapper;
-import com.revenat.ishop.application.service.ShoppingCartService;
+import com.revenat.ishop.application.service.impl.ShoppingCartServiceImpl;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.domain.model.ShoppingCart;
 import com.revenat.ishop.domain.model.ShoppingCart.ShoppingCartItem;
@@ -33,7 +33,7 @@ public class ShoppingCartStringMapperTest {
 	
 	@Before
 	public void setup() {
-		mapper = new ShoppingCartStringMapper(new ShoppingCartService(productRepository));
+		mapper = new ShoppingCartStringMapper(new ShoppingCartServiceImpl(productRepository));
 		when(productRepository.getById(Mockito.any(Integer.class))).thenAnswer(new Answer<Product>() {
 			@Override
 			public Product answer(InvocationOnMock invocation) throws Throwable {

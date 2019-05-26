@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.revenat.ishop.infrastructure.framework.handler.base.DefaultResultSetHandler;
-import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 
 public class DefaultUniqueResultSetHandler<T> implements ResultSetHandler<T> {
 	private ResultSetHandler<T> oneRowResultSetHandler;

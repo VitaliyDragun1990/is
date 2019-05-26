@@ -39,7 +39,7 @@ public class ShoppingCartServiceTest {
 
 	@Before
 	public void setUp() {
-		service = new ShoppingCartService(productRepository);
+		service = new ShoppingCartServiceImpl(productRepository);
 		
 		Product p = createProductWithId(PRODUCT_ID);
 		when(productRepository.getById(PRODUCT_ID)).thenReturn(p);

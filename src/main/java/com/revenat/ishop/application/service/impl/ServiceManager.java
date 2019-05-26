@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.application.service.ProducerService;
 import com.revenat.ishop.application.service.ProductService;
 import com.revenat.ishop.application.service.ShoppingCartService;
+import com.revenat.ishop.infrastructure.framework.factory.JDBCTransactionalProxyFactory;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.repository.RepositoryFactory;
 import com.revenat.ishop.infrastructure.service.NotificationService;
@@ -120,26 +122,44 @@ public class ServiceManager {
 				getApplicationProperty("db.pool.maxSize"));
 
 		ProductRepository productRepo = RepositoryFactory.createProductRepository(dataSource);
-		categoryService = new CategoryServiceImpl(RepositoryFactory.createCategoryRepository(dataSource));
-		producerService = new ProducerServiceImpl(RepositoryFactory.createProducerRepository(dataSource));
-		productService = new ProductServiceImpl(productRepo);
-		orderService = new OrderServiceImpl(
-				RepositoryFactory.createOrderRepository(dataSource,  RepositoryFactory.createOrderItemRepository(dataSource)));
-		shoppingCartService = new ShoppingCartService(productRepo);
+		categoryService = createProxyService(
+				dataSource,
+				new CategoryServiceImpl(RepositoryFactory.createCategoryRepository(dataSource)));
+		producerService = createProxyService(
+				dataSource,
+				new ProducerServiceImpl(RepositoryFactory.createProducerRepository(dataSource)));
+		productService = createProxyService(
+				dataSource,
+				new ProductServiceImpl(productRepo));
+		orderService = createProxyService(
+				dataSource,
+				new OrderServiceImpl(
+						RepositoryFactory.createOrderRepository(dataSource,
+						RepositoryFactory.createOrderItemRepository(dataSource))));
+		shoppingCartService = createProxyService(
+				dataSource,
+				new ShoppingCartServiceImpl(productRepo));
 		cartMapper = new ShoppingCartStringMapper(shoppingCartService);
 		socialService = ServiceFactory.createSocialSevice(
 				getApplicationProperty("social.facebook.appId"),
 				getApplicationProperty("social.facebook.secret"),
 				getApplicationProperty("app.host") + "/social-login");
-		authService = new SocialAuthenticationService(socialService,
-				ServiceFactory.createAvatarService(applicationRootDir),
-				RepositoryFactory.createAccountRepository(dataSource));
+		authService = createProxyService(
+				dataSource,
+				new SocialAuthenticationService(
+						socialService,
+						ServiceFactory.createAvatarService(applicationRootDir),
+						RepositoryFactory.createAccountRepository(dataSource)));
 		notificationService = ServiceFactory.createNotificationService(getEmailProperties());
 		orderManager = new OrderManager(
 				authService,
 				orderService,
 				new FeedbackServiceImpl(notificationService, getApplicationProperty("app.host"))
 				);
+	}
+	
+	private static <T> T createProxyService(DataSource dataSource, T originalService) {
+		return JDBCTransactionalProxyFactory.createTransactionalProxy(dataSource, originalService);
 	}
 	
 	private Properties getEmailProperties() {

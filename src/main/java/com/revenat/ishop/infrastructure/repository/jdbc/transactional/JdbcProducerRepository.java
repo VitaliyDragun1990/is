@@ -1,8 +1,6 @@
-package com.revenat.ishop.infrastructure.repository.jdbc.framework;
+package com.revenat.ishop.infrastructure.repository.jdbc.transactional;
 
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,6 @@ import com.revenat.ishop.infrastructure.framework.handler.DefaultListResultSetHa
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.ProducerRepository;
-import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 
 /**
  * This is implementation of the {@link ProducerRepository} responsible
@@ -36,19 +33,15 @@ public class JdbcProducerRepository extends AbstractJdbcRepository implements Pr
 			+ "GROUP BY pr.id, pr.name "
 			+ "ORDER BY pr.name";
 	private static final ResultSetHandler<List<Producer>> PRODUCERS_HANDLER = new DefaultListResultSetHandler<>(Producer.class);
-	
-	public JdbcProducerRepository(DataSource dataSource) {
-		super(dataSource);
-	}
 
 	@Override
 	public List<Producer> getAll() {
-		return executeSelect(conn -> FrameworkJDBCUtils.select(conn, GET_ALL_PRODUCERS, PRODUCERS_HANDLER));
+		return execute(conn -> FrameworkJDBCUtils.select(conn, GET_ALL_PRODUCERS, PRODUCERS_HANDLER));
 	}
 	
 	@Override
 	public List<Producer> getByCriteria(ProductCriteria criteria) {
-		return executeSelect(conn -> {
+		return execute(conn -> {
 			SqlQuery sqlQuery = buildSqlQuery(criteria, GET_PRODUCERS_BY_CRITERIA_TEMPLATE);
 			LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());
 			return FrameworkJDBCUtils.select(conn, sqlQuery.getQuery(), PRODUCERS_HANDLER, sqlQuery.getParameters());

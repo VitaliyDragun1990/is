@@ -8,6 +8,7 @@ import com.revenat.ishop.application.service.AuthenticationService;
 import com.revenat.ishop.domain.entity.Account;
 import com.revenat.ishop.infrastructure.exception.PersistenceException;
 import com.revenat.ishop.infrastructure.exception.flow.FlowException;
+import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Transactional;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
 import com.revenat.ishop.infrastructure.service.AvatarService;
 import com.revenat.ishop.infrastructure.service.SocialAccount;
@@ -20,7 +21,7 @@ import com.revenat.ishop.infrastructure.service.SocialService;
  * @author Vitaly Dragun
  *
  */
-class SocialAuthenticationService implements AuthenticationService {
+public class SocialAuthenticationService implements AuthenticationService {
 	private final SocialService socialService;
 	private final AvatarService avatarService;
 	private final AccountRepository accountRepository;
@@ -37,6 +38,7 @@ class SocialAuthenticationService implements AuthenticationService {
 		return session.getAccount() != null;
 	}
 
+	@Transactional(readOnly=false)
 	@Override
 	public void authenticate(Credentials credentials, ClientSession session) {
 		String authToken = ((AuthenticationTokenCredentials) credentials).getAuthToken();

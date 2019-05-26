@@ -11,10 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
-import com.revenat.ishop.infrastructure.framework.util.JDBCUtils;
-import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
+import com.revenat.ishop.infrastructure.util.JDBCUtils;
+import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
 
 /**
  * This is implementation of the {@link ProductRepository} responsible

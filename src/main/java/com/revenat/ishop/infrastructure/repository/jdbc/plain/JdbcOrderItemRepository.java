@@ -6,8 +6,8 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import com.revenat.ishop.domain.entity.OrderItem;
-import com.revenat.ishop.infrastructure.framework.util.JDBCUtils;
-import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.util.JDBCUtils;
+import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
 import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 

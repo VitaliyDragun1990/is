@@ -5,16 +5,19 @@ import java.util.List;
 import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.domain.entity.OrderItem;
+import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Transactional;
 import com.revenat.ishop.infrastructure.repository.OrderRepository;
 import com.revenat.ishop.infrastructure.util.Checks;
 
-class OrderServiceImpl implements OrderService {
+@Transactional(readOnly=true)
+public class OrderServiceImpl implements OrderService {
 	private final OrderRepository orderRepository;
 
 	public OrderServiceImpl(OrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
 	}
 	
+	@Transactional(readOnly=false)
 	@Override
 	public Order createOrder(List<OrderItem> orderItems, int accountId) {
 		Order order = new Order();
@@ -42,7 +45,7 @@ class OrderServiceImpl implements OrderService {
 		return orderRepository.countByAccountId(accountId);
 	}
 	
-	private int calculateOffset(int page, int productsPerPage) {
+	private static int calculateOffset(int page, int productsPerPage) {
 		return (page - 1) * productsPerPage;
 	}
 	

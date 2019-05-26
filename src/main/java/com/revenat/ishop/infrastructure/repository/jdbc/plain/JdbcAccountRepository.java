@@ -3,8 +3,8 @@ package com.revenat.ishop.infrastructure.repository.jdbc.plain;
 import javax.sql.DataSource;
 
 import com.revenat.ishop.domain.entity.Account;
-import com.revenat.ishop.infrastructure.framework.util.JDBCUtils;
-import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.util.JDBCUtils;
+import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
 import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 

@@ -1,8 +1,6 @@
-package com.revenat.ishop.infrastructure.repository.jdbc.framework;
+package com.revenat.ishop.infrastructure.repository.jdbc.transactional;
 
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.domain.entity.OrderItem;
@@ -13,7 +11,6 @@ import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
 import com.revenat.ishop.infrastructure.repository.OrderRepository;
-import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 
 /**
  * This is implementation of the {@link OrderRepository} responsible
@@ -37,15 +34,14 @@ public class JdbcOrderRepository extends AbstractJdbcRepository implements Order
 	
 	private final OrderItemRepository orderItemRepo;
 
-	public JdbcOrderRepository(DataSource dataSource, OrderItemRepository orderItemRepository) {
-		super(dataSource);
+	public JdbcOrderRepository(OrderItemRepository orderItemRepository) {
 		this.orderItemRepo = orderItemRepository;
 	}
 
 	@Override
 	public Order save(Order order) {
 		// save order and get its generated it
-		Order saved = executeUpdate(conn ->
+		Order saved = execute(conn ->
 			FrameworkJDBCUtils.insert(conn, INSERT_ORDER, ORDER_HANDLER, order.getAccountId(), order.getCreated())
 		);
 		// set newly generated id
@@ -67,7 +63,7 @@ public class JdbcOrderRepository extends AbstractJdbcRepository implements Order
 	@Override
 	public Order getById(long id) {
 		// Get order by id
-		Order order = executeSelect(conn -> FrameworkJDBCUtils.select(conn, GET_ORDER_BY_ID, ORDER_HANDLER, id));
+		Order order = execute(conn -> FrameworkJDBCUtils.select(conn, GET_ORDER_BY_ID, ORDER_HANDLER, id));
 		if (order != null) {
 			loadOrderItemsForOrder(order);
 		}
@@ -78,7 +74,7 @@ public class JdbcOrderRepository extends AbstractJdbcRepository implements Order
 	@Override
 	public List<Order> getByAccountId(int accountId, int offset, int limit) {
 		// Get order by accountId
-		List<Order> orders = executeSelect(conn ->
+		List<Order> orders = execute(conn ->
 			FrameworkJDBCUtils.select(conn, GET_ORDERS_BY_ACCOUNT_ID, ORDERS_HANDLER, accountId, limit, offset)
 		);
 		for (Order order : orders) {
@@ -90,7 +86,7 @@ public class JdbcOrderRepository extends AbstractJdbcRepository implements Order
 	
 	@Override
 	public int countByAccountId(int accountId) {
-		return executeSelect(conn -> FrameworkJDBCUtils.select(conn, COUNT_ORDERS_BY_ACCOUNT_ID, COUNT_HANDLER, accountId));
+		return execute(conn -> FrameworkJDBCUtils.select(conn, COUNT_ORDERS_BY_ACCOUNT_ID, COUNT_HANDLER, accountId));
 	}
 	
 	private void loadOrderItemsForOrder(Order order) {

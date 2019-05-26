@@ -3,7 +3,7 @@ package com.revenat.ishop.infrastructure.framework.handler;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 
 public class IntResultSetHandler implements ResultSetHandler<Integer> {
 

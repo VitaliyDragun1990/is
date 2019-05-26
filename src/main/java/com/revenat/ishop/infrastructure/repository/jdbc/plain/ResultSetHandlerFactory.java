@@ -12,7 +12,7 @@ import com.revenat.ishop.domain.entity.OrderItem;
 import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.infrastructure.exception.PersistenceException;
-import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
 
 /**
  * This factory class responsible for creating different

@@ -5,10 +5,12 @@ import java.util.List;
 import com.revenat.ishop.application.service.ProductService;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
+import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Transactional;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.util.Checks;
 
-class ProductServiceImpl implements ProductService {
+@Transactional(readOnly=true)
+public class ProductServiceImpl implements ProductService {
 	private final ProductRepository productRepository;
 	
 	public ProductServiceImpl(ProductRepository productRepository) {
@@ -36,7 +38,7 @@ class ProductServiceImpl implements ProductService {
 		return productRepository.getByCriteria(criteria, offset, limit);
 	}
 
-	private int calculateOffset(int page, int productsPerPage) {
+	private static int calculateOffset(int page, int productsPerPage) {
 		return (page - 1) * productsPerPage;
 	}
 	

@@ -1,9 +1,7 @@
-package com.revenat.ishop.infrastructure.repository.jdbc.framework;
+package com.revenat.ishop.infrastructure.repository.jdbc.transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import com.revenat.ishop.domain.entity.OrderItem;
 import com.revenat.ishop.infrastructure.framework.handler.DefaultListResultSetHandler;
@@ -11,7 +9,6 @@ import com.revenat.ishop.infrastructure.framework.handler.DefaultUniqueResultSet
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
-import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 
 /**
  * This is implementation of the {@link OrderItemRepository} responsible
@@ -34,13 +31,9 @@ public class JdbcOrderItemRepository extends AbstractJdbcRepository implements O
 	private static final ResultSetHandler<OrderItem> ORDER_ITEM_HANDLER = new DefaultUniqueResultSetHandler<>(OrderItem.class);
 	private static final ResultSetHandler<List<OrderItem>> ORDER_ITEMS_HANDLER = new DefaultListResultSetHandler<>(OrderItem.class);
 
-	public JdbcOrderItemRepository(DataSource dataSource) {
-		super(dataSource);
-	}
-
 	@Override
 	public OrderItem save(OrderItem orderItem) {
-		OrderItem saved = executeUpdate(conn -> FrameworkJDBCUtils.insert(conn, INSERT_ORDER_ITEM, ORDER_ITEM_HANDLER,
+		OrderItem saved = execute(conn -> FrameworkJDBCUtils.insert(conn, INSERT_ORDER_ITEM, ORDER_ITEM_HANDLER,
 				orderItem.getOrderId(), orderItem.getProduct().getId(), orderItem.getQuantity()));
 		orderItem.setId(saved.getId());
 		return orderItem;
@@ -49,7 +42,7 @@ public class JdbcOrderItemRepository extends AbstractJdbcRepository implements O
 	@Override
 	public void saveAll(Iterable<OrderItem> orderItems) {
 		List<Object[]> parametersList = generateParametersList(orderItems);
-		executeUpdate(conn -> FrameworkJDBCUtils.insertBatch(conn, INSERT_ORDER_ITEM, parametersList));
+		execute(conn -> FrameworkJDBCUtils.insertBatch(conn, INSERT_ORDER_ITEM, parametersList));
 	}
 
 	private List<Object[]> generateParametersList(Iterable<OrderItem> orderItems) {
@@ -62,6 +55,6 @@ public class JdbcOrderItemRepository extends AbstractJdbcRepository implements O
 
 	@Override
 	public List<OrderItem> getByOrderId(long orderId) {
-		return executeSelect(conn -> FrameworkJDBCUtils.select(conn, GET_ORDER_ITEMS_BY_ORDER_ID, ORDER_ITEMS_HANDLER, orderId));
+		return execute(conn -> FrameworkJDBCUtils.select(conn, GET_ORDER_ITEMS_BY_ORDER_ID, ORDER_ITEMS_HANDLER, orderId));
 	}
 }

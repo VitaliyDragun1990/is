@@ -1,13 +1,10 @@
-package com.revenat.ishop.infrastructure.repository.jdbc.framework;
-
-import javax.sql.DataSource;
+package com.revenat.ishop.infrastructure.repository.jdbc.transactional;
 
 import com.revenat.ishop.domain.entity.Account;
 import com.revenat.ishop.infrastructure.framework.handler.DefaultUniqueResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
-import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 
 /**
  * This is implementation of the {@link AccountRepository} that is responsible
@@ -22,18 +19,14 @@ public class JdbcAccountRepository extends AbstractJdbcRepository implements Acc
 	private static final String INSERT_ACCOUNT = "INSERT INTO account (name, email, avatar_url) VALUES (?,?,?)";
 	private static final ResultSetHandler<Account> ACCOUNT_HANDLER = new DefaultUniqueResultSetHandler<>(Account.class);
 
-	public JdbcAccountRepository(DataSource dataSource) {
-		super(dataSource);
-	}
-
 	@Override
 	public Account getByEmail(String email) {
-		return executeSelect(conn -> FrameworkJDBCUtils.select(conn, GET_ACCOUNT_BY_EMAIL, ACCOUNT_HANDLER, email));
+		return execute(conn -> FrameworkJDBCUtils.select(conn, GET_ACCOUNT_BY_EMAIL, ACCOUNT_HANDLER, email));
 	}
 	
 	@Override
 	public Account save(Account account) {
-		Account saved = executeUpdate(conn -> 
+		Account saved = execute(conn -> 
 			FrameworkJDBCUtils.insert(conn, INSERT_ACCOUNT, ACCOUNT_HANDLER, account.getName(), account.getEmail(), account.getAvatarUrl())
 		);
 		account.setId(saved.getId());

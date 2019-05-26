@@ -11,7 +11,7 @@ import com.revenat.ishop.infrastructure.framework.converter.Converter;
 import com.revenat.ishop.infrastructure.framework.converter.impl.DefaultConverter;
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkSystemException;
 import com.revenat.ishop.infrastructure.framework.util.ReflectionUtils;
-import com.revenat.ishop.infrastructure.framework.util.JDBCUtils.ResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 
 public class DefaultResultSetHandler<T> implements ResultSetHandler<T> {
 	protected final Class<T> entityClass;

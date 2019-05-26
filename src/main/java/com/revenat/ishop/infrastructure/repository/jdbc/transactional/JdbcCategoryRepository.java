@@ -1,8 +1,6 @@
-package com.revenat.ishop.infrastructure.repository.jdbc.framework;
+package com.revenat.ishop.infrastructure.repository.jdbc.transactional;
 
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,6 @@ import com.revenat.ishop.infrastructure.framework.handler.DefaultListResultSetHa
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.CategoryRepository;
-import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 
 /**
  * This is implementation of the {@link CategoryRepository} that is responsible
@@ -36,19 +33,15 @@ public class JdbcCategoryRepository extends AbstractJdbcRepository implements Ca
 			+ "GROUP BY c.id, c.name, c.url "
 			+ "ORDER BY c.name";
 	private static final ResultSetHandler<List<Category>> CATEGORIES_HANDLER = new DefaultListResultSetHandler<>(Category.class);
-	
-	public JdbcCategoryRepository(DataSource dataSource) {
-		super(dataSource);
-	}
 
 	@Override
 	public List<Category> getAll() {
-		return executeSelect(conn -> FrameworkJDBCUtils.select(conn, GET_ALL_CATEGORIES, CATEGORIES_HANDLER));
+		return execute(conn -> FrameworkJDBCUtils.select(conn, GET_ALL_CATEGORIES, CATEGORIES_HANDLER));
 	}
 
 	@Override
 	public List<Category> getByCriteria(ProductCriteria criteria) {
-		return executeSelect(conn -> {
+		return execute(conn -> {
 			SqlQuery sqlQuery = buildSqlQuery(criteria, GET_CATEGORIES_BY_CRITERIA_TEMPLATE);
 			LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());
 			return FrameworkJDBCUtils.select(conn, sqlQuery.getQuery(), CATEGORIES_HANDLER, sqlQuery.getParameters());
