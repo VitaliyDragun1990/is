@@ -3,8 +3,10 @@ package com.revenat.ishop.domain.entity;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Column;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Column;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Table;
 
+@Table(name="category")
 @XmlRootElement(name ="category")
 public class Category extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = -1834996509365201052L;

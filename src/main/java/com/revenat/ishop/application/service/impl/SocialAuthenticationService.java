@@ -9,7 +9,7 @@ import com.revenat.ishop.domain.entity.Account;
 import com.revenat.ishop.infrastructure.exception.PersistenceException;
 import com.revenat.ishop.infrastructure.exception.flow.FlowException;
 import com.revenat.ishop.infrastructure.exception.security.AuthenticationException;
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Transactional;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
 import com.revenat.ishop.infrastructure.service.AvatarService;
 import com.revenat.ishop.infrastructure.service.SocialAccount;

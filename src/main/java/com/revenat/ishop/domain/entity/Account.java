@@ -1,7 +1,9 @@
 package com.revenat.ishop.domain.entity;
 
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Column;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Column;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Table;
 
+@Table(name="account")
 public class Account extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = -8951792395607124164L;
 

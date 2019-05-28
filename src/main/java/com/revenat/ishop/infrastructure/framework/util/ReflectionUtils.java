@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Column;
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Transient;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Column;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Transient;
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkSystemException;
 
 public final class ReflectionUtils {

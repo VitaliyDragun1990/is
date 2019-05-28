@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.factory;
+package com.revenat.ishop.infrastructure.framework.factory.transaction;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -7,7 +7,7 @@ import java.lang.reflect.Proxy;
 
 import javax.sql.DataSource;
 
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Transactional;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.framework.util.ReflectionUtils;
 
 /**

@@ -6,12 +6,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Child;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Child;
 import com.revenat.ishop.infrastructure.framework.converter.Converter;
 import com.revenat.ishop.infrastructure.framework.converter.impl.DefaultConverter;
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkSystemException;
+import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.util.ReflectionUtils;
-import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 
 public class DefaultResultSetHandler<T> implements ResultSetHandler<T> {
 	protected final Class<T> entityClass;

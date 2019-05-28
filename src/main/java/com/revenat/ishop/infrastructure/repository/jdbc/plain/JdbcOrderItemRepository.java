@@ -1,15 +1,16 @@
 package com.revenat.ishop.infrastructure.repository.jdbc.plain;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import com.revenat.ishop.domain.entity.OrderItem;
-import com.revenat.ishop.infrastructure.util.JDBCUtils;
-import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
 import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
+import com.revenat.ishop.infrastructure.util.JDBCUtils;
+import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
 
 /**
  * This is implementation of the {@link OrderItemRepository} responsible
@@ -38,7 +39,7 @@ public class JdbcOrderItemRepository extends AbstractJdbcRepository implements O
 	}
 
 	@Override
-	public void saveAll(Iterable<OrderItem> orderItems) {
+	public void saveAll(Collection<OrderItem> orderItems) {
 		List<Object[]> parametersList = generateParametersList(orderItems);
 		executeUpdate(conn -> JDBCUtils.insertBatch(conn, SqlQueries.INSERT_ORDER_ITEM, parametersList));
 	}

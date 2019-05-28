@@ -4,6 +4,10 @@ import java.util.List;
 
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.CollectionItem;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Select;
+import com.revenat.ishop.infrastructure.repository.builder.CountProductsByCriteriaSQLBuilder;
+import com.revenat.ishop.infrastructure.repository.builder.FindProductsByCriteriaSQLBuilder;
 
 /**
  * This interface represents repository responsible for performing CRUD
@@ -13,10 +17,23 @@ import com.revenat.ishop.domain.search.criteria.ProductCriteria;
  *
  */
 public interface ProductRepository {
+	public static final String GET_PRODUCT_BY_ID = "SELECT p.*, c.name AS category, pr.name AS producer "
+			+ "FROM product AS p INNER JOIN category AS c ON p.category_id = c.id "
+			+ "INNER JOIN producer AS pr ON p.producer_id = pr.id "
+			+ "WHERE p.id = ? ORDER BY p.id";
+	public static final String GET_PRODUCTS_BY_CATEGORY = "SELECT p.*, c.name AS category, pr.name AS producer "
+			+ "FROM product AS p INNER JOIN category AS c ON p.category_id = c.id "
+			+ "INNER JOIN producer AS pr ON p.producer_id = pr.id " + "WHERE c.url = ? "
+			+ "ORDER BY p.id LIMIT ? OFFSET ?";
+	public static final String GET_ALL_PRODUCTS = "SELECT p.*, c.name AS category, pr.name AS producer "
+			+ "FROM product AS p INNER JOIN category AS c ON p.category_id = c.id "
+			+ "INNER JOIN producer AS pr ON p.producer_id = pr.id "
+			+ "ORDER BY p.id LIMIT ? OFFSET ?";
 
 	/**
 	 * Returns how many {@link Product} instances datastore contains.
 	 */
+	@Select("SELECT count(*) as count FROM product")
 	int countAll();
 
 	/**
@@ -25,6 +42,7 @@ public interface ProductRepository {
 	 * 
 	 * @param categoryUrl string that explicitely determines particular category
 	 */
+	@Select("SELECT product_count AS count FROM category AS c WHERE c.url = ?")
 	int countByCategory(String categoryUrl);
 
 	/**
@@ -33,6 +51,8 @@ public interface ProductRepository {
 	 * 
 	 * @param criteria search criteria object
 	 */
+	@Select(value="",
+			sqlBuilderClass=CountProductsByCriteriaSQLBuilder.class)
 	int countByCriteria(ProductCriteria criteria);
 
 	/**
@@ -41,6 +61,7 @@ public interface ProductRepository {
 	 * 
 	 * @param id unique {@code id} property value
 	 */
+	@Select(GET_PRODUCT_BY_ID)
 	Product findById(Integer id);
 
 	/**
@@ -56,7 +77,9 @@ public interface ProductRepository {
 	 *                    return all matches.
 	 * @return list of matching product or an empty list if there is no matches.
 	 */
-	List<Product> findByCategory(String categoryUrl, int offset, int limit);
+	@Select(GET_PRODUCTS_BY_CATEGORY)
+	@CollectionItem(Product.class)
+	List<Product> findByCategory(String categoryUrl, int limit, int offset);
 
 	/**
 	 * Returns list of {@link Product} entities which satisfy some search criteria
@@ -71,7 +94,9 @@ public interface ProductRepository {
 	 *                 return all matches.
 	 * @return list of matching product or an empty list if there is no matches.
 	 */
-	List<Product> findByCriteria(ProductCriteria criteria, int offset, int limit);
+	@Select(value="", sqlBuilderClass=FindProductsByCriteriaSQLBuilder.class)
+	@CollectionItem(Product.class)
+	List<Product> findByCriteria(ProductCriteria criteria, int limit, int offset);
 
 	/**
 	 * Returns list of {@link Product} entities using specified {@code offset} and
@@ -84,5 +109,7 @@ public interface ProductRepository {
 	 * @return list with products or an empty list if there is no products that
 	 *         satisfy specified {@code offset} and/or {@code limit} parameters.
 	 */
-	List<Product> findAll(int offset, int limit);
+	@Select(GET_ALL_PRODUCTS)
+	@CollectionItem(Product.class)
+	List<Product> findAll(int limit, int offset);
 }

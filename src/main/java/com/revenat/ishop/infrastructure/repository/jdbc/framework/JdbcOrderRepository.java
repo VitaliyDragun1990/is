@@ -9,8 +9,8 @@ import com.revenat.ishop.domain.entity.OrderItem;
 import com.revenat.ishop.infrastructure.framework.handler.DefaultListResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.handler.DefaultUniqueResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.handler.IntResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
-import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
 import com.revenat.ishop.infrastructure.repository.OrderRepository;
 import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
@@ -76,7 +76,7 @@ public class JdbcOrderRepository extends AbstractJdbcRepository implements Order
 	}
 
 	@Override
-	public List<Order> findByAccountId(int accountId, int offset, int limit) {
+	public List<Order> findByAccountId(int accountId, int limit, int offset) {
 		// Get order by accountId
 		List<Order> orders = executeSelect(conn ->
 			FrameworkJDBCUtils.select(conn, GET_ORDERS_BY_ACCOUNT_ID, ORDERS_HANDLER, accountId, limit, offset)

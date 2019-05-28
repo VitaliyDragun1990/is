@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.annotation.jdbc;
+package com.revenat.ishop.infrastructure.framework.annotation.persistence.entity;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

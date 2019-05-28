@@ -7,4 +7,8 @@ public class FrameworkPersistenceException extends FrameworkSystemException {
 		super(cause);
 	}
 
+	public FrameworkPersistenceException(String message) {
+		super(message);
+	}
+
 }

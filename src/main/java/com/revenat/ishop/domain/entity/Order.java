@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Column;
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Transient;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Column;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Table;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Transient;
 
+@Table(name="\"order\"")
 public class Order extends AbstractEntity<Long> {
 	private static final long serialVersionUID = 4243683635737044229L;
 

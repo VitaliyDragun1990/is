@@ -2,8 +2,8 @@ package com.revenat.ishop.infrastructure.repository.jdbc.transactional;
 
 import com.revenat.ishop.domain.entity.Account;
 import com.revenat.ishop.infrastructure.framework.handler.DefaultUniqueResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
-import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
 
 /**

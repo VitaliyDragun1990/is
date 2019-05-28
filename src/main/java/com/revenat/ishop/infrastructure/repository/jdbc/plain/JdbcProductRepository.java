@@ -60,14 +60,14 @@ public class JdbcProductRepository extends AbstractJdbcRepository implements Pro
 	}
 
 	@Override
-	public List<Product> findByCategory(String categoryUrl, int offset, int limit) {
+	public List<Product> findByCategory(String categoryUrl, int limit, int offset) {
 		return executeSelect(
 				conn -> JDBCUtils.select(conn, SqlQueries.GET_PRODUCTS_BY_CATEGORY, PRODUCTS_HANDLER, categoryUrl, limit, offset)
 				);
 	}
 	
 	@Override
-	public List<Product> findByCriteria(ProductCriteria criteria, int offset, int limit) {
+	public List<Product> findByCriteria(ProductCriteria criteria, int limit, int offset) {
 		SqlQuery sqlQuery = buildSqlQuery(criteria, SqlQueries.GET_PRODUCTS_BY_CRITERIA_TEMPLATE, limit, offset);
 		LOGGER.debug("search query={} with params={}", sqlQuery.getQuery(), sqlQuery.getParameters());
 		return executeSelect(
@@ -77,7 +77,7 @@ public class JdbcProductRepository extends AbstractJdbcRepository implements Pro
 	}
 	
 	@Override
-	public List<Product> findAll(int offset, int limit) {
+	public List<Product> findAll(int limit, int offset) {
 		return executeSelect(conn -> JDBCUtils.select(conn, SqlQueries.GET_ALL_PRODUCTS, PRODUCTS_HANDLER, limit, offset));
 	}
 }

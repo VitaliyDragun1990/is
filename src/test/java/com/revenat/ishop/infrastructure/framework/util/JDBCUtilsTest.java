@@ -17,8 +17,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
+import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
-import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 
 public class JDBCUtilsTest {
 	private static final String DELETE_ALL = "DELETE FROM product";

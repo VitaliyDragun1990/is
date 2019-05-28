@@ -19,7 +19,7 @@ import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.application.service.ProducerService;
 import com.revenat.ishop.application.service.ProductService;
 import com.revenat.ishop.application.service.ShoppingCartService;
-import com.revenat.ishop.infrastructure.framework.factory.JDBCTransactionalProxyFactory;
+import com.revenat.ishop.infrastructure.framework.factory.transaction.JDBCTransactionalProxyFactory;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.repository.RepositoryFactory;
 import com.revenat.ishop.infrastructure.service.NotificationService;
@@ -134,7 +134,9 @@ public class ServiceManager {
 		orderService = createProxyService(
 				dataSource,
 				new OrderServiceImpl(
-						RepositoryFactory.createOrderRepository(RepositoryFactory.createOrderItemRepository())));
+						RepositoryFactory.createOrderRepository(),
+						RepositoryFactory.createOrderItemRepository()
+				));
 		shoppingCartService = createProxyService(
 				dataSource,
 				new ShoppingCartServiceImpl(productRepo));

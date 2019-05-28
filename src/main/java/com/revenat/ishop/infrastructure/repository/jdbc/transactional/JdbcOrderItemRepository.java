@@ -1,13 +1,14 @@
 package com.revenat.ishop.infrastructure.repository.jdbc.transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.revenat.ishop.domain.entity.OrderItem;
 import com.revenat.ishop.infrastructure.framework.handler.DefaultListResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.handler.DefaultUniqueResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
-import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
 
 /**
@@ -40,7 +41,7 @@ public class JdbcOrderItemRepository extends AbstractJdbcRepository implements O
 	}
 
 	@Override
-	public void saveAll(Iterable<OrderItem> orderItems) {
+	public void saveAll(Collection<OrderItem> orderItems) {
 		List<Object[]> parametersList = generateParametersList(orderItems);
 		execute(conn -> FrameworkJDBCUtils.insertBatch(conn, INSERT_ORDER_ITEM, parametersList));
 	}

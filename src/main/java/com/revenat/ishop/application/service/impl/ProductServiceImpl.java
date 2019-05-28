@@ -5,7 +5,7 @@ import java.util.List;
 import com.revenat.ishop.application.service.ProductService;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Transactional;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.util.Checks;
 
@@ -21,21 +21,21 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> findProducts(int page, int limit) {
 		validate(page, limit);
 		int offset = calculateOffset(page, limit);
-		return productRepository.findAll(offset, limit);
+		return productRepository.findAll(limit, offset);
 	}
 
 	@Override
 	public List<Product> findProductsByCategory(String categoryUrl, int page, int limit) {
 		validate(page, limit);
 		int offset = calculateOffset(page, limit);
-		return productRepository.findByCategory(categoryUrl, offset, limit);
+		return productRepository.findByCategory(categoryUrl, limit, offset);
 	}
 	
 	@Override
 	public List<Product> findProductsByCriteria(ProductCriteria criteria, int page, int limit) {
 		validate(page, limit);
 		int offset = calculateOffset(page, limit);
-		return productRepository.findByCriteria(criteria, offset, limit);
+		return productRepository.findByCriteria(criteria, limit, offset);
 	}
 
 	private static int calculateOffset(int page, int productsPerPage) {

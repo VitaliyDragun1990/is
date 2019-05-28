@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revenat.ishop.infrastructure.framework.handler.base.DefaultResultSetHandler;
-import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 
 public class DefaultListResultSetHandler<T> implements ResultSetHandler<List<T>> {
 	private ResultSetHandler<T> oneRowResultSetHandler;

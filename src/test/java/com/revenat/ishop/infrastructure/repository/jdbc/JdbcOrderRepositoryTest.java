@@ -95,7 +95,7 @@ public class JdbcOrderRepositoryTest {
 	public void shouldAllowToGetOrdersByAccountId() throws Exception {
 		int accountId = 1;
 
-		List<Order> orders = repository.findByAccountId(accountId, 0, 5);
+		List<Order> orders = repository.findByAccountId(accountId, 5, 0);
 
 		assertThat(orders, hasSize(5));
 	}
@@ -104,7 +104,7 @@ public class JdbcOrderRepositoryTest {
 	public void shouldReturnEmptyListIfNoOrdersForSuchAccountId() throws Exception {
 		int accountId = 999;
 
-		List<Order> orders = repository.findByAccountId(accountId, 0, 5);
+		List<Order> orders = repository.findByAccountId(accountId, 5, 0);
 
 		assertThat(orders, empty());
 	}
@@ -113,7 +113,7 @@ public class JdbcOrderRepositoryTest {
 	public void shouldReturnOrdersInDescendingChronologicalOrder() throws Exception {
 		int accountId = 1;
 
-		List<Order> orders = repository.findByAccountId(accountId, 0, 5);
+		List<Order> orders = repository.findByAccountId(accountId, 5, 0);
 
 		assertThat(orders.get(0).getCreated(), LocalDateTimeMatchers.after(orders.get(1).getCreated()));
 		assertThat(orders.get(1).getCreated(), LocalDateTimeMatchers.after(orders.get(2).getCreated()));

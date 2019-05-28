@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
 import com.revenat.ishop.infrastructure.framework.handler.DefaultListResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
-import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.ProducerRepository;
 import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractJdbcRepository;
 

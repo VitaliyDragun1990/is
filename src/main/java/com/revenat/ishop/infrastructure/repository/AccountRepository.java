@@ -1,6 +1,8 @@
 package com.revenat.ishop.infrastructure.repository;
 
 import com.revenat.ishop.domain.entity.Account;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Insert;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Select;
 
 /**
  * This interface represents repository responsible for for performing CRUD
@@ -18,6 +20,7 @@ public interface AccountRepository {
 	 * @return {@link Account} entity with given email or null if no account with
 	 *         such email.
 	 */
+	@Select("SELECT * FROM account WHERE email = ?")
 	Account findByEmail(String email);
 
 	/**
@@ -26,5 +29,6 @@ public interface AccountRepository {
 	 * @param account {@link Account} instance to save.
 	 * @return saved {@link Account} object
 	 */
+	@Insert
 	Account save(Account account);
 }

@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import com.revenat.ishop.domain.entity.Category;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
 import com.revenat.ishop.infrastructure.framework.handler.DefaultListResultSetHandler;
+import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
-import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils.ResultSetHandler;
 import com.revenat.ishop.infrastructure.repository.CategoryRepository;
 
 /**
@@ -24,8 +24,8 @@ public class JdbcCategoryRepository extends AbstractJdbcRepository implements Ca
 	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcCategoryRepository.class);
 	
 	private static final String GET_ALL_CATEGORIES = "SELECT * FROM category ORDER BY name";
-	private static final String GET_CATEGORIES_BY_CRITERIA_TEMPLATE = "SELECT c.id, c.name, c.url,"
-			+ " CAST(count(prod.id) AS INTEGER) AS product_count "
+	private static final String GET_CATEGORIES_BY_CRITERIA_TEMPLATE = "SELECT c.id, c.name, c.url, "
+			+ "CAST(count(prod.id) AS INTEGER) AS product_count "
 			+ "FROM category AS c LEFT OUTER JOIN "
 			+ "(SELECT p.id, p.category_id FROM product AS p INNER JOIN producer AS pr ON p.producer_id = pr.id "
 			+ "%s) "

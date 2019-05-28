@@ -2,8 +2,10 @@ package com.revenat.ishop.domain.entity;
 
 import java.math.BigDecimal;
 
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Column;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Column;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Table;
 
+@Table(name="product")
 public class Product extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = 2900041021842951941L;
 	

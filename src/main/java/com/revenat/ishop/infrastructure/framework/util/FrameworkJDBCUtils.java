@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkPersistenceException;
+import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
 import com.revenat.ishop.infrastructure.util.Checks;
 
 /**
@@ -156,18 +157,5 @@ public final class FrameworkJDBCUtils {
 		checkParams(conn, sql);
 		Checks.checkParam(parameterssList != null && !parameterssList.isEmpty(),
 				"Can not execute insertBatch with null or empty parameter list");
-	}
-
-	/**
-	 * Represents handler with method {@code #handle(ResultSet)} whose role is to
-	 * map given {@link ResultSet} instance to some generic type <T>
-	 * 
-	 * @author Vitaly Dragun
-	 *
-	 * @param <T> generic type
-	 */
-	@FunctionalInterface
-	public interface ResultSetHandler<T> {
-		T handle(ResultSet rs) throws SQLException;
 	}
 }

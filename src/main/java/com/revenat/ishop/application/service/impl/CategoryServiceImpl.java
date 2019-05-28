@@ -5,7 +5,7 @@ import java.util.List;
 import com.revenat.ishop.application.service.CategoryService;
 import com.revenat.ishop.domain.entity.Category;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
-import com.revenat.ishop.infrastructure.framework.annotation.jdbc.Transactional;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.CategoryRepository;
 
 @Transactional(readOnly=true)

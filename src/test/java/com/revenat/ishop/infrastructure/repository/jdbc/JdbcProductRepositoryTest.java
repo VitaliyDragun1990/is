@@ -42,7 +42,7 @@ public class JdbcProductRepositoryTest {
 
 	@Test
 	public void shouldAllowToGetAllProductsAccordingToOffsetAndLimit() throws SQLException {
-		List<Product> products = repository.findAll(0, 10);
+		List<Product> products = repository.findAll(10, 0);
 
 		assertThat(products, hasSize(4));
 	}
@@ -77,7 +77,7 @@ public class JdbcProductRepositoryTest {
 
 	@Test
 	public void shouldAllowToGetProductsByCategory() throws Exception {
-		List<Product> products = repository.findByCategory("/tablet", 0, 10);
+		List<Product> products = repository.findByCategory("/tablet", 10, 0);
 
 		assertThat(products, hasSize(2));
 		assertThat(products, everyItem(hasProperty("category", equalToIgnoringCase("tablet"))));
@@ -99,7 +99,7 @@ public class JdbcProductRepositoryTest {
 
 	@Test
 	public void shouldReturnEmptyListIfThereIsNoProductBySuchCategory() throws Exception {
-		List<Product> products = repository.findByCategory("/tv", 0, 10);
+		List<Product> products = repository.findByCategory("/tv", 10, 0);
 
 		assertThat(products, empty());
 	}
@@ -112,7 +112,7 @@ public class JdbcProductRepositoryTest {
 				Arrays.asList(TABLET_CATEGORY_ID),
 				Arrays.asList(APPLE_PRODUCER_ID, SAMSUNG_PRODUCER_ID));
 		
-		List<Product> products = repository.findByCriteria(criteria, 0, 10);
+		List<Product> products = repository.findByCriteria(criteria, 10, 0);
 		
 		assertThat(products, hasSize(2));
 		assertThat(products, everyItem(hasProperty("name", containsStringIgnoringCase(query))));
@@ -127,7 +127,7 @@ public class JdbcProductRepositoryTest {
 				"",
 				Arrays.asList(TABLET_CATEGORY_ID, SMARTPHONE_CATEGORY_ID));
 		
-		List<Product> products = repository.findByCriteria(criteria, 0, 10);
+		List<Product> products = repository.findByCriteria(criteria, 10, 0);
 		
 		assertThat(products, hasSize(4));
 		assertThat(products, hasItem(hasProperty("category", equalToIgnoringCase("tablet"))));
@@ -141,7 +141,7 @@ public class JdbcProductRepositoryTest {
 				Arrays.asList(APPLE_PRODUCER_ID, SAMSUNG_PRODUCER_ID));
 				
 		
-		List<Product> products = repository.findByCriteria(criteria, 0, 10);
+		List<Product> products = repository.findByCriteria(criteria, 10, 0);
 		
 		assertThat(products, hasSize(3));
 		assertThat(products, hasItem(hasProperty("producer", equalToIgnoringCase("apple"))));
@@ -157,7 +157,7 @@ public class JdbcProductRepositoryTest {
 				Collections.emptyList());
 				
 		
-		List<Product> products = repository.findByCriteria(criteria, 0, 10);
+		List<Product> products = repository.findByCriteria(criteria, 10, 0);
 		
 		assertThat(products, hasSize(4));
 		assertThat(products, hasItem(hasProperty("description", containsStringIgnoringCase(query))));
@@ -171,7 +171,7 @@ public class JdbcProductRepositoryTest {
 				Collections.emptyList(),
 				Collections.emptyList());
 		
-		List<Product> products = repository.findByCriteria(criteria, 0, 10);
+		List<Product> products = repository.findByCriteria(criteria, 10, 0);
 		
 		assertThat(products, hasSize(4));
 	}
@@ -182,7 +182,7 @@ public class JdbcProductRepositoryTest {
 				"",
 				Arrays.asList(SONY_PRODUCER_ID));
 		
-		List<Product> products = repository.findByCriteria(criteria, 0, 10);
+		List<Product> products = repository.findByCriteria(criteria, 10, 0);
 		
 		assertThat(products, empty());
 	}

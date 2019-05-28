@@ -4,7 +4,7 @@ import java.sql.Connection;
 
 import com.revenat.ishop.infrastructure.exception.PersistenceException;
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkPersistenceException;
-import com.revenat.ishop.infrastructure.framework.factory.JDBCConnectionFactory;
+import com.revenat.ishop.infrastructure.framework.factory.transaction.JDBCConnectionFactory;
 import com.revenat.ishop.infrastructure.repository.jdbc.base.AbstractRepository;
 
 /**

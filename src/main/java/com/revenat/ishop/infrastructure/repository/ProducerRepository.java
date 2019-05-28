@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.CollectionItem;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Select;
+import com.revenat.ishop.infrastructure.repository.builder.FindProducersByCriteriaSQLBuilder;
 
 /**
  * This interface represents repository responsible for performing CRUD
@@ -20,6 +23,8 @@ public interface ProducerRepository {
 	 * @return {@link List} containing {@link Producer} entities or empty list if
 	 *         there are no producers in the datastore.
 	 */
+	@Select("SELECT * FROM producer ORDER BY name")
+	@CollectionItem(Producer.class)
 	List<Producer> findAll();
 
 	/**
@@ -27,5 +32,7 @@ public interface ProducerRepository {
 	 * 
 	 * @param criteria search criteria producers should satisfy
 	 */
+	@Select(value="", sqlBuilderClass=FindProducersByCriteriaSQLBuilder.class)
+	@CollectionItem(Producer.class)
 	List<Producer> findByCriteria(ProductCriteria criteria);
 }
