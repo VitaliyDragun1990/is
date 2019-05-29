@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.factory.transaction;
+package com.revenat.ishop.infrastructure.framework.factory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -19,7 +19,7 @@ import com.revenat.ishop.infrastructure.framework.util.ReflectionUtils;
  * @author Vitaly Dragun
  *
  */
-public final class JDBCTransactionalProxyFactory {
+final class JDBCTransactionalProxyFactory {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T createTransactionalProxy(DataSource dataSource, T realService) {
@@ -27,6 +27,15 @@ public final class JDBCTransactionalProxyFactory {
 				JDBCTransactionalProxyFactory.class.getClassLoader(),
 				realService.getClass().getInterfaces(),
 				new TransactionalProxyInvocationHandler(realService, dataSource));
+	}
+	
+	static boolean isTransactionalProxyInvocationHandler(Object invocationHandler) {
+		return invocationHandler.getClass() == TransactionalProxyInvocationHandler.class;
+	}
+	
+	static Object getRealService(Object invocationHandler) throws IllegalAccessException {
+		TransactionalProxyInvocationHandler handler = (TransactionalProxyInvocationHandler) invocationHandler;
+		return handler.realService;
 	}
 
 	private JDBCTransactionalProxyFactory() {

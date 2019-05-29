@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import com.revenat.ishop.infrastructure.exception.PersistenceException;
-import com.revenat.ishop.infrastructure.framework.exception.FrameworkPersistenceException;
 
 /**
  * This is the base parent class for all JDBC repositories.
@@ -24,7 +23,7 @@ public abstract class AbstractJdbcRepository extends AbstractRepository {
 	protected <T> T executeSelect(Function<T> func) {
 		try (Connection con = dataSource.getConnection()) {
 			return func.execute(con);
-		} catch (SQLException | FrameworkPersistenceException e) {
+		} catch (SQLException e) {
 			throw new PersistenceException("Error while executing sql query", e);
 		}
 	}
@@ -36,7 +35,7 @@ public abstract class AbstractJdbcRepository extends AbstractRepository {
 			T result =  func.execute(conn);
 			conn.commit();
 			return result;
-		} catch (SQLException | FrameworkPersistenceException e) {
+		} catch (SQLException e) {
 			rollback(ref, e);
 			throw new PersistenceException("Error while executing sql query", e);
 		}

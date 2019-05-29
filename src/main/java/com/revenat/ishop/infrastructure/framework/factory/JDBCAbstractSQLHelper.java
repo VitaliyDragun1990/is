@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.factory.repository;
+package com.revenat.ishop.infrastructure.framework.factory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

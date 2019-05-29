@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.factory.repository;
+package com.revenat.ishop.infrastructure.framework.factory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -23,10 +23,10 @@ import com.revenat.ishop.infrastructure.framework.annotation.persistence.reposit
  * @author Vitaly Dragun
  *
  */
-public final class JDBCRepositoryFactory {
+final class JDBCRepositoryFactory {
 
 	@SuppressWarnings("unchecked")
-	public static <T> T createRepository(Class<T> interfaceClass) {
+	static <T> T createRepository(Class<T> interfaceClass) {
 		return (T) Proxy.newProxyInstance(JDBCRepositoryFactory.class.getClassLoader(), new Class[] { interfaceClass },
 				new JDBCRepositoryInvocationHandler(interfaceClass));
 	}

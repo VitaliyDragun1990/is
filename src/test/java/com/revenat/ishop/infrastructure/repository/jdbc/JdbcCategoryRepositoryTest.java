@@ -20,7 +20,7 @@ import org.junit.Test;
 import com.revenat.ishop.domain.entity.Category;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
 import com.revenat.ishop.infrastructure.repository.DataSourceFactory;
-import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcCategoryRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.plain.JdbcCategoryRepository;
 
 public class JdbcCategoryRepositoryTest {
 	private static final int CATEGORY_TV_ID = 3;

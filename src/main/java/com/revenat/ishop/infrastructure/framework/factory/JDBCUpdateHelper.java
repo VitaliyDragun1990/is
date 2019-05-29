@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.factory.repository;
+package com.revenat.ishop.infrastructure.framework.factory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,7 +13,6 @@ import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Update;
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkPersistenceException;
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkSystemException;
-import com.revenat.ishop.infrastructure.framework.factory.transaction.JDBCConnectionFactory;
 import com.revenat.ishop.infrastructure.framework.sql.queries.UpdateQuery;
 import com.revenat.ishop.infrastructure.framework.util.ReflectionUtils;
 
@@ -27,7 +26,7 @@ import com.revenat.ishop.infrastructure.framework.util.ReflectionUtils;
 class JDBCUpdateHelper {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JDBCUpdateHelper.class);
 	
-	public Object update(Method method, Object[] args) throws IllegalAccessException {
+	Object update(Method method, Object[] args) throws IllegalAccessException {
 		validateMethodArgs(method, args);
 		
 		Object entity = args[0];
@@ -40,7 +39,7 @@ class JDBCUpdateHelper {
 	}
 	
 	private Object updateEntity(Object entity, Table table) throws IllegalAccessException {
-		List<Field> entityFields = ReflectionUtils.getAccessibleEntityFields(entity.getClass());
+		List<Field> entityFields = ReflectionUtils.getAccessibleFields(entity.getClass());
 		
 		UpdateQuery sql = build(entity, table, entityFields);
 		LOGGER.debug("UPDATE: {}, {}", sql.getQuery(), sql.getParameters());
@@ -126,7 +125,7 @@ class JDBCUpdateHelper {
 		Child child = field.getAnnotation(Child.class);
 		Object fieldValue = findIdFieldValue(entity, field);
 		if (child != null) {
-			List<Field> childFields = ReflectionUtils.getAccessibleEntityFields(fieldValue.getClass());
+			List<Field> childFields = ReflectionUtils.getAccessibleFields(fieldValue.getClass());
 			Field childIdField = ReflectionUtils.findField(fieldValue.getClass(), childFields, child.idFieldName());
 			return findIdFieldValue(fieldValue, childIdField);
 		}

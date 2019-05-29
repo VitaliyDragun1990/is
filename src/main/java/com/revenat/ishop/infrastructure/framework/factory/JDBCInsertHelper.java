@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.factory.repository;
+package com.revenat.ishop.infrastructure.framework.factory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +11,6 @@ import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Table;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Insert;
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkSystemException;
-import com.revenat.ishop.infrastructure.framework.factory.transaction.JDBCConnectionFactory;
 import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.sql.queries.BatchInsertQuery;
 import com.revenat.ishop.infrastructure.framework.sql.queries.InsertQuery;
@@ -44,7 +43,7 @@ class JDBCInsertHelper extends JDBCAbstractSQLHelper {
 
 	private void insertEntities(Collection<?> entities, Table table) throws IllegalAccessException {
 		Object entity = entities.iterator().next();
-		List<Field> entityFields = ReflectionUtils.getAccessibleEntityFields(entity.getClass());
+		List<Field> entityFields = ReflectionUtils.getAccessibleFields(entity.getClass());
 
 		BatchInsertQuery sql = build(entities, table, entityFields);
 		LOGGER.debug("INSERT: {}, {}", sql.getQuery(), sql.getParameters());
@@ -80,7 +79,7 @@ class JDBCInsertHelper extends JDBCAbstractSQLHelper {
 	private Object insertEntity(Object entity, Table table, Method method,
 			Class<? extends ResultSetHandler> resultSetHandlerClass)
 			throws IllegalAccessException, InvocationTargetException {
-		List<Field> entityFields = ReflectionUtils.getAccessibleEntityFields(entity.getClass());
+		List<Field> entityFields = ReflectionUtils.getAccessibleFields(entity.getClass());
 
 		InsertQuery sql = build(entity, table, entityFields);
 		LOGGER.debug("INSERT: {}, {}", sql.getQuery(), sql.getParameters());
@@ -183,7 +182,7 @@ class JDBCInsertHelper extends JDBCAbstractSQLHelper {
 		Child child = field.getAnnotation(Child.class);
 		Object fieldValue = field.get(entity);
 		if (child != null) {
-			List<Field> childFields = ReflectionUtils.getAccessibleEntityFields(fieldValue.getClass());
+			List<Field> childFields = ReflectionUtils.getAccessibleFields(fieldValue.getClass());
 			Field idField = ReflectionUtils.findField(fieldValue.getClass(), childFields, child.idFieldName());
 			return idField.get(fieldValue);
 		}

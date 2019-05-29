@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.util;
+package com.revenat.ishop.infrastructure.util;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -17,8 +17,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
-import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
-import com.revenat.ishop.infrastructure.framework.util.FrameworkJDBCUtils;
+import com.revenat.ishop.infrastructure.util.JDBCUtils;
+import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
 
 public class JDBCUtilsTest {
 	private static final String DELETE_ALL = "DELETE FROM product";
@@ -41,7 +41,7 @@ public class JDBCUtilsTest {
 		expected.expect(InvalidParameterException.class);
 		expected.expectMessage(containsString("Connection can not be null"));
 		
-		FrameworkJDBCUtils.select(null, JDBC_URL, new ProductsHandler());
+		JDBCUtils.select(null, JDBC_URL, new ProductsHandler());
 	}
 	
 	@Test
@@ -50,7 +50,7 @@ public class JDBCUtilsTest {
 		expected.expectMessage(containsString("Sql string can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			FrameworkJDBCUtils.select(c, null, new ProductsHandler());
+			JDBCUtils.select(c, null, new ProductsHandler());
 
 		}
 	}
@@ -61,7 +61,7 @@ public class JDBCUtilsTest {
 		expected.expectMessage(containsString("Result set handler can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			FrameworkJDBCUtils.select(c, SELECT_ALL, null);
+			JDBCUtils.select(c, SELECT_ALL, null);
 
 		}
 	}
@@ -69,7 +69,7 @@ public class JDBCUtilsTest {
 	@Test
 	public void shouldNotAllowToSelectWithParameters() throws Exception {
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			Product product = FrameworkJDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
+			Product product = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
 
 			assertThat(product.getId(), equalTo(1));
 		}
@@ -78,7 +78,7 @@ public class JDBCUtilsTest {
 	@Test
 	public void shouldAllowToSelectWithoutParameters() throws SQLException {
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			List<Product> allProducts = FrameworkJDBCUtils.select(c, SELECT_ALL, new ProductsHandler());
+			List<Product> allProducts = JDBCUtils.select(c, SELECT_ALL, new ProductsHandler());
 
 			assertThat(allProducts, hasSize(2));
 		}
@@ -89,7 +89,7 @@ public class JDBCUtilsTest {
 		expected.expect(InvalidParameterException.class);
 		expected.expectMessage(containsString("Connection can not be null"));
 		
-		FrameworkJDBCUtils.insert(null, INSERT_NEW_WITHOUT_PARAMS, new ProductIdHandler());
+		JDBCUtils.insert(null, INSERT_NEW_WITHOUT_PARAMS, new ProductIdHandler());
 	}
 	
 	@Test
@@ -98,7 +98,7 @@ public class JDBCUtilsTest {
 		expected.expectMessage(containsString("Sql string can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			FrameworkJDBCUtils.insert(c, null, new ProductIdHandler());
+			JDBCUtils.insert(c, null, new ProductIdHandler());
 
 		}
 	}
@@ -109,7 +109,7 @@ public class JDBCUtilsTest {
 		expected.expectMessage(containsString("Result set handler can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			FrameworkJDBCUtils.insert(c, INSERT_NEW_WITHOUT_PARAMS, null);
+			JDBCUtils.insert(c, INSERT_NEW_WITHOUT_PARAMS, null);
 
 		}
 	}
@@ -117,9 +117,9 @@ public class JDBCUtilsTest {
 	@Test
 	public void shouldAllowToInsertWithParameters() throws Exception {
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			int productId = FrameworkJDBCUtils.insert(c, INSERT_NEW_WITH_PARAMS, new ProductIdHandler(), "IPad", "Tablet", "Apple");
+			int productId = JDBCUtils.insert(c, INSERT_NEW_WITH_PARAMS, new ProductIdHandler(), "IPad", "Tablet", "Apple");
 			
-			Product product = FrameworkJDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), productId);
+			Product product = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), productId);
 			
 			assertThat(product.getId(), equalTo(productId));
 			assertThat(product.getName(), equalTo("IPad"));
@@ -131,9 +131,9 @@ public class JDBCUtilsTest {
 	@Test
 	public void shouldAllowToInsertWithoutParameters() throws Exception {
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			int productId = FrameworkJDBCUtils.insert(c, INSERT_NEW_WITHOUT_PARAMS, new ProductIdHandler());
+			int productId = JDBCUtils.insert(c, INSERT_NEW_WITHOUT_PARAMS, new ProductIdHandler());
 			
-			Product product = FrameworkJDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), productId);
+			Product product = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), productId);
 			
 			assertThat(product.getId(), equalTo(productId));
 			assertThat(product.getName(), equalTo("IPad"));
@@ -147,7 +147,7 @@ public class JDBCUtilsTest {
 		expected.expect(InvalidParameterException.class);
 		expected.expectMessage(containsString("Connection can not be null"));
 		
-		FrameworkJDBCUtils.executeUpdate(null, INSERT_NEW_WITHOUT_PARAMS);
+		JDBCUtils.executeUpdate(null, INSERT_NEW_WITHOUT_PARAMS);
 	}
 	
 	@Test
@@ -156,20 +156,20 @@ public class JDBCUtilsTest {
 		expected.expectMessage(containsString("Sql string can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			FrameworkJDBCUtils.executeUpdate(c, null);
+			JDBCUtils.executeUpdate(c, null);
 		}
 	}
 	
 	@Test
 	public void shouldAllowToUpdateWithParameters() throws Exception {
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			Product product = FrameworkJDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
+			Product product = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
 			assertThat(product.getName(), equalTo("Macbook Air"));
 			
-			int rowsUpdated = FrameworkJDBCUtils.executeUpdate(c, UPDATE_WITH_PARAMS, "Macbook Pro", 1);
+			int rowsUpdated = JDBCUtils.executeUpdate(c, UPDATE_WITH_PARAMS, "Macbook Pro", 1);
 			assertThat(rowsUpdated, equalTo(1));
 			
-			product = FrameworkJDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
+			product = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
 			assertThat(product.getName(), equalTo("Macbook Pro"));
 		}
 	}
@@ -177,13 +177,13 @@ public class JDBCUtilsTest {
 	@Test
 	public void shouldAllowToUpdateWithoutParameters() throws Exception {
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			Product product = FrameworkJDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
+			Product product = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
 			assertThat(product.getName(), equalTo("Macbook Air"));
 			
-			int rowsUpdated = FrameworkJDBCUtils.executeUpdate(c, UPDATE_WITHOUT_PARAMS);
+			int rowsUpdated = JDBCUtils.executeUpdate(c, UPDATE_WITHOUT_PARAMS);
 			assertThat(rowsUpdated, equalTo(1));
 			
-			product = FrameworkJDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
+			product = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
 			assertThat(product.getName(), equalTo("Macbook Pro"));
 		}
 	}
@@ -191,13 +191,13 @@ public class JDBCUtilsTest {
 	@Test
 	public void shouldAllowToDeleteWithoutParameters() throws Exception {
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			List<Product> products = FrameworkJDBCUtils.select(c, SELECT_ALL, new ProductsHandler());
+			List<Product> products = JDBCUtils.select(c, SELECT_ALL, new ProductsHandler());
 			assertThat(products, hasSize(2));
 			
-			int rowsDeleted = FrameworkJDBCUtils.executeUpdate(c, DELETE_ALL);
+			int rowsDeleted = JDBCUtils.executeUpdate(c, DELETE_ALL);
 			assertThat(rowsDeleted, equalTo(2));
 			
-			products = FrameworkJDBCUtils.select(c, SELECT_ALL, new ProductsHandler());
+			products = JDBCUtils.select(c, SELECT_ALL, new ProductsHandler());
 			assertThat(products, empty());
 		}
 	}
@@ -205,13 +205,13 @@ public class JDBCUtilsTest {
 	@Test
 	public void shouldAllowToDeleteWithParameters() throws Exception {
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			Product product = FrameworkJDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
+			Product product = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
 			assertThat(product, notNullValue());
 			
-			int rowsDeleted = FrameworkJDBCUtils.executeUpdate(c, "DELETE FROM product WHERE product_id=?", 1);
+			int rowsDeleted = JDBCUtils.executeUpdate(c, "DELETE FROM product WHERE product_id=?", 1);
 			assertThat(rowsDeleted, equalTo(1));
 			
-			product = FrameworkJDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
+			product = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1);
 			assertNull(product);
 		}
 	}
@@ -222,7 +222,7 @@ public class JDBCUtilsTest {
 		expected.expectMessage(containsString("Sql string can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			FrameworkJDBCUtils.insertBatch(c, null, Collections.emptyList());
+			JDBCUtils.insertBatch(c, null, Collections.emptyList());
 		}
 	}
 	
@@ -231,7 +231,7 @@ public class JDBCUtilsTest {
 		expected.expect(InvalidParameterException.class);
 		expected.expectMessage(containsString("Connection can not be null"));
 		
-		FrameworkJDBCUtils.insertBatch(null, INSERT_NEW_WITHOUT_PARAMS, Collections.emptyList());
+		JDBCUtils.insertBatch(null, INSERT_NEW_WITHOUT_PARAMS, Collections.emptyList());
 	}
 	
 	@Test
@@ -240,7 +240,7 @@ public class JDBCUtilsTest {
 		expected.expectMessage(containsString("Can not execute insertBatch with null or empty parameter list"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			FrameworkJDBCUtils.insertBatch(c, INSERT_NEW_WITHOUT_PARAMS, null);
+			JDBCUtils.insertBatch(c, INSERT_NEW_WITHOUT_PARAMS, null);
 		}
 	}
 	
@@ -250,7 +250,7 @@ public class JDBCUtilsTest {
 		expected.expectMessage(containsString("Can not execute insertBatch with null or empty parameter list"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			FrameworkJDBCUtils.insertBatch(c, INSERT_NEW_WITHOUT_PARAMS, Collections.emptyList());
+			JDBCUtils.insertBatch(c, INSERT_NEW_WITHOUT_PARAMS, Collections.emptyList());
 		}
 	}
 	
@@ -261,10 +261,10 @@ public class JDBCUtilsTest {
 				new Object[] {1999, "IPhone+", "Smartphone", "Apple"}
 				);
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
-			FrameworkJDBCUtils.insertBatch(c, INSERT_BATCH_WITH_PARAMS, params);
+			JDBCUtils.insertBatch(c, INSERT_BATCH_WITH_PARAMS, params);
 			
-			Product productA = FrameworkJDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 999);
-			Product productB = FrameworkJDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1999);
+			Product productA = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 999);
+			Product productB = JDBCUtils.select(c, SELECT_BY_ID, new ProductHandler(), 1999);
 			
 			assertThat(productA.getId(), equalTo(999));
 			assertThat(productA.getName(), equalTo("IPad+"));

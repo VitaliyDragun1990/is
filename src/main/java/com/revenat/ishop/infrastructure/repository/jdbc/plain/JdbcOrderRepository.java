@@ -71,7 +71,7 @@ public class JdbcOrderRepository extends AbstractJdbcRepository implements Order
 	}
 
 	@Override
-	public List<Order> findByAccountId(int accountId, int offset, int limit) {
+	public List<Order> findByAccountId(int accountId, int limit, int offset) {
 		// Get order by accountId
 		List<Order> orders = executeSelect(conn ->
 			JDBCUtils.select(conn, SqlQueries.GET_ORDERS_BY_ACCOUNT_ID, ORDERS_NANDLER, accountId, limit, offset)

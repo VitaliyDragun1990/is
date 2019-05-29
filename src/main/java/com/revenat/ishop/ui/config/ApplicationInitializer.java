@@ -41,7 +41,7 @@ public class ApplicationInitializer implements ServletContainerInitializer {
 	
 	@Override
 	public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
-		ServiceManager serviceManager = ServiceManager.getInstance(ctx.getRealPath("/"));
+		ServiceManager serviceManager = ServiceManager.getInstance();
 		
 		ServletRegistration.Dynamic servletReg = ctx.addServlet("AllProductsController",
 				new AllProductsController(serviceManager.getProductService()));

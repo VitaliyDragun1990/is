@@ -5,13 +5,20 @@ import java.util.List;
 import com.revenat.ishop.application.service.ProductService;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.util.Checks;
 
+@Component
 @Transactional(readOnly=true)
 public class ProductServiceImpl implements ProductService {
-	private final ProductRepository productRepository;
+	@Autowired
+	private ProductRepository productRepository;
+	
+	public ProductServiceImpl() {
+	}
 	
 	public ProductServiceImpl(ProductRepository productRepository) {
 		this.productRepository = productRepository;

@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.factory.repository;
+package com.revenat.ishop.infrastructure.framework.factory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -11,7 +11,6 @@ import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Delete;
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkPersistenceException;
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkSystemException;
-import com.revenat.ishop.infrastructure.framework.factory.transaction.JDBCConnectionFactory;
 import com.revenat.ishop.infrastructure.framework.sql.queries.DeleteQuery;
 import com.revenat.ishop.infrastructure.framework.util.ReflectionUtils;
 
@@ -36,7 +35,7 @@ class JDBCDeleteHelper {
 	}
 	
 	private Object deleteEntity(Object entity, Table table) throws IllegalAccessException {
-		List<Field> entityFields = ReflectionUtils.getAccessibleEntityFields(entity.getClass());
+		List<Field> entityFields = ReflectionUtils.getAccessibleFields(entity.getClass());
 		
 		DeleteQuery sql = build(entity, table, entityFields);
 		LOGGER.debug("DELETE: {}, {}", sql.getQuery(), sql.getParameters());

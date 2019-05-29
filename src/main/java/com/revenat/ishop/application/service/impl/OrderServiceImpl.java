@@ -5,16 +5,24 @@ import java.util.List;
 import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.domain.entity.OrderItem;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
 import com.revenat.ishop.infrastructure.repository.OrderRepository;
 import com.revenat.ishop.infrastructure.util.Checks;
 
+@Component
 @Transactional(readOnly=true)
 public class OrderServiceImpl implements OrderService {
-	private final OrderRepository orderRepository;
-	private final OrderItemRepository orderItemRepository;
+	@Autowired
+	private OrderRepository orderRepository;
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 
+	public OrderServiceImpl() {
+	}
+	
 	public OrderServiceImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
 		this.orderRepository = orderRepository;
 		this.orderItemRepository = orderItemRepository;

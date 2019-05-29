@@ -31,7 +31,7 @@ public class DefaultResultSetHandler<T> implements ResultSetHandler<T> {
 	public T handle(ResultSet rs) throws SQLException {
 		try {
 			T entity = entityClass.newInstance();
-			List<Field> entityFields = ReflectionUtils.getAccessibleEntityFields(entityClass);
+			List<Field> entityFields = ReflectionUtils.getAccessibleFields(entityClass);
 			List<String> columns = getAllColumns(rs);
 			populateFields(entityFields, entity, columns, rs);
 			return entity;
@@ -67,7 +67,7 @@ public class DefaultResultSetHandler<T> implements ResultSetHandler<T> {
 			List<String> columns) throws InstantiationException, IllegalAccessException, SQLException {
 		Object embeddedInstance = fieldClass.newInstance();
 		field.set(entity, embeddedInstance);
-		List<Field> embeddedInstanceFields = ReflectionUtils.getAccessibleEntityFields(fieldClass);
+		List<Field> embeddedInstanceFields = ReflectionUtils.getAccessibleFields(fieldClass);
 		populateFields(embeddedInstanceFields, embeddedInstance, columns, rs);
 		
 		Field idField = ReflectionUtils.findField(fieldClass, embeddedInstanceFields, child.idFieldName());

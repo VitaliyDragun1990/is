@@ -17,7 +17,7 @@ import org.junit.rules.ExpectedException;
 import com.revenat.ishop.domain.entity.Account;
 import com.revenat.ishop.infrastructure.exception.PersistenceException;
 import com.revenat.ishop.infrastructure.repository.DataSourceFactory;
-import com.revenat.ishop.infrastructure.repository.jdbc.framework.JdbcAccountRepository;
+import com.revenat.ishop.infrastructure.repository.jdbc.plain.JdbcAccountRepository;
 
 public class JdbcAccountRepositoryTest {
 	

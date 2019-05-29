@@ -1,6 +1,8 @@
 package com.revenat.ishop.application.service.impl;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -11,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.application.mapper.ShoppingCartMapper;
-import com.revenat.ishop.application.mapper.impl.ShoppingCartStringMapper;
 import com.revenat.ishop.application.service.AuthenticationService;
 import com.revenat.ishop.application.service.CategoryService;
 import com.revenat.ishop.application.service.OrderManager;
@@ -19,13 +20,9 @@ import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.application.service.ProducerService;
 import com.revenat.ishop.application.service.ProductService;
 import com.revenat.ishop.application.service.ShoppingCartService;
-import com.revenat.ishop.infrastructure.framework.factory.transaction.JDBCTransactionalProxyFactory;
-import com.revenat.ishop.infrastructure.repository.ProductRepository;
-import com.revenat.ishop.infrastructure.repository.RepositoryFactory;
+import com.revenat.ishop.infrastructure.framework.factory.DependencyInjectionManager;
 import com.revenat.ishop.infrastructure.service.NotificationService;
 import com.revenat.ishop.infrastructure.service.PropertiesLoader;
-import com.revenat.ishop.infrastructure.service.SocialService;
-import com.revenat.ishop.infrastructure.service.impl.ServiceFactory;
 
 /**
  * This component exists as single instance and resides in the
@@ -43,61 +40,54 @@ public class ServiceManager {
 
 	private final Properties applicationProperties;
 	private final BasicDataSource dataSource;
-	private final ShoppingCartMapper<String> cartMapper;
-	private final ProductService productService;
-	private final CategoryService categoryService;
-	private final ProducerService producerService;
-	private final OrderService orderService;
-	private final ShoppingCartService shoppingCartService;
-	private final SocialService socialService;
-	private final AuthenticationService authService;
 	private final NotificationService notificationService;
-	private final OrderManager orderManager;
+	private final DependencyInjectionManager dependencyInjectionManager;
 
 	public OrderService getOrderService() {
-		return orderService;
+		return dependencyInjectionManager.getInstance(OrderService.class);
 	}
 
 	public ProductService getProductService() {
-		return productService;
+		return dependencyInjectionManager.getInstance(ProductService.class);
 	}
 	
 	public CategoryService getCategoryService() {
-		return categoryService;
+		return dependencyInjectionManager.getInstance(CategoryService.class);
 	}
 	
 	public ProducerService getProducerService() {
-		return producerService;
+		return dependencyInjectionManager.getInstance(ProducerService.class);
 	}
 
 	public ShoppingCartService getShoppingCartService() {
-		return shoppingCartService;
+		return dependencyInjectionManager.getInstance(ShoppingCartService.class);
 	}
 
 	public String getApplicationProperty(String propertyName) {
 		String value =  applicationProperties.getProperty(propertyName);
 		if (value.startsWith("${sysEnv.")) {
 			value = value.replace("${sysEnv.", "").replace("}", "");
-			return System.getenv(value);
+			return System.getProperty(value);
 		}
 		return value;
 	}
 
 	public AuthenticationService getAuthService() {
-		return authService;
+		return dependencyInjectionManager.getInstance(AuthenticationService.class);
 	}
 	
 	public OrderManager getOrderManager() {
-		return orderManager;
+		return dependencyInjectionManager.getInstance(OrderManager.class);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public ShoppingCartMapper<String> getCartMapper() {
-		return cartMapper;
+		return dependencyInjectionManager.getInstance(ShoppingCartMapper.class);
 	}
 
-	public static synchronized ServiceManager getInstance(String applicationRootDir) {
+	public static synchronized ServiceManager getInstance() {
 		if (instance == null) {
-			instance = new ServiceManager(applicationRootDir);
+			instance = new ServiceManager();
 		}
 		return instance;
 	}
@@ -105,13 +95,14 @@ public class ServiceManager {
 	public void close() {
 		try {
 			dataSource.close();
-			notificationService.shutdown();
 		} catch (SQLException e) {
 			LOGGER.error("Error while closing datasource: " + e.getMessage(), e);
 		}
+		notificationService.shutdown();
+		dependencyInjectionManager.destroyInstances();
 	}
 
-	private ServiceManager(String applicationRootDir) {
+	private ServiceManager() {
 		applicationProperties = loadApplicationProperties();
 		dataSource = createDataSource(
 				getApplicationProperty("db.url"),
@@ -120,58 +111,18 @@ public class ServiceManager {
 				getApplicationProperty("db.driver"),
 				getApplicationProperty("db.pool.initSize"),
 				getApplicationProperty("db.pool.maxSize"));
-
-		ProductRepository productRepo = RepositoryFactory.createProductRepository();
-		categoryService = createProxyService(
-				dataSource,
-				new CategoryServiceImpl(RepositoryFactory.createCategoryRepository()));
-		producerService = createProxyService(
-				dataSource,
-				new ProducerServiceImpl(RepositoryFactory.createProducerRepository()));
-		productService = createProxyService(
-				dataSource,
-				new ProductServiceImpl(productRepo));
-		orderService = createProxyService(
-				dataSource,
-				new OrderServiceImpl(
-						RepositoryFactory.createOrderRepository(),
-						RepositoryFactory.createOrderItemRepository()
-				));
-		shoppingCartService = createProxyService(
-				dataSource,
-				new ShoppingCartServiceImpl(productRepo));
-		cartMapper = new ShoppingCartStringMapper(shoppingCartService);
-		socialService = ServiceFactory.createSocialSevice(
-				getApplicationProperty("social.facebook.appId"),
-				getApplicationProperty("social.facebook.secret"),
-				getApplicationProperty("app.host") + "/social-login");
-		authService = createProxyService(
-				dataSource,
-				new SocialAuthenticationService(
-						socialService,
-						ServiceFactory.createAvatarService(applicationRootDir),
-						RepositoryFactory.createAccountRepository()));
-		notificationService = ServiceFactory.createNotificationService(getEmailProperties());
-		orderManager = new OrderManager(
-				authService,
-				orderService,
-				new FeedbackServiceImpl(notificationService, getApplicationProperty("app.host"))
-				);
-	}
-	
-	private static <T> T createProxyService(DataSource dataSource, T originalService) {
-		return JDBCTransactionalProxyFactory.createTransactionalProxy(dataSource, originalService);
-	}
-	
-	private Properties getEmailProperties() {
-		Properties emailProps = new Properties();
-		emailProps.setProperty("email.fromEmail", getApplicationProperty("email.fromEmail"));
-		emailProps.setProperty("email.sendTryAttempts", getApplicationProperty("email.sendTryAttempts"));
-		emailProps.setProperty("email.smtp.server", getApplicationProperty("email.smtp.server"));
-		emailProps.setProperty("email.smtp.port", getApplicationProperty("email.smtp.port"));
-		emailProps.setProperty("email.smtp.username", getApplicationProperty("email.smtp.username"));
-		emailProps.setProperty("email.smtp.password", getApplicationProperty("email.smtp.password"));
-		return emailProps;
+		
+		Map<Class<?>, Object> externalDependencies = new HashMap<>();
+		externalDependencies.put(DataSource.class, dataSource);
+		
+		dependencyInjectionManager = new DependencyInjectionManager(applicationProperties, externalDependencies);
+		dependencyInjectionManager.scanPackage("com.revenat.ishop.application.mapper.impl");
+		dependencyInjectionManager.scanPackage("com.revenat.ishop.application.service.impl");
+		dependencyInjectionManager.scanPackage("com.revenat.ishop.infrastructure.repository");
+		dependencyInjectionManager.scanPackage("com.revenat.ishop.infrastructure.service.impl");
+		dependencyInjectionManager.injectDependencies();
+		
+		notificationService = dependencyInjectionManager.getInstance(NotificationService.class);
 	}
 
 	private Properties loadApplicationProperties() {

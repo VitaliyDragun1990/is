@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.factory.repository;
+package com.revenat.ishop.infrastructure.framework.factory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +17,7 @@ import com.revenat.ishop.infrastructure.util.Checks;
  * @author Vitaly Dragun
  *
  */
-public final class JDBCUtils {
+final class JDBCUtils {
 
 	private JDBCUtils() {
 	}

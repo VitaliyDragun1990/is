@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.revenat.ishop.domain.entity.OrderItem;
+import com.revenat.ishop.infrastructure.framework.annotation.di.JDBCRepository;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.CollectionItem;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Insert;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Select;
@@ -15,6 +16,7 @@ import com.revenat.ishop.infrastructure.framework.annotation.persistence.reposit
  * @author Vitaly Dragun
  *
  */
+@JDBCRepository
 public interface OrderItemRepository {
 	public static final String GET_ORDER_ITEMS_BY_ORDER_ID = 
 			"SELECT item.id, item.quantity, item.order_id, item.product_id, "

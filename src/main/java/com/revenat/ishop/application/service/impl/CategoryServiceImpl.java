@@ -5,13 +5,20 @@ import java.util.List;
 import com.revenat.ishop.application.service.CategoryService;
 import com.revenat.ishop.domain.entity.Category;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.CategoryRepository;
 
+@Component
 @Transactional(readOnly=true)
 public class CategoryServiceImpl implements CategoryService {
-	private final CategoryRepository categoryRepository;
+	@Autowired
+	private CategoryRepository categoryRepository;
 
+	public CategoryServiceImpl() {
+	}
+	
 	public CategoryServiceImpl(CategoryRepository categoryRepository) {
 		this.categoryRepository = categoryRepository;
 	}

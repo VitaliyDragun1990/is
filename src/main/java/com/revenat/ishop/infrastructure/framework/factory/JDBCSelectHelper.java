@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.factory.repository;
+package com.revenat.ishop.infrastructure.framework.factory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,7 +7,6 @@ import java.util.Collection;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.CollectionItem;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Select;
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkSystemException;
-import com.revenat.ishop.infrastructure.framework.factory.transaction.JDBCConnectionFactory;
 import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
 import com.revenat.ishop.infrastructure.framework.sql.SQLBuilder;
 import com.revenat.ishop.infrastructure.framework.sql.queries.SelectQuery;

@@ -16,14 +16,24 @@ import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
 import com.revenat.ishop.infrastructure.exception.PersistenceException;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Value;
 import com.revenat.ishop.infrastructure.repository.CategoryRepository;
 import com.revenat.ishop.infrastructure.repository.ProducerRepository;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 
+//@XMLRepository
+//@Component
 public class XMLCategoryRepository implements CategoryRepository {
-	private final ProductRepository productRepo;
-	private final ProducerRepository producerRepo;
-	private final String fileName;
+	@Autowired
+	private ProductRepository productRepo;
+	@Autowired
+	private ProducerRepository producerRepo;
+	@Value("app.xml.categories")
+	private String fileName;
+	
+	public XMLCategoryRepository() {
+	}
 
 	public XMLCategoryRepository(ProductRepository productRepo, ProducerRepository producerRepo, String fileName) {
 		this.productRepo = productRepo;

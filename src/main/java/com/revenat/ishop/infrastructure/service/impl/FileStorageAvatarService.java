@@ -11,13 +11,21 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Value;
 import com.revenat.ishop.infrastructure.service.AvatarService;
 
 import net.coobird.thumbnailator.Thumbnails;
 
+@Component
 public class FileStorageAvatarService implements AvatarService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileStorageAvatarService.class);
-	private final String mediaDirParent;
+	
+	@Value("app.root.dir")
+	private String mediaDirParent;
+	
+	public FileStorageAvatarService() {
+	}
 	
 	public FileStorageAvatarService(String mediaDirParentPath) {
 		this.mediaDirParent = normalizeMediaDirPath(mediaDirParentPath);

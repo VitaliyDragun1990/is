@@ -54,7 +54,7 @@ public class OrderManagerTest {
 
 	@Before
 	public void setUp() {
-		orderManager = new OrderManager(authService, orderService, feedbackService);
+		orderManager = new OrderManagerImpl(authService, orderService, feedbackService);
 //		Account clientAccount = new Account(CLIENT_NAME, CLIENT_EMAIL);
 		ClientAccount clientAccount = new ClientAccount(1, CLIENT_NAME, CLIENT_EMAIL, "");
 		clientAccount.setId(1);

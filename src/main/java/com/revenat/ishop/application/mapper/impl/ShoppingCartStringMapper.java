@@ -10,6 +10,8 @@ import com.revenat.ishop.domain.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
 import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.infrastructure.util.Checks;
 
 /**
@@ -19,12 +21,17 @@ import com.revenat.ishop.infrastructure.util.Checks;
  * @author Vitaly Dragun
  *
  */
+@Component
 public class ShoppingCartStringMapper implements ShoppingCartMapper<String> {
 	private static final String CART_ITEM_CODING_FORMAT = "%d-%d|";
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingCartStringMapper.class);
 
-	private final ShoppingCartService cartService;
+	@Autowired
+	private ShoppingCartService cartService;
 
+	public ShoppingCartStringMapper() {
+	}
+	
 	public ShoppingCartStringMapper(ShoppingCartService cartService) {
 		this.cartService = cartService;
 	}

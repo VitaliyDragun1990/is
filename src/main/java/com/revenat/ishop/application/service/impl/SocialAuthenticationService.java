@@ -9,6 +9,8 @@ import com.revenat.ishop.domain.entity.Account;
 import com.revenat.ishop.infrastructure.exception.PersistenceException;
 import com.revenat.ishop.infrastructure.exception.flow.FlowException;
 import com.revenat.ishop.infrastructure.exception.security.AuthenticationException;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
 import com.revenat.ishop.infrastructure.service.AvatarService;
@@ -22,10 +24,17 @@ import com.revenat.ishop.infrastructure.service.SocialService;
  * @author Vitaly Dragun
  *
  */
+@Component
 public class SocialAuthenticationService implements AuthenticationService {
-	private final SocialService socialService;
-	private final AvatarService avatarService;
-	private final AccountRepository accountRepository;
+	@Autowired
+	private SocialService socialService;
+	@Autowired
+	private AvatarService avatarService;
+	@Autowired
+	private AccountRepository accountRepository;
+	
+	public SocialAuthenticationService() {
+	}
 
 	public SocialAuthenticationService(SocialService socialService, AvatarService avatarService,
 			AccountRepository accountRepository) {

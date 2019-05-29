@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.factory.transaction;
+package com.revenat.ishop.infrastructure.framework.factory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -51,7 +51,7 @@ class JDBCTransactionalHelper {
 			Object result = method.invoke(realService, args);
 			conn.commit();
 			return result;
-		} catch (FrameworkPersistenceException e) {
+		} catch (SQLException | InvocationTargetException | IllegalAccessException | FrameworkPersistenceException e) {
 			conn.rollback();
 			throw e;
 		} catch (RuntimeException e) {
@@ -61,10 +61,7 @@ class JDBCTransactionalHelper {
 				conn.commit();
 			}
 			throw e;
-		} catch (SQLException | InvocationTargetException | IllegalAccessException e) {
-			conn.rollback();
-			throw e;
-		}
+		} 
 	}
 
 	private boolean hasSqlExceptionCause(RuntimeException e) {

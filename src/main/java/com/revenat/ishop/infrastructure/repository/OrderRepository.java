@@ -3,6 +3,7 @@ package com.revenat.ishop.infrastructure.repository;
 import java.util.List;
 
 import com.revenat.ishop.domain.entity.Order;
+import com.revenat.ishop.infrastructure.framework.annotation.di.JDBCRepository;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.CollectionItem;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Insert;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Select;
@@ -14,6 +15,7 @@ import com.revenat.ishop.infrastructure.framework.annotation.persistence.reposit
  * @author Vitaly Dragun
  *
  */
+@JDBCRepository
 public interface OrderRepository {
 
 	@Insert

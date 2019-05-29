@@ -1,6 +1,7 @@
 package com.revenat.ishop.infrastructure.repository;
 
 import com.revenat.ishop.domain.entity.Account;
+import com.revenat.ishop.infrastructure.framework.annotation.di.JDBCRepository;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Insert;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Select;
 
@@ -11,6 +12,7 @@ import com.revenat.ishop.infrastructure.framework.annotation.persistence.reposit
  * @author Vitaly Dragun
  *
  */
+@JDBCRepository
 public interface AccountRepository {
 
 	/**

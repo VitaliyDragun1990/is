@@ -1,4 +1,4 @@
-package com.revenat.ishop.infrastructure.framework.factory.transaction;
+package com.revenat.ishop.infrastructure.framework.factory;
 
 import java.sql.Connection;
 
@@ -11,7 +11,7 @@ import com.revenat.ishop.infrastructure.framework.exception.FrameworkSystemExcep
  * @author Vitaly Dragun
  *
  */
-public final class JDBCConnectionFactory {
+final class JDBCConnectionFactory {
 	private static final ThreadLocal<Connection> connections = new ThreadLocal<>();
 
 	/**

@@ -10,6 +10,8 @@ import org.apache.commons.mail.SimpleEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
+import com.revenat.ishop.infrastructure.framework.annotation.di.Value;
 import com.revenat.ishop.infrastructure.service.NotificationService;
 
 /**
@@ -19,14 +21,32 @@ import com.revenat.ishop.infrastructure.service.NotificationService;
  * @author Vitaly Dragun
  *
  */
-class AsyncEmailNotificationService implements NotificationService {
+@Component
+public class AsyncEmailNotificationService implements NotificationService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AsyncEmailNotificationService.class);
 	private final ExecutorService executorService;
-	private final EmailData emailData;
+//	private EmailData emailData;
+	
+	@Value("email.fromEmail")
+	private String fromEmail;
+	@Value("email.sendTryAttempts")
+	private String tryAttempts;
+	@Value("email.smtp.server")
+	private String server;
+	@Value("email.smtp.port")
+	private String port;
+	@Value("email.smtp.username")
+	private String username;
+	@Value("email.smtp.password")
+	private String password;
 
+	public AsyncEmailNotificationService() {
+		this.executorService = Executors.newCachedThreadPool();
+	}
+	
 	private AsyncEmailNotificationService(EmailData emailData) {
 		this.executorService = Executors.newCachedThreadPool();
-		this.emailData = emailData;
+//		this.emailData = emailData;
 	}
 	
 	public AsyncEmailNotificationService(Properties props) {
@@ -63,7 +83,8 @@ class AsyncEmailNotificationService implements NotificationService {
 			this.recipientEmail = email;
 			this.subject = subject;
 			this.content = content;
-			this.tryAttempts = emailData.getTryAttempts();
+//			this.tryAttempts = emailData.getTryAttempts();
+			this.tryAttempts = Integer.parseInt(AsyncEmailNotificationService.this.tryAttempts);
 		}
 
 		private boolean isValidTry() {
@@ -76,14 +97,15 @@ class AsyncEmailNotificationService implements NotificationService {
 				SimpleEmail email = new SimpleEmail();
 				email.setCharset("utf-8");
 
-				email.setHostName(emailData.getSmtpServer());
-				email.setSmtpPort(Integer.parseInt(emailData.getSmtpPort()));
+				email.setHostName(AsyncEmailNotificationService.this.server);
+				email.setSmtpPort(Integer.parseInt(AsyncEmailNotificationService.this.port));
 				email.setSSLCheckServerIdentity(true);
 				email.setStartTLSEnabled(true);
 
 				email.setAuthenticator(
-						new DefaultAuthenticator(emailData.getSmtpUsername(), emailData.getSmtpPassword()));
-				email.setFrom(emailData.getFromEmail());
+						new DefaultAuthenticator(AsyncEmailNotificationService.this.username,
+								AsyncEmailNotificationService.this.password));
+				email.setFrom(AsyncEmailNotificationService.this.fromEmail);
 				email.setSubject(subject);
 				email.setMsg(content);
 				email.addTo(recipientEmail);

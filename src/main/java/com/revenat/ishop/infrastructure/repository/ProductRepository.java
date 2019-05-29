@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
+import com.revenat.ishop.infrastructure.framework.annotation.di.JDBCRepository;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.CollectionItem;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Select;
 import com.revenat.ishop.infrastructure.repository.builder.CountProductsByCriteriaSQLBuilder;
@@ -16,6 +17,7 @@ import com.revenat.ishop.infrastructure.repository.builder.FindProductsByCriteri
  * @author Vitaly Dragun
  *
  */
+@JDBCRepository
 public interface ProductRepository {
 	public static final String GET_PRODUCT_BY_ID = "SELECT p.*, c.name AS category, pr.name AS producer "
 			+ "FROM product AS p INNER JOIN category AS c ON p.category_id = c.id "

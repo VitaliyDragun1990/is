@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
+import com.revenat.ishop.infrastructure.framework.annotation.di.JDBCRepository;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.CollectionItem;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.repository.Select;
 import com.revenat.ishop.infrastructure.repository.builder.FindProducersByCriteriaSQLBuilder;
@@ -15,6 +16,7 @@ import com.revenat.ishop.infrastructure.repository.builder.FindProducersByCriter
  * @author Vitaly Dragun
  *
  */
+@JDBCRepository
 public interface ProducerRepository {
 
 	/**

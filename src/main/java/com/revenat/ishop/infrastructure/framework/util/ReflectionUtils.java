@@ -14,7 +14,7 @@ import com.revenat.ishop.infrastructure.framework.exception.FrameworkSystemExcep
 
 public final class ReflectionUtils {
 
-	public static List<Field> getAccessibleEntityFields(Class<?> entityClass) {
+	public static List<Field> getAccessibleFields(Class<?> entityClass) {
 		List<Field> fields = new ArrayList<>();
 		while (entityClass != Object.class) {
 			for (Field field : entityClass.getDeclaredFields()) {
