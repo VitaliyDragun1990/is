@@ -55,7 +55,7 @@ class JDBCDeleteHelper {
 			throws IllegalAccessException {
 		StringBuilder sql = new StringBuilder("DELETE FROM ").append(table.name()).append(" WHERE ");
 		
-		String idFieldName = table.id();
+		String idFieldName = table.idField();
 		Field idField = findIdField(entityFields, idFieldName, entity);
 		Object idFieldValue = idField.get(entity);
 		String idColumnName = getIdColumnName(idField);

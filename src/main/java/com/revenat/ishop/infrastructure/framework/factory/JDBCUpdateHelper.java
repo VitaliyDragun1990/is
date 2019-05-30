@@ -63,7 +63,7 @@ class JDBCUpdateHelper {
 		StringBuilder sql = new StringBuilder("UPDATE ").append(table.name()).append(" SET ");
 		StringBuilder whereClause = new StringBuilder(" WHERE ");
 		
-		String idFieldName = table.id();
+		String idFieldName = table.idField();
 		Field idField = findIdField(entityFields, idFieldName, entity);
 		Object idFieldValue = findIdFieldValue(entity, idField);
 		String idColumnName = getIdColumnName(idField);

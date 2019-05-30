@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -28,28 +29,36 @@ class JDBCTransactionalHelper {
 
 	Object invokeInsideTransaction(Transactional transactional, Method method, Object[] args)
 			throws IllegalAccessException, InvocationTargetException {
-
-		try (Connection conn = dataSource.getConnection()) {
-			JDBCConnectionFactory.setCurrentConnection(conn);
+		
+		boolean isNestedTransaction = JDBCConnectionFactory.isCurrentConnectionExists();
+		Connection conn = null;
+		try /*(Connection conn = dataSource.getConnection())*/ {
+			conn = obtainCurrentConnection(isNestedTransaction);
 
 			if (transactional.readOnly()) {
 				return method.invoke(realService, args);
 			} else {
-				return invokeInsideTransaction(conn, method, args);
+				return invokeInsideTransaction(conn, method, args, isNestedTransaction);
 			}
 
 		} catch (SQLException e) {
 			throw new FrameworkPersistenceException(e);
 		} finally {
-			JDBCConnectionFactory.removeCurrentConnection();
+			discardCurrentConnection(conn, isNestedTransaction);
 		}
 	}
 
-	private Object invokeInsideTransaction(Connection conn, Method method, Object[] args)
+	private Object invokeInsideTransaction(Connection conn, Method method, Object[] args, boolean isNestedTransaction)
 			throws SQLException, IllegalAccessException, InvocationTargetException {
 		try {
+			if (!isNestedTransaction) {
+				TransactionSynchronizationManager.initSynchronization();
+			}
 			Object result = method.invoke(realService, args);
-			conn.commit();
+			if (!isNestedTransaction) {
+				conn.commit();
+				afterCommit();
+			}
 			return result;
 		} catch (SQLException | InvocationTargetException | IllegalAccessException | FrameworkPersistenceException e) {
 			conn.rollback();
@@ -58,10 +67,23 @@ class JDBCTransactionalHelper {
 			if (hasSqlExceptionCause(e)) {
 				conn.rollback();
 			} else {
-				conn.commit();
+				if (!isNestedTransaction) {
+					conn.commit();
+				}
 			}
 			throw e;
-		} 
+		} finally {
+			if (!isNestedTransaction) {
+				TransactionSynchronizationManager.clearSynchronization();
+			}
+		}
+	}
+
+	private void afterCommit() {
+		List<TransactionSynchronization> synchronizations = TransactionSynchronizationManager.getSynchronizations();
+		for (TransactionSynchronization synchronization : synchronizations) {
+			synchronization.afterCommit();
+		}
 	}
 
 	private boolean hasSqlExceptionCause(RuntimeException e) {
@@ -73,5 +95,29 @@ class JDBCTransactionalHelper {
 		}
 		return false;
 	}
+	
+	private Connection obtainCurrentConnection(boolean isNestedTransaction) throws SQLException {
+		Connection conn = isNestedTransaction ? JDBCConnectionFactory.getCurrentConnection() : dataSource.getConnection();
+		if (!isNestedTransaction) {
+			JDBCConnectionFactory.setCurrentConnection(conn);
+		}
+		return conn;
+	}
+	
+	private void discardCurrentConnection(Connection conn, boolean isNestedTransaction) {
+		if (!isNestedTransaction) {
+			handleCloseConnection(conn);
+			JDBCConnectionFactory.removeCurrentConnection();
+		}
+	}
 
+	private static void handleCloseConnection(Connection conn) {
+		try {
+			if (conn != null) {
+				conn.close();
+			}
+		} catch (SQLException e) {
+			throw new FrameworkPersistenceException(e);
+		}
+	}
 }

@@ -20,7 +20,7 @@ public @interface Table {
 	 * 
 	 * @return
 	 */
-	String id() default "id";
+	String idField() default "id";
 
 	/**
 	 * Expression to generate next id value, may be left empty if database use

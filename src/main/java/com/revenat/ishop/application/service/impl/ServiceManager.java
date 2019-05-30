@@ -113,10 +113,12 @@ public class ServiceManager {
 		externalDependencies.put(DataSource.class, dataSource);
 		
 		dependencyInjectionManager = new DependencyInjectionManager(applicationProperties, externalDependencies);
-		dependencyInjectionManager.scanPackage("com.revenat.ishop.application.mapper.impl");
-		dependencyInjectionManager.scanPackage("com.revenat.ishop.application.service.impl");
-		dependencyInjectionManager.scanPackage("com.revenat.ishop.infrastructure.repository");
-		dependencyInjectionManager.scanPackage("com.revenat.ishop.infrastructure.service.impl");
+		dependencyInjectionManager.scanPackages(
+				"com.revenat.ishop.application.mapper.impl",
+				"com.revenat.ishop.application.service.impl",
+				"com.revenat.ishop.infrastructure.repository",
+				"com.revenat.ishop.infrastructure.service.impl"
+				);
 		dependencyInjectionManager.injectDependencies();
 	}
 

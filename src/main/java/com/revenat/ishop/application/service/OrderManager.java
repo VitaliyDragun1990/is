@@ -5,6 +5,12 @@ import java.util.List;
 import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.domain.entity.Order;
 
+/**
+ * Contains operation for managing {@link Order} objects in the application
+ * 
+ * @author Vitaly Dragun
+ *
+ */
 public interface OrderManager {
 
 	long placeOrder(ClientSession clientSession);

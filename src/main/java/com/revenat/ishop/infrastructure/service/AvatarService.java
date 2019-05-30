@@ -14,14 +14,14 @@ public interface AvatarService {
 	String MEDIA_AVATAR_PREFIX = "/media/avatar/";
 
 	/**
-	 * Downloads user avatar image using provided {@code url}.
+	 * Saves user avatar image obtaining it from provided {@code url}.
 	 * 
-	 * @param url url of the avatar image to download
-	 * @return string representing path to downloaded avatar or {@code null} if
+	 * @param url url of the avatar image to obtain
+	 * @return string representing path to saved avatar or {@code null} if
 	 *         privided {@code url} was {@code null} in the first place.
 	 * @throws IOException
 	 */
-	String downloadAvatar(String url) throws IOException;
+	String saveAvatar(String url) throws IOException;
 
 	/**
 	 * Deletes avatar image that can be found using provided {@code avatarPath}.

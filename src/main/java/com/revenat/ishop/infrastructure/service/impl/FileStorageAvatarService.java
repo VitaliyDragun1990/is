@@ -29,7 +29,7 @@ public class FileStorageAvatarService implements AvatarService {
 	}
 
 	@Override
-	public String downloadAvatar(String url) throws IOException {
+	public String saveAvatar(String url) throws IOException {
 		if (url != null) {
 			String uid = UUID.randomUUID().toString() + ".jpg";
 			String fullImgPath = getMediaDirParent() + MEDIA_AVATAR_PREFIX + uid;

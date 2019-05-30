@@ -94,7 +94,7 @@ public class SocialAuthenticationService implements AuthenticationService {
 		String avatarUrl = null;
 		
 		try {
-			avatarUrl = avatarService.downloadAvatar(socialAccount.getAvatarUrl());
+			avatarUrl = avatarService.saveAvatar(socialAccount.getAvatarUrl());
 			Account account = new Account(socialAccount.getName(), socialAccount.getEmail(), avatarUrl);
 			return accountRepository.save(account);
 		} catch (PersistenceException | IOException e) {

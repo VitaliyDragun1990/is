@@ -19,6 +19,8 @@ import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
 import com.revenat.ishop.infrastructure.exception.security.AccessDeniedException;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
+import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
+import com.revenat.ishop.infrastructure.framework.factory.TransactionSynchronizationManager;
 import com.revenat.ishop.infrastructure.util.Checks;
 
 @Component
@@ -40,6 +42,7 @@ public class OrderManagerImpl implements OrderManager {
 		this.feedbackService = feedbackService;
 	}
 
+	@Transactional(readOnly=false)
 	@Override
 	public long placeOrder(ClientSession clientSession) {
 		ClientAccount userAccount = authService.getAuthenticatedUserAccount(clientSession);
@@ -48,12 +51,15 @@ public class OrderManagerImpl implements OrderManager {
 		
 		Order order = orderService.createOrder(toOrderItems(cart.getItems()), userAccount.getId());
 		
-		cart.clear();
-		feedbackService.sendNewOrderNotification(userAccount.getEmail(), order.getId());
+		TransactionSynchronizationManager.addSynchronization(() -> {
+			cart.clear();
+			feedbackService.sendNewOrderNotification(userAccount.getEmail(), order);
+		});
 		
 		return order.getId();
 	}
 	
+	@Transactional
 	@Override
 	public Order getById(long id, ClientSession clientSession) {
 		Order order = getOrder(id);
@@ -71,6 +77,7 @@ public class OrderManagerImpl implements OrderManager {
 		return order;
 	}
 	
+	@Transactional
 	@Override
 	public List<Order> findByClient(ClientSession clientSession, int page, int limit) {
 		validateParams(page, limit);
@@ -78,6 +85,7 @@ public class OrderManagerImpl implements OrderManager {
 		return orderService.findByAccountId(userAccount.getId(), page, limit);
 	}
 
+	@Transactional
 	@Override
 	public int coundByClient(ClientSession clientSession) {
 		ClientAccount userAccount = authService.getAuthenticatedUserAccount(clientSession);

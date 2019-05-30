@@ -36,6 +36,10 @@ final class JDBCConnectionFactory {
 	static void removeCurrentConnection() {
 		connections.remove();
 	}
+	
+	static boolean isCurrentConnectionExists() {
+		return connections.get() != null;
+	}
 
 	private JDBCConnectionFactory() {
 	}
