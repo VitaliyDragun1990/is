@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URL;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.infrastructure.framework.annotation.di.JDBCRepository;
+import com.revenat.ishop.infrastructure.framework.annotation.di.OnDestroy;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Value;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkSystemException;
@@ -80,7 +82,47 @@ public class DependencyInjectionManager {
 	}
 	
 	public void destroyInstances() {
+		for (Object instance : instances.values()) {
+			if (Proxy.isProxyClass(instance.getClass())) {
+				destroyProxyInstance(instance);
+			} else {
+				destroyInstance(instance);
+			}
+			
+		}
 		instances.clear();
+	}
+
+	protected void destroyProxyInstance(Object proxyInstance) {
+		List<Field> fields = ReflectionUtils.getAccessibleFields(proxyInstance.getClass());
+		for (Field invocationhandlerField : fields) {
+			try {
+				Object invocationHandler = invocationhandlerField.get(proxyInstance);
+				if (JDBCTransactionalProxyFactory.isTransactionalProxyInvocationHandler(invocationHandler)) {
+					Object realInstance = JDBCTransactionalProxyFactory.getRealService(invocationHandler);
+					destroyInstance(realInstance);
+				}
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				LOGGER.error("Error while trying to get a real instance of class: " + proxyInstance.getClass().getSimpleName() 
+					+ " from proxy to destroy it", e);
+			}
+		}
+	}
+
+	protected void destroyInstance(Object instance) {
+		Method[] methods = instance.getClass().getDeclaredMethods();
+		for (Method method : methods) {
+			if (method.isAnnotationPresent(OnDestroy.class) && method.getParameterCount() == 0) {
+				LOGGER.info("Invoke method annotated with @OnDestroy from class {}", instance.getClass().getSimpleName());
+				try {
+					method.setAccessible(true);
+					method.invoke(instance);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					LOGGER.error("Invoke method annotated witn @OnDestroy failed:" + e.getMessage(), e);
+				}
+			}
+		}
+		
 	}
 
 	protected void injectProxyDependencies(Object proxyInstance) throws IllegalAccessException {

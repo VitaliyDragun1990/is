@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.revenat.ishop.application.mapper.ShoppingCartMapper;
 import com.revenat.ishop.domain.model.ShoppingCart;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.ui.config.Constants;
 import com.revenat.ishop.ui.util.WebUtils;
 
@@ -17,7 +16,6 @@ import com.revenat.ishop.ui.util.WebUtils;
  * @author Vitaly Dragun
  *
  */
-@Component
 public class ShoppingCartCookieSerializer {
 	private final ShoppingCartMapper<String> cartMapper;
 

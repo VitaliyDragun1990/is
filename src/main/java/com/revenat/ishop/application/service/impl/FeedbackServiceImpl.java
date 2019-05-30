@@ -26,6 +26,5 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public void sendNewOrderNotification(String email, long orderId) {
 		notificationService.sendNotification(email, TITLE, applicationHost + "/order?id=" + orderId);
-
 	}
 }

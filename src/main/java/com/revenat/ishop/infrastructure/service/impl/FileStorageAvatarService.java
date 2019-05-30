@@ -24,18 +24,15 @@ public class FileStorageAvatarService implements AvatarService {
 	@Value("app.root.dir")
 	private String mediaDirParent;
 	
-	public FileStorageAvatarService() {
-	}
-	
-	public FileStorageAvatarService(String mediaDirParentPath) {
-		this.mediaDirParent = normalizeMediaDirPath(mediaDirParentPath);
+	private String getMediaDirParent() {
+		return normalizeMediaDirPath(mediaDirParent);
 	}
 
 	@Override
 	public String downloadAvatar(String url) throws IOException {
 		if (url != null) {
 			String uid = UUID.randomUUID().toString() + ".jpg";
-			String fullImgPath = mediaDirParent + MEDIA_AVATAR_PREFIX + uid;
+			String fullImgPath = getMediaDirParent() + MEDIA_AVATAR_PREFIX + uid;
 			downloadImageFromUrl(url, fullImgPath);
 			Thumbnails.of(new File(fullImgPath)).size(AVATAR_SIZE_IN_PX, AVATAR_SIZE_IN_PX).toFile(new File(fullImgPath));
 			return MEDIA_AVATAR_PREFIX + uid;
@@ -46,7 +43,7 @@ public class FileStorageAvatarService implements AvatarService {
 	@Override
 	public boolean deleteAvatarIfExists(String avatarPath) {
 		if (avatarPath != null) {
-			File avatar = new File(mediaDirParent + avatarPath);
+			File avatar = new File(getMediaDirParent() + avatarPath);
 			if (avatar.exists()) {
 				if (avatar.delete()) {
 					LOGGER.info("Avatar {} has been deleted.", avatarPath);

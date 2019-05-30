@@ -21,7 +21,6 @@ import com.revenat.ishop.application.service.ProducerService;
 import com.revenat.ishop.application.service.ProductService;
 import com.revenat.ishop.application.service.ShoppingCartService;
 import com.revenat.ishop.infrastructure.framework.factory.DependencyInjectionManager;
-import com.revenat.ishop.infrastructure.service.NotificationService;
 import com.revenat.ishop.infrastructure.service.PropertiesLoader;
 
 /**
@@ -40,7 +39,6 @@ public class ServiceManager {
 
 	private final Properties applicationProperties;
 	private final BasicDataSource dataSource;
-	private final NotificationService notificationService;
 	private final DependencyInjectionManager dependencyInjectionManager;
 
 	public OrderService getOrderService() {
@@ -98,7 +96,6 @@ public class ServiceManager {
 		} catch (SQLException e) {
 			LOGGER.error("Error while closing datasource: " + e.getMessage(), e);
 		}
-		notificationService.shutdown();
 		dependencyInjectionManager.destroyInstances();
 	}
 
@@ -121,8 +118,6 @@ public class ServiceManager {
 		dependencyInjectionManager.scanPackage("com.revenat.ishop.infrastructure.repository");
 		dependencyInjectionManager.scanPackage("com.revenat.ishop.infrastructure.service.impl");
 		dependencyInjectionManager.injectDependencies();
-		
-		notificationService = dependencyInjectionManager.getInstance(NotificationService.class);
 	}
 
 	private Properties loadApplicationProperties() {

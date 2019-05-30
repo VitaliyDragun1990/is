@@ -1,6 +1,5 @@
 package com.revenat.ishop.infrastructure.service.impl;
 
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -11,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
+import com.revenat.ishop.infrastructure.framework.annotation.di.OnDestroy;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Value;
 import com.revenat.ishop.infrastructure.service.NotificationService;
 
@@ -25,12 +25,11 @@ import com.revenat.ishop.infrastructure.service.NotificationService;
 public class AsyncEmailNotificationService implements NotificationService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AsyncEmailNotificationService.class);
 	private final ExecutorService executorService;
-//	private EmailData emailData;
 	
 	@Value("email.fromEmail")
 	private String fromEmail;
 	@Value("email.sendTryAttempts")
-	private String tryAttempts;
+	private String sendTryAttempts;
 	@Value("email.smtp.server")
 	private String server;
 	@Value("email.smtp.port")
@@ -43,31 +42,13 @@ public class AsyncEmailNotificationService implements NotificationService {
 	public AsyncEmailNotificationService() {
 		this.executorService = Executors.newCachedThreadPool();
 	}
-	
-	private AsyncEmailNotificationService(EmailData emailData) {
-		this.executorService = Executors.newCachedThreadPool();
-//		this.emailData = emailData;
-	}
-	
-	public AsyncEmailNotificationService(Properties props) {
-		this(buildEmailData(props));
-	}
-
-	private static EmailData buildEmailData(Properties props) {
-		return new EmailData(
-				props.getProperty("email.fromEmail"),
-				Integer.parseInt(props.getProperty("email.sendTryAttempts")),
-				props.getProperty("email.smtp.server"),
-				props.getProperty("email.smtp.port"),
-				props.getProperty("email.smtp.username"),
-				props.getProperty("email.smtp.password"));
-	}
 
 	@Override
 	public void sendNotification(String recipientEmail, String title, String content) {
 		executorService.submit(new EmailItem(recipientEmail, title, content));
 	}
 
+	@OnDestroy
 	@Override
 	public void shutdown() {
 		executorService.shutdown();
@@ -79,12 +60,11 @@ public class AsyncEmailNotificationService implements NotificationService {
 		private final String content;
 		private int tryAttempts;
 
-		public EmailItem(String email, String subject, String content) {
+		EmailItem(String email, String subject, String content) {
 			this.recipientEmail = email;
 			this.subject = subject;
 			this.content = content;
-//			this.tryAttempts = emailData.getTryAttempts();
-			this.tryAttempts = Integer.parseInt(AsyncEmailNotificationService.this.tryAttempts);
+			this.tryAttempts = Integer.parseInt(sendTryAttempts);
 		}
 
 		private boolean isValidTry() {
@@ -97,15 +77,14 @@ public class AsyncEmailNotificationService implements NotificationService {
 				SimpleEmail email = new SimpleEmail();
 				email.setCharset("utf-8");
 
-				email.setHostName(AsyncEmailNotificationService.this.server);
-				email.setSmtpPort(Integer.parseInt(AsyncEmailNotificationService.this.port));
+				email.setHostName(server);
+				email.setSmtpPort(Integer.parseInt(port));
 				email.setSSLCheckServerIdentity(true);
 				email.setStartTLSEnabled(true);
 
 				email.setAuthenticator(
-						new DefaultAuthenticator(AsyncEmailNotificationService.this.username,
-								AsyncEmailNotificationService.this.password));
-				email.setFrom(AsyncEmailNotificationService.this.fromEmail);
+						new DefaultAuthenticator(username,password));
+				email.setFrom(fromEmail);
 				email.setSubject(subject);
 				email.setMsg(content);
 				email.addTo(recipientEmail);
