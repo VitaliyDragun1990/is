@@ -7,8 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.revenat.ishop.application.dto.ProductDTO;
 import com.revenat.ishop.application.service.ProductService;
-import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.ui.config.Constants;
 import com.revenat.ishop.ui.config.Constants.Attribute;
 import com.revenat.ishop.ui.config.Constants.Fragment;
@@ -25,7 +25,7 @@ public class LoadMoreAllProductsController extends AbstractProductController {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		int requestedPage = getPage(req);
-		List<Product> page = productService.findProducts(requestedPage, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
+		List<ProductDTO> page = productService.findProducts(requestedPage, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
 
 		req.setAttribute(Attribute.PRODUCTS, page);
 

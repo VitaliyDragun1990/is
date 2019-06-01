@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import com.revenat.ishop.application.form.ProductForm;
+import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.application.service.ShoppingCartService;
-import com.revenat.ishop.domain.model.ShoppingCart;
 import com.revenat.ishop.ui.controller.AbstractController;
 import com.revenat.ishop.ui.util.RoutingUtils;
 

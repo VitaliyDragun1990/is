@@ -21,16 +21,6 @@ public class Product extends AbstractEntity<Integer> {
 		price = BigDecimal.ZERO;
 	}
 
-	public Product(String name, String description, String imageLink, BigDecimal price, String category,
-			String producer) {
-		this.name = name;
-		this.description = description;
-		this.imageLink = imageLink;
-		this.price = price;
-		this.category = category;
-		this.producer = producer;
-	}
-
 	public String getName() {
 		return name;
 	}

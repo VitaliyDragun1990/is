@@ -7,8 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.revenat.ishop.application.dto.OrderDTO;
 import com.revenat.ishop.application.service.OrderManager;
-import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.ui.config.Constants;
 import com.revenat.ishop.ui.config.Constants.Attribute;
 import com.revenat.ishop.ui.config.Constants.Page;
@@ -24,7 +24,7 @@ public class MyOrdersController extends AbstractOrderController {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<Order> userOrders = orderManager.findByClient(getClientSession(req), 1, Constants.MAX_ORDERS_PER_HTML_PAGE);
+		List<OrderDTO> userOrders = orderManager.findByClient(getClientSession(req), 1, Constants.MAX_ORDERS_PER_HTML_PAGE);
 		int totalOrderCount = orderManager.coundByClient(getClientSession(req));
 		int totalPageCount = getTotalPageCount(totalOrderCount, Constants.MAX_ORDERS_PER_HTML_PAGE);
 		

@@ -353,7 +353,7 @@ $(function() {
                 }
                 refreshCartTotal(data);
 			},
-			erro : function(data) {
+			error : function(data) {
 				convertLoaderSpinnerToButton(btn, 'btn-primary', addProductToCart);
 				alert("Error while adding product to shopping cart");
 			}

@@ -52,6 +52,6 @@ public class Account extends AbstractEntity<Integer> {
 
 	@Override
 	public String toString() {
-		return String.format("Account [id=%s, name=%s, email=%s]",getId(), name, email);
+		return String.format("Account [id=%s, name=%s, email=%s, avatarUrl=%s]",getId(), name, email, avatarUrl);
 	}
 }

@@ -1,15 +1,22 @@
-package com.revenat.ishop.domain.model;
+package com.revenat.ishop.application.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
+import com.revenat.ishop.application.dto.ProductDTO;
+import com.revenat.ishop.application.dto.base.BaseDTO;
+import com.revenat.ishop.domain.entity.OrderItem;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
+import com.revenat.ishop.infrastructure.transform.annotation.Ignore;
+import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 import com.revenat.ishop.infrastructure.util.Checks;
+import com.revenat.ishop.infrastructure.util.CommonUtil;
 
 /**
  * This component represents client's shopping cart. It can store at most
@@ -59,7 +66,7 @@ public class ShoppingCart implements Serializable {
 	 *                             {@value #MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART} x
 	 *                             {@value #MAX_PRODUCTS_PER_SHOPPING_CART}
 	 */
-	public void addProduct(Product product, int quantity) {
+	public void addProduct(ProductDTO product, int quantity) {
 		ShoppingCartItem oldItem = cart.get(product.getId());
 		if (oldItem != null) {
 			int numberOfProducts = oldItem.getQuantity() + quantity;
@@ -104,8 +111,10 @@ public class ShoppingCart implements Serializable {
 	 * 
 	 * @return {@link Collection} of {@link ShoppingCartItem} instances.
 	 */
-	public Collection<ShoppingCartItem> getItems() {
-		return Collections.unmodifiableCollection(cart.values());
+	public List<ShoppingCartItem> getItems() {
+		List<ShoppingCartItem> items = new ArrayList<>();
+		items.addAll(cart.values());
+		return CommonUtil.getSafeList(items);
 	}
 
 	/**
@@ -156,18 +165,29 @@ public class ShoppingCart implements Serializable {
 	 * @author Vitaly Dragun
 	 *
 	 */
-	public static class ShoppingCartItem implements Serializable {
+	public static class ShoppingCartItem extends BaseDTO<Long, OrderItem> implements Serializable {
 		private static final long serialVersionUID = 1L;
 
-		private final Product product;
-		private final int quantity;
+		@Ignore
+		private ProductDTO product;
+		private Integer quantity;
+		
+		public ShoppingCartItem() {
+		}
+		
+		@Override
+		public OrderItem untransform(OrderItem entity, Transformer transformer) {
+			entity.setProduct(transformer.untransform(product, Product.class));
+			
+			return super.untransform(entity, transformer);
+		}
 
-		private ShoppingCartItem(Product product, int quantity) {
+		private ShoppingCartItem(ProductDTO product, int quantity) {
 			this.product = product;
 			this.quantity = quantity;
 		}
 
-		public Product getProduct() {
+		public ProductDTO getProduct() {
 			return product;
 		}
 

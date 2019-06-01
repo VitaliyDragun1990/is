@@ -1,7 +1,7 @@
 package com.revenat.ishop.application.service;
 
+import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.domain.entity.Product;
-import com.revenat.ishop.domain.model.ShoppingCart;
 import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
 
 /**

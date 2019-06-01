@@ -1,8 +1,8 @@
 package com.revenat.ishop.application.service;
 
-import com.revenat.ishop.domain.entity.Order;
+import com.revenat.ishop.application.dto.OrderDTO;
 
 public interface NotificationContentBuilderService {
 
-	String buildNewOrderCreatedNotificationMessage(Order order);
+	String buildNewOrderCreatedNotificationMessage(OrderDTO order);
 }

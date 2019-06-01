@@ -21,7 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.revenat.ishop.application.mapper.ShoppingCartMapper;
-import com.revenat.ishop.domain.model.ShoppingCart;
+import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.ui.config.Constants;
 import com.revenat.ishop.ui.service.ShoppingCartCookieSerializer;
 

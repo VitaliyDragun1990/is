@@ -1,7 +1,14 @@
-package com.revenat.ishop.domain.model;
+package com.revenat.ishop.application.model;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -9,9 +16,8 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.revenat.ishop.domain.entity.Product;
-import com.revenat.ishop.domain.model.ShoppingCart;
-import com.revenat.ishop.domain.model.ShoppingCart.ShoppingCartItem;
+import com.revenat.ishop.application.dto.ProductDTO;
+import com.revenat.ishop.application.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
 
 public class ShoppingCartTest {
@@ -46,7 +52,7 @@ public class ShoppingCartTest {
 
 	@Test
 	public void shouldAllowToRemoveSpecifiedNumberOfProductUnitsFromShoppingCart() throws Exception {
-		Product p = createProductWithId(1);
+		ProductDTO p = createProductWithId(1);
 		shoppingCart.addProduct(p, 5);
 
 		shoppingCart.removeProduct(p.getId(), 2);
@@ -76,7 +82,7 @@ public class ShoppingCartTest {
 
 	@Test
 	public void shouldAllowToIncrementProductUnitQuantityIfAddProductSeveralTimes() throws Exception {
-		Product p = createProductWithId(1);
+		ProductDTO p = createProductWithId(1);
 		shoppingCart.addProduct(p, 1);
 		shoppingCart.addProduct(p, 2);
 
@@ -85,7 +91,7 @@ public class ShoppingCartTest {
 
 	@Test
 	public void shouldAllowToDecrementProductUnitQuantityIfRemoveProductSeveralTimes() throws Exception {
-		Product p = createProductWithId(1);
+		ProductDTO p = createProductWithId(1);
 		shoppingCart.addProduct(p, 8);
 
 		shoppingCart.removeProduct(p.getId(), 2);
@@ -96,7 +102,7 @@ public class ShoppingCartTest {
 
 	@Test(expected = ValidationException.class)
 	public void shouldNotAllowToAddProductIfItTotalQuantityWouldBeGreaterThan10() throws Exception {
-		Product p = createProductWithId(1);
+		ProductDTO p = createProductWithId(1);
 		shoppingCart.addProduct(p, 5);
 		shoppingCart.addProduct(p, 6);
 	}
@@ -134,9 +140,9 @@ public class ShoppingCartTest {
 	
 	@Test
 	public void shouldAllowToGetCartTotalCost() throws Exception {
-		Product productA = createProductWithId(1);
+		ProductDTO productA = createProductWithId(1);
 		productA.setPrice(BigDecimal.valueOf(10.45));
-		Product productB = createProductWithId(2);
+		ProductDTO productB = createProductWithId(2);
 		productB.setPrice(BigDecimal.valueOf(20.50));
 		
 		shoppingCart.addProduct(productA, 1);
@@ -152,9 +158,9 @@ public class ShoppingCartTest {
 	
 	@Test
 	public void shouldAllowToClearShoppingCart() throws Exception {
-		Product productA = createProductWithId(1);
+		ProductDTO productA = createProductWithId(1);
 		productA.setPrice(BigDecimal.valueOf(10.45));
-		Product productB = createProductWithId(2);
+		ProductDTO productB = createProductWithId(2);
 		productB.setPrice(BigDecimal.valueOf(20.50));
 		shoppingCart.addProduct(productA, 1);
 		shoppingCart.addProduct(productB, 10);
@@ -172,8 +178,8 @@ public class ShoppingCartTest {
 
 	}
 	
-	private static Product createProductWithId(int id) {
-		Product p = new Product();
+	private static ProductDTO createProductWithId(int id) {
+		ProductDTO p = new ProductDTO();
 		p.setId(id);
 		return p;
 	}

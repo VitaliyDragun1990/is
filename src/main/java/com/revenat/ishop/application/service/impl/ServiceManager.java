@@ -117,7 +117,8 @@ public class ServiceManager {
 				"com.revenat.ishop.application.mapper.impl",
 				"com.revenat.ishop.application.service.impl",
 				"com.revenat.ishop.infrastructure.repository",
-				"com.revenat.ishop.infrastructure.service.impl"
+				"com.revenat.ishop.infrastructure.service.impl",
+				"com.revenat.ishop.infrastructure.transform.transformer.impl"
 				);
 		dependencyInjectionManager.injectDependencies();
 	}

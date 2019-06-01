@@ -22,14 +22,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.revenat.ishop.application.dto.ClientAccount;
+import com.revenat.ishop.application.dto.OrderDTO;
+import com.revenat.ishop.application.dto.ProductDTO;
 import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.application.service.AuthenticationService;
 import com.revenat.ishop.application.service.FeedbackService;
 import com.revenat.ishop.application.service.OrderManager;
 import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.domain.entity.Account;
-import com.revenat.ishop.domain.entity.Order;
-import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
 import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
@@ -60,7 +60,7 @@ public class OrderManagerTest {
 		ClientAccount clientAccount = new ClientAccount(1, CLIENT_NAME, CLIENT_EMAIL, "");
 		clientAccount.setId(1);
 		when(authService.getAuthenticatedUserAccount(Mockito.any(ClientSession.class))).thenReturn(clientAccount);
-		Order order = new Order();
+		OrderDTO order = new OrderDTO();
 		order.setId(ORDER_ID);
 		when(orderService.createOrder(Mockito.any(), Mockito.anyInt())).thenReturn(order);
 	}
@@ -104,12 +104,12 @@ public class OrderManagerTest {
 //	@Test
 	public void shouldSendNotificationAfterOrderWasPlaced() throws Exception {
 		ClientSession session = createSessionWithShoppingCartWithProduct();
-		ArgumentCaptor<Order> captor = ArgumentCaptor.forClass(Order.class);
+		ArgumentCaptor<OrderDTO> captor = ArgumentCaptor.forClass(OrderDTO.class);
 
 		orderManager.placeOrder(session);
 
 		verify(feedbackService).sendNewOrderNotification(CLIENT_EMAIL, captor.capture());
-		Order savedOrder = captor.getValue();
+		OrderDTO savedOrder = captor.getValue();
 		assertThat(savedOrder.getId(), equalTo(ORDER_ID));
 	}
 
@@ -143,7 +143,7 @@ public class OrderManagerTest {
 		returnOrder(createOrderWithIdAndAccountId(orderId, accountId));
 		ClientSession session = createSessionWithShoppingCartWithProduct();
 
-		Order order = orderManager.getById(orderId, session);
+		OrderDTO order = orderManager.getById(orderId, session);
 
 		assertThat(order.getId(), equalTo(orderId));
 	}
@@ -152,14 +152,14 @@ public class OrderManagerTest {
 	public void shouldAllowToFindOrdersByClient() throws Exception {
 		int accountId = 5;
 		returnAccount(createAccountWithId(accountId));
-		List<Order> orders = Arrays.asList(createOrderWithIdAndAccountId(1, accountId),
+		List<OrderDTO> orders = Arrays.asList(createOrderWithIdAndAccountId(1, accountId),
 				createOrderWithIdAndAccountId(2, accountId));
 		returnOrdersByAccountId(orders, accountId);
 		ClientSession session = createSessionWithShoppingCartWithProduct();
 
 		int anyPage = 1;
 		int anyLimit = 10;
-		List<Order> clientOrders = orderManager.findByClient(session, anyPage, anyLimit);
+		List<OrderDTO> clientOrders = orderManager.findByClient(session, anyPage, anyLimit);
 
 		assertThat(clientOrders, equalTo(orders));
 	}
@@ -203,11 +203,11 @@ public class OrderManagerTest {
 		when(orderService.countByAccountId(Mockito.eq(accountId))).thenReturn(orderCount);
 	}
 
-	private void returnOrdersByAccountId(List<Order> orders, int accountId) {
+	private void returnOrdersByAccountId(List<OrderDTO> orders, int accountId) {
 		when(orderService.findByAccountId(Mockito.eq(accountId), Mockito.anyInt(), Mockito.anyInt())).thenReturn(orders);
 	}
 
-	private void returnOrder(Order order) {
+	private void returnOrder(OrderDTO order) {
 		when(orderService.findById(Mockito.anyLong())).thenReturn(order);
 	}
 
@@ -222,15 +222,15 @@ public class OrderManagerTest {
 		return account;
 	}
 
-	private Order createOrderWithIdAndAccountId(long id, int accountId) {
-		Order order = new Order();
+	private OrderDTO createOrderWithIdAndAccountId(long id, int accountId) {
+		OrderDTO order = new OrderDTO();
 		order.setId(id);
 		order.setAccountId(accountId);
 		return order;
 	}
 
 	private ClientSession createSessionWithShoppingCartWithProduct() {
-		Product p = new Product();
+		ProductDTO p = new ProductDTO();
 		p.setId(1);
 		ClientSession session = new ClientSession();
 		session.getShoppingCart().addProduct(p, 1);

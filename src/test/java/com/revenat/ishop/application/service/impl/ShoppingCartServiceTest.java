@@ -17,12 +17,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import com.revenat.ishop.application.dto.ProductDTO;
+import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.application.service.ShoppingCartService;
 import com.revenat.ishop.domain.entity.Product;
-import com.revenat.ishop.domain.model.ShoppingCart;
 import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
+import com.revenat.ishop.infrastructure.transform.transformer.impl.SimpleDTOTransformer;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ShoppingCartServiceTest {
@@ -39,9 +41,12 @@ public class ShoppingCartServiceTest {
 
 	@Before
 	public void setUp() {
-		service = new ShoppingCartServiceImpl(productRepository);
+		service = new ShoppingCartServiceImpl(productRepository, new SimpleDTOTransformer());
 		
-		Product p = createProductWithId(PRODUCT_ID);
+		Product p = new Product();
+		p.setId(PRODUCT_ID);
+		p.setPrice(PRODUCT_PRICE);
+		
 		when(productRepository.findById(PRODUCT_ID)).thenReturn(p);
 	}
 
@@ -120,7 +125,7 @@ public class ShoppingCartServiceTest {
 	@Test
 	public void shouldAllowToRemoveProductFromShoppingCart() throws Exception {
 		ShoppingCart cart = new ShoppingCart();
-		Product p = createProductWithId(PRODUCT_ID);
+		ProductDTO p = createProductWithId(PRODUCT_ID);
 		int initialQuantity = 5;
 		cart.addProduct(p, initialQuantity);
 		assertThat(cart.getTotalCount(), equalTo(initialQuantity));
@@ -134,7 +139,7 @@ public class ShoppingCartServiceTest {
 	@Test
 	public void shouldRemoveProductCompletelyIfQuantityToRemoveGreaterThatActualQuantity() throws Exception {
 		ShoppingCart cart = new ShoppingCart();
-		Product p = createProductWithId(PRODUCT_ID);
+		ProductDTO p = createProductWithId(PRODUCT_ID);
 		int initialQuantity = 5;
 		cart.addProduct(p, initialQuantity);
 		assertThat(cart.getTotalCount(), equalTo(initialQuantity));
@@ -145,8 +150,8 @@ public class ShoppingCartServiceTest {
 		assertTrue(cart.isEmpty());
 	}
 	
-	private Product createProductWithId(int productId) {
-		Product p = new Product();
+	private ProductDTO createProductWithId(int productId) {
+		ProductDTO p = new ProductDTO();
 		p.setId(productId);
 		p.setPrice(PRODUCT_PRICE);
 		return p;

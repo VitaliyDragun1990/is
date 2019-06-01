@@ -1,8 +1,8 @@
 package com.revenat.ishop.application.service.impl;
 
+import com.revenat.ishop.application.dto.OrderDTO;
 import com.revenat.ishop.application.service.FeedbackService;
 import com.revenat.ishop.application.service.NotificationContentBuilderService;
-import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.infrastructure.service.NotificationService;
@@ -24,7 +24,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	}
 
 	@Override
-	public void sendNewOrderNotification(String email, Order order) {
+	public void sendNewOrderNotification(String email, OrderDTO order) {
 		notificationService.sendNotification(email, TITLE, contentBuilder.buildNewOrderCreatedNotificationMessage(order));
 	}
 }

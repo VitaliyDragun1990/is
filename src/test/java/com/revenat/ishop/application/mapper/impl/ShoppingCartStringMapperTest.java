@@ -1,7 +1,11 @@
 package com.revenat.ishop.application.mapper.impl;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
@@ -15,13 +19,14 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import com.revenat.ishop.application.mapper.impl.ShoppingCartStringMapper;
+import com.revenat.ishop.application.dto.ProductDTO;
+import com.revenat.ishop.application.model.ShoppingCart;
+import com.revenat.ishop.application.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.application.service.impl.ShoppingCartServiceImpl;
 import com.revenat.ishop.domain.entity.Product;
-import com.revenat.ishop.domain.model.ShoppingCart;
-import com.revenat.ishop.domain.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
+import com.revenat.ishop.infrastructure.transform.transformer.impl.SimpleDTOTransformer;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ShoppingCartStringMapperTest {
@@ -33,7 +38,7 @@ public class ShoppingCartStringMapperTest {
 	
 	@Before
 	public void setup() {
-		mapper = new ShoppingCartStringMapper(new ShoppingCartServiceImpl(productRepository));
+		mapper = new ShoppingCartStringMapper(new ShoppingCartServiceImpl(productRepository, new SimpleDTOTransformer()));
 		when(productRepository.findById(Mockito.any(Integer.class))).thenAnswer(new Answer<Product>() {
 			@Override
 			public Product answer(InvocationOnMock invocation) throws Throwable {
@@ -47,9 +52,9 @@ public class ShoppingCartStringMapperTest {
 	
 	@Test
 	public void shouldAllowToMarshallShoppingCartWithProductsIntoCookieString() throws Exception {
-		Product productA = new Product();
+		ProductDTO productA = new ProductDTO();
 		productA.setId(1);
-		Product productB = new Product();
+		ProductDTO productB = new ProductDTO();
 		productB.setId(2);
 		
 		ShoppingCart cart = new ShoppingCart();

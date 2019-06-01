@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.revenat.ishop.application.mapper.ShoppingCartMapper;
-import com.revenat.ishop.domain.model.ShoppingCart;
+import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.ui.config.Constants;
 import com.revenat.ishop.ui.util.WebUtils;
 

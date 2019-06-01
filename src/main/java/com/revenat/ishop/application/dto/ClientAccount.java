@@ -1,6 +1,7 @@
 package com.revenat.ishop.application.dto;
 
-import java.io.Serializable;
+import com.revenat.ishop.application.dto.base.BaseDTO;
+import com.revenat.ishop.domain.entity.Account;
 
 /**
  * This interface represents currently logged in user in the application.
@@ -8,10 +9,7 @@ import java.io.Serializable;
  * @author Vitaly Dragun
  *
  */
-public class ClientAccount implements Serializable {
-	private static final long serialVersionUID = -5588097152703208436L;
-	
-	private int id;
+public class ClientAccount extends BaseDTO<Integer, Account> {
 	private String name;
 	private String email;
 	private String avatarUrl;
@@ -20,7 +18,7 @@ public class ClientAccount implements Serializable {
 	}
 
 	public ClientAccount(int id, String name, String email, String avatarUrl) {
-		this.id = id;
+		setId(id);
 		this.name = name;
 		this.email = email;
 		this.avatarUrl = avatarUrl;
@@ -28,14 +26,6 @@ public class ClientAccount implements Serializable {
 	
 	public String getDescription() {
 		return String.format("%s(%s)", name, email);
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getName() {

@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.application.mapper.ShoppingCartMapper;
+import com.revenat.ishop.application.model.ShoppingCart;
+import com.revenat.ishop.application.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.application.service.ShoppingCartService;
-import com.revenat.ishop.domain.model.ShoppingCart;
-import com.revenat.ishop.domain.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
 import com.revenat.ishop.infrastructure.exception.flow.ValidationException;

@@ -8,6 +8,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.revenat.ishop.application.dto.CategoryDTO;
+import com.revenat.ishop.application.dto.ProducerDTO;
 import com.revenat.ishop.application.form.SearchForm;
 import com.revenat.ishop.application.service.CategoryService;
 import com.revenat.ishop.application.service.ProducerService;
@@ -39,8 +41,8 @@ public class CategoriesAndProducersLoaderFilter extends AbstractFilter {
 	void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		SearchForm searchForm = getSearchForm(request);
-		List<Category> allCategories;
-		List<Producer> allProducers;
+		List<CategoryDTO> allCategories;
+		List<ProducerDTO> allProducers;
 		if (searchForm.isEmpty()) {
 			allCategories = categoryService.findAllCategories();
 			allProducers = producerService.findAllProducers();

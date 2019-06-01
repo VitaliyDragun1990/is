@@ -9,6 +9,7 @@ import javax.servlet.ServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.revenat.ishop.application.dto.CategoryDTO;
 import com.revenat.ishop.application.service.impl.ServiceManager;
 import com.revenat.ishop.domain.entity.Category;
 import com.revenat.ishop.ui.config.Constants.Attribute;
@@ -50,7 +51,7 @@ public class ApplicationInitializationListener implements ServletContextListener
 	}
 
 	private void setInitAttributes(ServletContext servletContext) {
-		List<Category> categories = serviceManager.getCategoryService().findAllCategories();
+		List<CategoryDTO> categories = serviceManager.getCategoryService().findAllCategories();
 		servletContext.setAttribute(Attribute.ALL_CATEGORIES, categories);
 	}
 

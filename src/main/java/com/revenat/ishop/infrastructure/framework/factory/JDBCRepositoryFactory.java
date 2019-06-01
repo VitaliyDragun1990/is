@@ -27,7 +27,9 @@ final class JDBCRepositoryFactory {
 
 	@SuppressWarnings("unchecked")
 	static <T> T createRepository(Class<T> interfaceClass) {
-		return (T) Proxy.newProxyInstance(JDBCRepositoryFactory.class.getClassLoader(), new Class[] { interfaceClass },
+		return (T) Proxy.newProxyInstance(
+				JDBCRepositoryFactory.class.getClassLoader(),
+				new Class[] { interfaceClass },
 				new JDBCRepositoryInvocationHandler(interfaceClass));
 	}
 

@@ -16,6 +16,7 @@ import com.revenat.ishop.infrastructure.repository.AccountRepository;
 import com.revenat.ishop.infrastructure.service.AvatarService;
 import com.revenat.ishop.infrastructure.service.SocialAccount;
 import com.revenat.ishop.infrastructure.service.SocialService;
+import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 
 /**
  * Default implementation of the {@link AuthenticationService} interface which
@@ -32,15 +33,18 @@ public class SocialAuthenticationService implements AuthenticationService {
 	private AvatarService avatarService;
 	@Autowired
 	private AccountRepository accountRepository;
+	@Autowired
+	private Transformer transformer;
 	
 	public SocialAuthenticationService() {
 	}
 
 	public SocialAuthenticationService(SocialService socialService, AvatarService avatarService,
-			AccountRepository accountRepository) {
+			AccountRepository accountRepository, Transformer transformer) {
 		this.socialService = socialService;
 		this.avatarService = avatarService;
 		this.accountRepository = accountRepository;
+		this.transformer = transformer;
 	}
 
 	@Override
@@ -86,8 +90,7 @@ public class SocialAuthenticationService implements AuthenticationService {
 		if (account == null) {
 			account = createNewAccount(socialAccount);
 		}
-		return new ClientAccount(account.getId(), account.getName(),
-				account.getEmail(), account.getAvatarUrl());
+		return transformer.transform(account, ClientAccount.class);
 	}
 
 	private Account createNewAccount(SocialAccount socialAccount) {

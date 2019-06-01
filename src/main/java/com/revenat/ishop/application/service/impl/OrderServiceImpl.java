@@ -2,6 +2,7 @@ package com.revenat.ishop.application.service.impl;
 
 import java.util.List;
 
+import com.revenat.ishop.application.dto.OrderDTO;
 import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.domain.entity.OrderItem;
@@ -10,6 +11,7 @@ import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
 import com.revenat.ishop.infrastructure.repository.OrderRepository;
+import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 import com.revenat.ishop.infrastructure.util.Checks;
 
 @Component
@@ -19,18 +21,22 @@ public class OrderServiceImpl implements OrderService {
 	private OrderRepository orderRepository;
 	@Autowired
 	private OrderItemRepository orderItemRepository;
+	@Autowired
+	private Transformer transformer;
 
 	public OrderServiceImpl() {
 	}
 	
-	public OrderServiceImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
+	public OrderServiceImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository,
+			Transformer transformer) {
 		this.orderRepository = orderRepository;
 		this.orderItemRepository = orderItemRepository;
+		this.transformer = transformer;
 	}
 
 	@Transactional(readOnly=false)
 	@Override
-	public Order createOrder(List<OrderItem> orderItems, int accountId) {
+	public OrderDTO createOrder(List<OrderItem> orderItems, int accountId) {
 		Order order = new Order();
 		order.setAccountId(accountId);
 		orderRepository.save(order);
@@ -40,27 +46,27 @@ public class OrderServiceImpl implements OrderService {
 		
 		order.setItems(orderItems);
 		
-		return order;
+		return transformer.transform(order, OrderDTO.class);
 	}
 	
 	@Override
-	public Order findById(long id) {
+	public OrderDTO findById(long id) {
 		Order order =  orderRepository.findById(id);
 		if (order != null) {
 			loadOrderItemsForOrder(order);
 		}
-		return order;
+		return transformer.transform(order, OrderDTO.class);
 	}
 	
 	@Override
-	public List<Order> findByAccountId(int accountId, int page, int limit) {
+	public List<OrderDTO> findByAccountId(int accountId, int page, int limit) {
 		validate(page, limit);
 		int offset = calculateOffset(page, limit);
 		List<Order> orders = orderRepository.findByAccountId(accountId, limit, offset);
 
 		orders.forEach(this::loadOrderItemsForOrder);
 		
-		return orders;
+		return transformer.transfrom(orders, OrderDTO.class);
 	}
 	
 	@Override

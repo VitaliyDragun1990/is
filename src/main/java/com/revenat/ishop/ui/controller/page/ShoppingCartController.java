@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.revenat.ishop.domain.model.ShoppingCart;
+import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.ui.config.Constants.URL;
 import com.revenat.ishop.ui.controller.AbstractController;
 import com.revenat.ishop.ui.util.RoutingUtils;

@@ -6,8 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.revenat.ishop.application.dto.OrderDTO;
 import com.revenat.ishop.application.service.OrderManager;
-import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.ui.config.Constants.Attribute;
 import com.revenat.ishop.ui.config.Constants.Page;
 import com.revenat.ishop.ui.config.Constants.URL;
@@ -33,7 +33,7 @@ public class OrderController extends AbstractOrderController {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		long orderId = Long.parseLong(req.getParameter("id"));
-		Order order = orderManager.getById(orderId, getClientSession(req));
+		OrderDTO order = orderManager.getById(orderId, getClientSession(req));
 		
 		req.setAttribute(Attribute.CURRENT_ORDER, order);
 		displayMessageIfAny(req);

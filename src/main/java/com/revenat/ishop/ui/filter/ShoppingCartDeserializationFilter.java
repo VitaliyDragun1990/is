@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.revenat.ishop.application.model.ClientSession;
-import com.revenat.ishop.domain.model.ShoppingCart;
+import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.ui.config.Constants.Attribute;
 import com.revenat.ishop.ui.service.ShoppingCartCookieSerializer;
 

@@ -1,7 +1,7 @@
 package com.revenat.ishop.application.service.impl;
 
+import com.revenat.ishop.application.dto.OrderDTO;
 import com.revenat.ishop.application.service.NotificationContentBuilderService;
-import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Value;
 
@@ -19,7 +19,7 @@ public class SimpleNotificationContentBuilderService implements NotificationCont
 	}
 
 	@Override
-	public String buildNewOrderCreatedNotificationMessage(Order order) {
+	public String buildNewOrderCreatedNotificationMessage(OrderDTO order) {
 		return applicationHost + "/order?id=" + order.getId();
 	}
 

@@ -29,6 +29,7 @@ import com.revenat.ishop.infrastructure.repository.AccountRepository;
 import com.revenat.ishop.infrastructure.service.AvatarService;
 import com.revenat.ishop.infrastructure.service.SocialAccount;
 import com.revenat.ishop.infrastructure.service.SocialService;
+import com.revenat.ishop.infrastructure.transform.transformer.impl.SimpleDTOTransformer;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class SocialAuthenticationServiceTest {
@@ -50,7 +51,7 @@ public class SocialAuthenticationServiceTest {
 
 	@Before
 	public void setUp() {
-		service = new SocialAuthenticationService(socialService,avatarService, accountRepository);
+		service = new SocialAuthenticationService(socialService,avatarService, accountRepository, new SimpleDTOTransformer());
 		when(socialService.getSocialAccount(AUTHENTICATION_TOKEN)).thenReturn(new SocialAccount(CLIENT_NAME, CLIENT_EMAIL, null));
 		doAnswer(new Answer<Account>() {
 
