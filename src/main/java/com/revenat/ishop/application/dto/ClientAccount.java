@@ -1,7 +1,11 @@
 package com.revenat.ishop.application.dto;
 
-import com.revenat.ishop.application.dto.base.BaseDTO;
+import java.io.Serializable;
+
 import com.revenat.ishop.domain.entity.Account;
+import com.revenat.ishop.infrastructure.transform.Transformable;
+import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
+import com.revenat.ishop.infrastructure.util.CommonUtil;
 
 /**
  * This interface represents currently logged in user in the application.
@@ -9,7 +13,10 @@ import com.revenat.ishop.domain.entity.Account;
  * @author Vitaly Dragun
  *
  */
-public class ClientAccount extends BaseDTO<Integer, Account> {
+public class ClientAccount implements Transformable<Account>, Serializable {
+	private static final long serialVersionUID = -4219199461297332520L;
+	
+	private Integer id;
 	private String name;
 	private String email;
 	private String avatarUrl;
@@ -24,8 +31,27 @@ public class ClientAccount extends BaseDTO<Integer, Account> {
 		this.avatarUrl = avatarUrl;
 	}
 	
+	@Override
+	public void transform(Account account, Transformer tarnsformer) {
+		this.id = account.getId();
+	}
+	
+	@Override
+	public Account untransform(Account account, Transformer tarnsformer) {
+		account.setId(id);
+		return account;
+	}
+	
 	public String getDescription() {
 		return String.format("%s(%s)", name, email);
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -52,4 +78,8 @@ public class ClientAccount extends BaseDTO<Integer, Account> {
 		this.avatarUrl = avatarUrl;
 	}
 	
+	@Override
+		public String toString() {
+			return CommonUtil.toString(this);
+		}
 }

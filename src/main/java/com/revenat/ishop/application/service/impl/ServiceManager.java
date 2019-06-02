@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.revenat.ishop.application.mapper.ShoppingCartMapper;
 import com.revenat.ishop.application.service.AuthenticationService;
 import com.revenat.ishop.application.service.CategoryService;
+import com.revenat.ishop.application.service.I18nService;
 import com.revenat.ishop.application.service.OrderManager;
 import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.application.service.ProducerService;
@@ -59,6 +60,10 @@ public class ServiceManager {
 
 	public ShoppingCartService getShoppingCartService() {
 		return dependencyInjectionManager.getInstance(ShoppingCartService.class);
+	}
+	
+	public I18nService getI18nService() {
+		return dependencyInjectionManager.getInstance(I18nService.class);
 	}
 
 	public String getApplicationProperty(String propertyName) {

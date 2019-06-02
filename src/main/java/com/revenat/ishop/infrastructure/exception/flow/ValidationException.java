@@ -10,7 +10,7 @@ package com.revenat.ishop.infrastructure.exception.flow;
 public class ValidationException extends FlowException {
 	private static final long serialVersionUID = 6176636234085711406L;
 
-	public ValidationException(String message) {
-		super(message, 400);
+	public ValidationException(String message, String messageCode, Object... args) {
+		super(message, messageCode, args);
 	}
 }

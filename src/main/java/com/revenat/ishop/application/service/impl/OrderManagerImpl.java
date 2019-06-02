@@ -22,7 +22,9 @@ import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 import com.revenat.ishop.infrastructure.util.Checks;
 
 @Component
-public class OrderManagerImpl implements OrderManager {
+public class OrderManagerImpl extends PageableResultService implements OrderManager {
+	private static final String CART_REQUIRED_MSG_CODE = "message.error.requiredCartWithProducts";
+	
 	@Autowired
 	private AuthenticationService authService;
 	@Autowired
@@ -55,7 +57,7 @@ public class OrderManagerImpl implements OrderManager {
 		
 		TransactionSynchronizationManager.addSynchronization(() -> {
 			cart.clear();
-			feedbackService.sendNewOrderNotification(userAccount.getEmail(), order);
+			feedbackService.sendNewOrderNotification(userAccount.getEmail(), clientSession.getClientLocale(), order);
 		});
 		
 		return order.getId();
@@ -104,11 +106,8 @@ public class OrderManagerImpl implements OrderManager {
 
 	private static void validateShoppingCart(ShoppingCart cart) {
 		Checks.validateCondition(cart != null && !cart.isEmpty(),
-				"Can not create new order: provided shopping cart is null or empty");
-	}
-	
-	private static void validateParams(int page, int limit) {
-		Checks.checkParam(page >= 1, "page number can not be less that 1: %d", page);
-		Checks.checkParam(limit >= 1, "limit can not be less that 1: %d", limit);
+				"Can not create new order: provided shopping cart is null or empty",
+				CART_REQUIRED_MSG_CODE
+				);
 	}
 }

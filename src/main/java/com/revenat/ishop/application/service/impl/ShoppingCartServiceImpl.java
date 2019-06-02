@@ -14,6 +14,8 @@ import com.revenat.ishop.infrastructure.util.Checks;
 
 @Component
 public class ShoppingCartServiceImpl implements ShoppingCartService {
+	private static final String VALID_PRODUCT_QUANTITY_MSG_CODE = "message.error.validProductQuantity";
+	
 	@Autowired
 	private ProductRepository productRepository;
 	@Autowired
@@ -48,6 +50,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	private static void validateProductQuantity(int quantity) {
 		Checks.checkParam(quantity > 0 && quantity <= ShoppingCart.MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART,
 				"valid product quantity should be between 1 and %d inclusive.",
+				VALID_PRODUCT_QUANTITY_MSG_CODE,
 				ShoppingCart.MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART);
 	}
 }

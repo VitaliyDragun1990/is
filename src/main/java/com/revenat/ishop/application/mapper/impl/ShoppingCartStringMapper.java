@@ -1,5 +1,7 @@
 package com.revenat.ishop.application.mapper.impl;
 
+import static java.util.Objects.requireNonNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +14,6 @@ import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException
 import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
 import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
-import com.revenat.ishop.infrastructure.util.Checks;
 
 /**
  * This component is responsible for mapping {@link ShoppingCart} instance
@@ -112,11 +113,11 @@ public class ShoppingCartStringMapper implements ShoppingCartMapper<String> {
 	}
 	
 	private static void checkParam(ShoppingCart shoppingCart) {
-		Checks.checkParam(shoppingCart != null, "Shopping cart to marshal can not be null");
+		requireNonNull(shoppingCart != null, "Shopping cart to marshal can not be null");
 	}
 	
 	private static void checkParam(String shoppingCartString) {
-		Checks.checkParam(shoppingCartString != null, "String to unmarshall shopping cart from can not be null");
+		requireNonNull(shoppingCartString != null, "String to unmarshall shopping cart from cookie not be null");
 		
 	}
 }

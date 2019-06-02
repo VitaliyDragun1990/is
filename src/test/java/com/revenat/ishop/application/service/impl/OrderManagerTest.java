@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -40,6 +41,7 @@ public class OrderManagerTest {
 	private static final String CLIENT_NAME = "Jack";
 	private static final String CLIENT_EMAIL = "jack@test.com";
 	private static final long ORDER_ID = 1L;
+	private static final Locale CLIENT_LOCALE = Locale.getDefault();
 
 	@Rule
 	public ExpectedException expected = ExpectedException.none();
@@ -74,15 +76,6 @@ public class OrderManagerTest {
 		orderManager.placeOrder(session);
 	}
 
-	@Test
-	public void shouldNowAllowToPlaceOrderWithNullShoppingCart() throws Exception {
-		ClientSession session = createSessionWithoutShoppingCart();
-		expected.expect(ValidationException.class);
-		expected.expectMessage(containsString("provided shopping cart is null or empty"));
-
-		orderManager.placeOrder(session);
-	}
-
 //	@Test
 	public void shouldReturnIdOfCreatedOrder() throws Exception {
 		ClientSession session = createSessionWithShoppingCartWithProduct();
@@ -108,7 +101,7 @@ public class OrderManagerTest {
 
 		orderManager.placeOrder(session);
 
-		verify(feedbackService).sendNewOrderNotification(CLIENT_EMAIL, captor.capture());
+		verify(feedbackService).sendNewOrderNotification(CLIENT_EMAIL, CLIENT_LOCALE, captor.capture());
 		OrderDTO savedOrder = captor.getValue();
 		assertThat(savedOrder.getId(), equalTo(ORDER_ID));
 	}
@@ -234,12 +227,7 @@ public class OrderManagerTest {
 		p.setId(1);
 		ClientSession session = new ClientSession();
 		session.getShoppingCart().addProduct(p, 1);
-		return session;
-	}
-
-	private ClientSession createSessionWithoutShoppingCart() {
-		ClientSession session = new ClientSession();
-		session.setShoppingCart(null);
+		session.setClientLocale(CLIENT_LOCALE);
 		return session;
 	}
 

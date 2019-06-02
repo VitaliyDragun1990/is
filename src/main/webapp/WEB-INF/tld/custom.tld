@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>2.3</jsp-version>
+	<shortname>custom</shortname>
+	
+	<tag>
+		<description>
+		<![CDATA[
+			This tag is responsible for internationalization messages it gets
+			using specified key attribute. Additional arguments can be specified
+			via args parameter in form of string which contains comma separated 
+			values. If not locale no lang parameters are specified,
+			request locale will be used. If locale parameter is specified - it will
+			be used to look for localized messages. If lang parameter is specified and
+			locale parameter are not, appropriate Locale will be determined by such
+			lang parameter. lang parameter should be string with values like "en", "ru"
+			etc.
+			]]>
+		</description>
+		<name>i18n</name>
+		<tag-class>com.revenat.ishop.ui.tag.I18nTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>
+				String used to look for appropriate message
+			</description>
+			<name>key</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				java.util.Locale object used to determine
+				appropriate language to show message in.
+			</description>
+			<name>locale</name>
+			<required>false</required>
+			<type>java.util.Locale</type>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				String represented the desired language to show message in.
+			</description>
+			<name>lang</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				String with comma separated values used to present additional
+				information to message to be shown.
+			</description>
+			<name>args</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+</taglib>

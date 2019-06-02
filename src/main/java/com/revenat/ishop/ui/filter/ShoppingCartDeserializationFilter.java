@@ -51,36 +51,46 @@ public class ShoppingCartDeserializationFilter extends AbstractFilter {
 
 	private void processCartDeserialization(HttpServletRequest request) {
 		HttpSession httpSession = request.getSession();
-		// get client session object
+		
 		ClientSession clientSession = getClientSession(httpSession);
-		if (clientSession == null) {
-			clientSession = deserializeCartFromCookie(request);
-			httpSession.setAttribute(Attribute.CLIENT_SESSION, clientSession);
+		ShoppingCart deserializedCart =  deserializeCartFromCookie(request);
+		if (deserializedCart != null) {
+			clientSession.setShoppingCart(deserializedCart);
 		}
+		
 		httpSession.setAttribute(SHOPPING_CART_DESERIALIZATION_DONE, Boolean.TRUE);
 	}
 
-	private ClientSession deserializeCartFromCookie(HttpServletRequest request) {
-		ClientSession clientSession = new ClientSession();
-		ShoppingCart cartFromCookie = cartSerializer.getShoppingCartFromCookie(request);
-		if (cartFromCookie != null) {
-			clientSession.setShoppingCart(cartFromCookie);
-		}
-		return clientSession;
+	private ShoppingCart deserializeCartFromCookie(HttpServletRequest request) {
+		return cartSerializer.getShoppingCartFromCookie(request);
 	}
 
 	private void processCartSerialization(HttpServletRequest request, HttpServletResponse response) {
 		ClientSession clientSession = getClientSession(request.getSession());
-
-		if (containsEmptyShoppingCart(clientSession)) {
-			deleteShoppingCartCookie(request, response);
-		} else {
-			serializeShoppingCartAsCookie(clientSession, response);
+		ShoppingCart cart = clientSession.getShoppingCart();
+		
+		deleteCartCookieAfterNewOrderCreadted(request, response, clientSession, cart);
+		
+		if (clientSession.isCartUpdated()) {
+			if (cart.isEmpty()) {
+				deleteShoppingCartCookie(request, response);
+			} else {
+				serializeShoppingCartAsCookie(cart, response);
+			}
+			clientSession.setCartUpdated(false);
 		}
 	}
 
-	private boolean containsEmptyShoppingCart(ClientSession clientSession) {
-		return clientSession != null && clientSession.getShoppingCart().isEmpty();
+	private void deleteCartCookieAfterNewOrderCreadted(HttpServletRequest request, HttpServletResponse response,
+			ClientSession clientSession, ShoppingCart cart) {
+		// This workround is needed to delete cookie after cart has been cleared after
+		// new order was created. The reason is that redirect doesn not preserve cookie
+		if (request.getSession().getAttribute(Attribute.REDIRECT_TO_NEW_ORDER) != null
+				&& !clientSession.isCartUpdated()
+				&& cart.isEmpty()) {
+			deleteShoppingCartCookie(request, response);
+			request.getSession().removeAttribute(Attribute.REDIRECT_TO_NEW_ORDER);
+		}
 	}
 
 	private void deleteShoppingCartCookie(HttpServletRequest request, HttpServletResponse response) {
@@ -90,10 +100,8 @@ public class ShoppingCartDeserializationFilter extends AbstractFilter {
 		}
 	}
 	
-	private void serializeShoppingCartAsCookie(ClientSession clientSession, HttpServletResponse response) {
-		if (clientSession != null) {
-			cartSerializer.saveShoppingCartAsCookie(clientSession.getShoppingCart(), response);
-		}
+	private void serializeShoppingCartAsCookie(ShoppingCart cart, HttpServletResponse response) {
+		cartSerializer.saveShoppingCartAsCookie(cart, response);
 	}
 
 	private ClientSession getClientSession(HttpSession httpSession) {

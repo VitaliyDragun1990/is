@@ -31,13 +31,25 @@ import com.revenat.ishop.infrastructure.util.CommonUtil;
  *
  */
 public class ShoppingCart implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6526125465093002906L;
+	
 	public static final int MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART = 10;
 	public static final int MAX_PRODUCTS_PER_SHOPPING_CART = 20;
+	private static final String CART_TOTAL_LIMIT_MSG_CODE = "message.error.cartTotalLimit";
+	private static final String CART_PRODUCT_INSTANCE_LIMIT_MSG_CODE = "message.error.cartProductInstanceLimit";
 
 	private final HashMap<Integer, ShoppingCartItem> cart = new LinkedHashMap<>();
 	private int totalCount = 0;
 	private BigDecimal totalCost = BigDecimal.ZERO;
+	private ArrayList<ShoppingCartEventListener> eventListeners = new ArrayList<>();
+	
+	public void addEventListener(ShoppingCartEventListener listener) {
+		eventListeners.add(listener);
+	}
+	
+	public void removeEventListener(ShoppingCartEventListener listener) {
+		eventListeners.remove(listener);
+	}
 
 	/**
 	 * Returns total number of product units in shopping cart.
@@ -76,6 +88,9 @@ public class ShoppingCart implements Serializable {
 			validateCartSize(cart.size());
 			cart.put(product.getId(), new ShoppingCartItem(product, quantity));
 		}
+		
+		eventListeners.forEach(listener -> listener.productWasAdded(product, quantity));
+		
 		recalculateTotalCount();
 		recalculateTotalCost();
 	}
@@ -98,6 +113,9 @@ public class ShoppingCart implements Serializable {
 			} else {
 				cart.put(productId, new ShoppingCartItem(item.getProduct(), item.getQuantity() - quantity));
 			}
+			
+			eventListeners.forEach(listener -> listener.productWasRemoved(item.getProduct(), quantity));
+			
 			recalculateTotalCount();
 			recalculateTotalCost();
 		}
@@ -133,6 +151,9 @@ public class ShoppingCart implements Serializable {
 
 	public void clear() {
 		this.cart.clear();
+		
+		eventListeners.forEach(ShoppingCartEventListener::cartWasCleared);
+		
 		recalculateTotalCost();
 		recalculateTotalCount();
 	}
@@ -145,12 +166,14 @@ public class ShoppingCart implements Serializable {
 	private static void validateCartSize(int cartSize) {
 		Checks.validateCondition(cartSize < MAX_PRODUCTS_PER_SHOPPING_CART,
 				"Shopping cart cannot store more than %d different products",
+				CART_TOTAL_LIMIT_MSG_CODE,
 				MAX_PRODUCTS_PER_SHOPPING_CART);
 	}
 
 	private static void validateCartItemNumberOfProducts(int cartItemNumberOfProducts) {
 		Checks.validateCondition(cartItemNumberOfProducts <= MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART,
 				"Limit for max instances per product reached: %d.",
+				CART_PRODUCT_INSTANCE_LIMIT_MSG_CODE,
 				MAX_INSTANCES_OF_ONE_PRODUCT_PER_SHOPPING_CART);
 	}
 
@@ -166,8 +189,8 @@ public class ShoppingCart implements Serializable {
 	 *
 	 */
 	public static class ShoppingCartItem extends BaseDTO<Long, OrderItem> implements Serializable {
-		private static final long serialVersionUID = 1L;
-
+		private static final long serialVersionUID = 104011869244013321L;
+		
 		@Ignore
 		private ProductDTO product;
 		private Integer quantity;

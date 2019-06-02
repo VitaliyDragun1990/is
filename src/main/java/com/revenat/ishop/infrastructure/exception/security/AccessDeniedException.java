@@ -13,6 +13,6 @@ public class AccessDeniedException extends ApplicationException {
 	private static final long serialVersionUID = -3739773835132414549L;
 
 	public AccessDeniedException(String message) {
-		super(message, 403);
+		super(message);
 	}
 }

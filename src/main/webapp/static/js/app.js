@@ -122,7 +122,7 @@ $(function() {
 				if (xhr.status == 400) {
 					alert(xhr.responseJSON.message);
 				} else {
-					alert("Error while adding product to shopping cart");
+					alert(messages.addProductToCartError);
 				}
 			}
         });
@@ -181,7 +181,7 @@ $(function() {
 			},
 			error : function(data) {
 				convertLoaderSpinnerToButton(btn, 'btn-success', loadMoreProducts);
-				alert('Error');
+				alert(messages.loadMoreProductsError);
 			}
         });
     };
@@ -218,7 +218,7 @@ $(function() {
 				if (xhr.status == 401) {
 					window.location.href = ctx + 'sign-in';
 				} else {
-					alert("Error while adding product to shopping cart");
+					alert(messages.loadMoreOrdersError);
 				}
 			}
         });
@@ -355,7 +355,7 @@ $(function() {
 			},
 			error : function(data) {
 				convertLoaderSpinnerToButton(btn, 'btn-primary', addProductToCart);
-				alert("Error while adding product to shopping cart");
+				alert(messages.removeProductFromCartError);
 			}
         });
     };

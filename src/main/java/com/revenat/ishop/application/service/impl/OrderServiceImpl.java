@@ -12,11 +12,11 @@ import com.revenat.ishop.infrastructure.framework.annotation.persistence.service
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
 import com.revenat.ishop.infrastructure.repository.OrderRepository;
 import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
-import com.revenat.ishop.infrastructure.util.Checks;
 
 @Component
 @Transactional(readOnly=true)
 public class OrderServiceImpl implements OrderService {
+	
 	@Autowired
 	private OrderRepository orderRepository;
 	@Autowired
@@ -60,7 +60,6 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	public List<OrderDTO> findByAccountId(int accountId, int page, int limit) {
-		validate(page, limit);
 		int offset = calculateOffset(page, limit);
 		List<Order> orders = orderRepository.findByAccountId(accountId, limit, offset);
 
@@ -83,10 +82,5 @@ public class OrderServiceImpl implements OrderService {
 	
 	private static int calculateOffset(int page, int productsPerPage) {
 		return (page - 1) * productsPerPage;
-	}
-	
-	private static void validate(int page, int limit) {
-		Checks.checkParam(page >= 1, "page number can not be less that 1: %d", page);
-		Checks.checkParam(limit >= 1, "limit can not be less that 1: %d", limit);
 	}
 }

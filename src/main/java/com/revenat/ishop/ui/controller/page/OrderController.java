@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.revenat.ishop.application.dto.OrderDTO;
+import com.revenat.ishop.application.service.I18nService;
 import com.revenat.ishop.application.service.OrderManager;
 import com.revenat.ishop.ui.config.Constants.Attribute;
 import com.revenat.ishop.ui.config.Constants.Page;
@@ -17,8 +18,11 @@ import com.revenat.ishop.ui.util.RoutingUtils;
 public class OrderController extends AbstractOrderController {
 	private static final long serialVersionUID = -2654221307584151283L;
 	
-	public OrderController(OrderManager orderManager) {
+	private final I18nService i18nService;
+	
+	public OrderController(OrderManager orderManager, I18nService i18nService) {
 		super(orderManager);
+		this.i18nService = i18nService;
 	}
 
 	@Override
@@ -26,7 +30,8 @@ public class OrderController extends AbstractOrderController {
 		long orderId = orderManager.placeOrder(getClientSession(req));
 		
 		req.getSession().setAttribute(Attribute.CURRENT_MESSAGE,
-				"Order has been created successfully. Please wait for our reply.");
+				i18nService.getMessage("message.orderCreated", req.getLocale()));
+		req.getSession().setAttribute(Attribute.REDIRECT_TO_NEW_ORDER, Boolean.TRUE);
 		RoutingUtils.redirect(URL.ORDER_WITH_ID + orderId, resp);
 	}
 	

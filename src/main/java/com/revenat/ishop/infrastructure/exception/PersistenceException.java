@@ -12,10 +12,10 @@ public class PersistenceException extends ApplicationException {
 	private static final long serialVersionUID = -3176677130267805185L;
 	
 	public PersistenceException(String message) {
-		super(message, 500);
+		super(message);
 	}
 
 	public PersistenceException(String message, Throwable cause) {
-		super(message, cause, 500);
+		super(message, cause);
 	}
 }

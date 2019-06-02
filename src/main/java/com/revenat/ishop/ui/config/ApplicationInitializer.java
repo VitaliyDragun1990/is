@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
 import com.revenat.ishop.application.service.impl.ServiceManager;
+import com.revenat.ishop.ui.config.Constants.Attribute;
 import com.revenat.ishop.ui.config.Constants.URL;
 import com.revenat.ishop.ui.controller.ajax.AddProductToShoppingCartController;
 import com.revenat.ishop.ui.controller.ajax.LoadMoreAllProductsController;
@@ -30,6 +31,7 @@ import com.revenat.ishop.ui.controller.page.SignOutController;
 import com.revenat.ishop.ui.controller.page.SocialLoginController;
 import com.revenat.ishop.ui.filter.AuthenticationFilter;
 import com.revenat.ishop.ui.filter.CategoriesAndProducersLoaderFilter;
+import com.revenat.ishop.ui.filter.ClientLocaleDefinerFilter;
 import com.revenat.ishop.ui.filter.ErrorHandlerFilter;
 import com.revenat.ishop.ui.filter.HtmlMinificationFilter;
 import com.revenat.ishop.ui.filter.RequestUrlMemorizerFilter;
@@ -42,6 +44,7 @@ public class ApplicationInitializer implements ServletContainerInitializer {
 	@Override
 	public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
 		ServiceManager serviceManager = ServiceManager.getInstance();
+		ctx.setAttribute(Attribute.I18N_SERVICE, serviceManager.getI18nService());
 		
 		ServletRegistration.Dynamic servletReg = ctx.addServlet("AllProductsController",
 				new AllProductsController(serviceManager.getProductService()));
@@ -73,7 +76,8 @@ public class ApplicationInitializer implements ServletContainerInitializer {
 		servletReg = ctx.addServlet("MyOrdersController", new MyOrdersController(serviceManager.getOrderManager()));
 		servletReg.addMapping(URL.MY_ORDERS);
 		
-		servletReg = ctx.addServlet("OrderController", new OrderController(serviceManager.getOrderManager()));
+		servletReg = ctx.addServlet("OrderController",
+				new OrderController(serviceManager.getOrderManager(), serviceManager.getI18nService()));
 		servletReg.addMapping(URL.ORDER);
 		
 		servletReg = ctx.addServlet("LoadMoreAllProductsController",
@@ -100,7 +104,8 @@ public class ApplicationInitializer implements ServletContainerInitializer {
 				new LoadMoreOrdersController(serviceManager.getOrderManager()));
 		servletReg.addMapping(URL.AJAX_MORE_ORDERS);
 		
-		FilterRegistration.Dynamic filterReg = ctx.addFilter("ErrorHandlerFilter", new ErrorHandlerFilter());
+		FilterRegistration.Dynamic filterReg = ctx.addFilter("ErrorHandlerFilter",
+				new ErrorHandlerFilter(serviceManager.getI18nService()));
 		filterReg.addMappingForUrlPatterns(
 				EnumSet.of(DispatcherType.REQUEST),
 				false,
@@ -127,6 +132,12 @@ public class ApplicationInitializer implements ServletContainerInitializer {
 				"/*");
 		
 		filterReg = ctx.addFilter("SetCurrentRequestUriFilter",new RequestUrlMemorizerFilter());
+		filterReg.addMappingForUrlPatterns(
+				EnumSet.of(DispatcherType.REQUEST),
+				true,
+				"/*");
+		
+		filterReg = ctx.addFilter("ClientLocaleDefinerFilter",new ClientLocaleDefinerFilter());
 		filterReg.addMappingForUrlPatterns(
 				EnumSet.of(DispatcherType.REQUEST),
 				true,

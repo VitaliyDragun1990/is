@@ -1,5 +1,7 @@
 package com.revenat.ishop.infrastructure.framework.factory;
 
+import static java.util.Objects.requireNonNull;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,7 +11,6 @@ import java.util.List;
 
 import com.revenat.ishop.infrastructure.framework.exception.FrameworkPersistenceException;
 import com.revenat.ishop.infrastructure.framework.handler.ResultSetHandler;
-import com.revenat.ishop.infrastructure.util.Checks;
 
 /**
  * Contains helper methods to work with JDBC.
@@ -148,16 +149,16 @@ final class JDBCUtils {
 	}
 
 	private static void checkParams(Connection conn, String sql, ResultSetHandler<?>... handlers) {
-		Checks.checkParam(conn != null, "Connection can not be null");
-		Checks.checkParam(sql != null, "Sql string can not be null");
+		requireNonNull(conn != null, "Connection can not be null");
+		requireNonNull(sql != null, "Sql string can not be null");
 		for (ResultSetHandler<?> handler : handlers) {
-			Checks.checkParam(handler != null, "Result set handler can not be null");
+			requireNonNull(handler != null, "Result set handler can not be null");
 		}
 	}
 
 	private static void checkParams(Connection conn, String sql, List<Object[]> parameterssList) {
 		checkParams(conn, sql);
-		Checks.checkParam(parameterssList != null && !parameterssList.isEmpty(),
+		requireNonNull(parameterssList != null && !parameterssList.isEmpty(),
 				"Can not execute insertBatch with null or empty parameter list");
 	}
 }

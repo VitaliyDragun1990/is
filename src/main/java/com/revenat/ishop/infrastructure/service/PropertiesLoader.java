@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revenat.ishop.infrastructure.exception.ConfigurationException;
-import com.revenat.ishop.infrastructure.util.Checks;
 
 /**
  * This component is responsible for loading configuration in form of
@@ -74,7 +73,8 @@ public class PropertiesLoader {
 	}
 
 	private void validateResourceName(String resourceName) {
-		Checks.checkParam(resourceName != null && resourceName.trim().length() > 0,
-				"Resource name to load properties from can not be null or empty");
+		if (resourceName == null || resourceName.trim().isEmpty()) {
+			throw new ConfigurationException("Resource name to load properties from can not be null or empty");
+		}
 	}
 }

@@ -1,7 +1,12 @@
 package com.revenat.ishop.infrastructure.util;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,8 +21,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
-import com.revenat.ishop.infrastructure.util.JDBCUtils;
 import com.revenat.ishop.infrastructure.util.JDBCUtils.ResultSetHandler;
 
 public class JDBCUtilsTest {
@@ -38,7 +41,7 @@ public class JDBCUtilsTest {
 	
 	@Test
 	public void shouldNotAllowToSelectWithNullConnection() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(NullPointerException.class);
 		expected.expectMessage(containsString("Connection can not be null"));
 		
 		JDBCUtils.select(null, JDBC_URL, new ProductsHandler());
@@ -46,7 +49,7 @@ public class JDBCUtilsTest {
 	
 	@Test
 	public void shouldNotAllowToSelectWithNullSqlQuery() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(NullPointerException.class);
 		expected.expectMessage(containsString("Sql string can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
@@ -57,7 +60,7 @@ public class JDBCUtilsTest {
 	
 	@Test
 	public void shouldNotAllowToSelectWithNullResultSetHandler() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(NullPointerException.class);
 		expected.expectMessage(containsString("Result set handler can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
@@ -86,7 +89,7 @@ public class JDBCUtilsTest {
 
 	@Test
 	public void shouldNotAllowToInsertWithNullConnection() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(NullPointerException.class);
 		expected.expectMessage(containsString("Connection can not be null"));
 		
 		JDBCUtils.insert(null, INSERT_NEW_WITHOUT_PARAMS, new ProductIdHandler());
@@ -94,7 +97,7 @@ public class JDBCUtilsTest {
 	
 	@Test
 	public void shouldNotAllowToInsertWithNullSqlQuery() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(NullPointerException.class);
 		expected.expectMessage(containsString("Sql string can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
@@ -105,7 +108,7 @@ public class JDBCUtilsTest {
 	
 	@Test
 	public void shouldNotAllowToInsertWithNullResultSetHandler() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(NullPointerException.class);
 		expected.expectMessage(containsString("Result set handler can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
@@ -144,7 +147,7 @@ public class JDBCUtilsTest {
 	
 	@Test
 	public void shouldNotAllowToUpdateWithNullConnection() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(NullPointerException.class);
 		expected.expectMessage(containsString("Connection can not be null"));
 		
 		JDBCUtils.executeUpdate(null, INSERT_NEW_WITHOUT_PARAMS);
@@ -152,7 +155,7 @@ public class JDBCUtilsTest {
 	
 	@Test
 	public void shouldNotAllowToUpdateWithNullSqlQuery() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(NullPointerException.class);
 		expected.expectMessage(containsString("Sql string can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
@@ -218,7 +221,7 @@ public class JDBCUtilsTest {
 	
 	@Test
 	public void shouldNotAllowToInsertInBatchWithNullSqlQuery() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(NullPointerException.class);
 		expected.expectMessage(containsString("Sql string can not be null"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
@@ -228,7 +231,7 @@ public class JDBCUtilsTest {
 	
 	@Test
 	public void shouldNotAllowToInsertInBatchWithNullConnection() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(NullPointerException.class);
 		expected.expectMessage(containsString("Connection can not be null"));
 		
 		JDBCUtils.insertBatch(null, INSERT_NEW_WITHOUT_PARAMS, Collections.emptyList());
@@ -236,8 +239,8 @@ public class JDBCUtilsTest {
 	
 	@Test
 	public void shouldNotAllowToInsertInBatchWithNullParametersList() throws Exception {
-		expected.expect(InvalidParameterException.class);
-		expected.expectMessage(containsString("Can not execute insertBatch with null or empty parameter list"));
+		expected.expect(NullPointerException.class);
+		expected.expectMessage(containsString("Can not execute insertBatch with null parameter list"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
 			JDBCUtils.insertBatch(c, INSERT_NEW_WITHOUT_PARAMS, null);
@@ -246,8 +249,8 @@ public class JDBCUtilsTest {
 	
 	@Test
 	public void shouldNotAllowToInsertInBatchWithoutParameters() throws Exception {
-		expected.expect(InvalidParameterException.class);
-		expected.expectMessage(containsString("Can not execute insertBatch with null or empty parameter list"));
+		expected.expect(IllegalArgumentException.class);
+		expected.expectMessage(containsString("Can not execute insertBatch with empty parameter list"));
 		
 		try (Connection c = DriverManager.getConnection(JDBC_URL)) {
 			JDBCUtils.insertBatch(c, INSERT_NEW_WITHOUT_PARAMS, Collections.emptyList());

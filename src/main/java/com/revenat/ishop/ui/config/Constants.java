@@ -17,6 +17,7 @@ public final class Constants {
 		public static final String SERVICE_MANAGER = "SERVICE_MAMANGER";
 		public static final String CURRENT_SHOPPING_CART = "CURRENT_SHOPPING_CART";
 		public static final String ALL_CATEGORIES = "allCategories";
+		public static final String USERS_SESSIONS = "usersSessions";
 		public static final String ALL_PRODUCERS = "allProducers";
 		public static final String FILTER_CATEGORIES = "filterCategories";
 		public static final String FILTER_PRODUCERS = "filterProducers";
@@ -34,6 +35,9 @@ public final class Constants {
 		public static final String ORDERS = "orders";
 		public static final String STATUS_CODE = "statusCode";
 		public static final String CLIENT_SESSION = "clientSession";
+		public static final String I18N_SERVICE = "i18nService";
+		public static final String ERROR_MESSAGE = "errorMessage";
+		public static final String REDIRECT_TO_NEW_ORDER = "redirectToNewOrder";
 
 		private Attribute() {
 		}

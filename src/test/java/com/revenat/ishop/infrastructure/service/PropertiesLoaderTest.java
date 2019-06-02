@@ -14,8 +14,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.revenat.ishop.infrastructure.exception.ConfigurationException;
-import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
-import com.revenat.ishop.infrastructure.service.PropertiesLoader;
 
 public class PropertiesLoaderTest {
 	
@@ -31,7 +29,7 @@ public class PropertiesLoaderTest {
 
 	@Test
 	public void shouldNotAllowToLoadUsingNullResourceName() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(ConfigurationException.class);
 		expected.expectMessage(containsString("Resource name to load properties from can not be null or empty"));
 		
 		loader.load(null);
@@ -39,7 +37,7 @@ public class PropertiesLoaderTest {
 	
 	@Test
 	public void shouldNotAllowToLoadUsingEmptyResourceName() throws Exception {
-		expected.expect(InvalidParameterException.class);
+		expected.expect(ConfigurationException.class);
 		expected.expectMessage(containsString("Resource name to load properties from can not be null or empty"));
 		
 		loader.load("");

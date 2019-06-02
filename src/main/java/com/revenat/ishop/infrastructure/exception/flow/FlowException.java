@@ -10,16 +10,33 @@ import com.revenat.ishop.infrastructure.exception.base.ApplicationException;
  */
 public class FlowException extends ApplicationException {
 	private static final long serialVersionUID = -1127720904105893710L;
+	
+	private final String messageCode;
+	private final Object[] args;
+	
+	public FlowException(String message, Throwable cause, Object... args) {
+		super(message, cause);
+		messageCode = "message.error.500";
+		this.args = args;
+	}
 
-	public FlowException(String message, Throwable cause, int code) {
-		super(message, cause, code);
+	public FlowException(String message, String messageCode, Object... args) {
+		super(message);
+		this.messageCode = messageCode;
+		this.args = args;
 	}
 	
-	public FlowException(String message, Throwable cause) {
-		super(message, cause, 500);
+	public FlowException(String message, Object... args) {
+		super(message);
+		messageCode = "message.error.500";
+		this.args = args;
 	}
-
-	public FlowException(String message, int code) {
-		super(message, code);
+	
+	public String getMessageCode() {
+		return messageCode;
+	}
+	
+	public Object[] getArgs() {
+		return args;
 	}
 }

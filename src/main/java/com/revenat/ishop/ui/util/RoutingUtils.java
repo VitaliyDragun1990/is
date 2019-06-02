@@ -77,7 +77,7 @@ public final class RoutingUtils {
 	 * @throws IOException
 	 */
 	public static void sendJSON(String json, HttpServletResponse resp) throws IOException {
-		resp.setContentType("application/json");
+		resp.setContentType("application/json; charset=utf-8");
 		resp.getWriter().println(json);
 		resp.getWriter().close();
 	}

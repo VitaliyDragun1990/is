@@ -12,10 +12,10 @@ public class ConfigurationException extends ApplicationException {
 	private static final long serialVersionUID = 1L;
 
 	public ConfigurationException(String message) {
-		super(message, 500);
+		super(message);
 	}
 
 	public ConfigurationException(String message, Throwable cause) {
-		super(message, cause, 500);
+		super(message, cause);
 	}
 }

@@ -13,9 +13,9 @@ public class Checks {
 	 * @param args    optional arguments to message string
 	 * @throws InvalidParameterException
 	 */
-	public static void checkParam(boolean check, String message, Object... args) throws InvalidParameterException {
+	public static void checkParam(boolean check, String message, String messageCode, Object... args) throws InvalidParameterException {
 		if (!check) {
-			throw new InvalidParameterException(String.format(message, args));
+			throw new InvalidParameterException(String.format(message, args), messageCode, args);
 		}
 	}
 
@@ -27,9 +27,9 @@ public class Checks {
 	 * @param args      optional arguments to message string
 	 * @throws ValidationException
 	 */
-	public static void validateCondition(boolean condition, String message, Object... args) throws ValidationException {
+	public static void validateCondition(boolean condition, String message, String messageCode, Object... args) throws ValidationException {
 		if (!condition) {
-			throw new ValidationException(String.format(message, args));
+			throw new ValidationException(String.format(message, args), messageCode, args);
 		}
 	}
 

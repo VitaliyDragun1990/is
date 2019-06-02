@@ -10,11 +10,11 @@ import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
-import com.revenat.ishop.infrastructure.util.Checks;
 
 @Component
 @Transactional(readOnly=true)
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl extends PageableResultService implements ProductService {
+	
 	@Autowired
 	private ProductRepository productRepository;
 	@Autowired
@@ -30,21 +30,21 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<ProductDTO> findProducts(int page, int limit) {
-		validate(page, limit);
+		validateParams(page, limit);
 		int offset = calculateOffset(page, limit);
 		return transformer.transfrom(productRepository.findAll(limit, offset), ProductDTO.class);
 	}
 
 	@Override
 	public List<ProductDTO> findProductsByCategory(String categoryUrl, int page, int limit) {
-		validate(page, limit);
+		validateParams(page, limit);
 		int offset = calculateOffset(page, limit);
 		return transformer.transfrom(productRepository.findByCategory(categoryUrl, limit, offset), ProductDTO.class);
 	}
 	
 	@Override
 	public List<ProductDTO> findProductsByCriteria(ProductCriteria criteria, int page, int limit) {
-		validate(page, limit);
+		validateParams(page, limit);
 		int offset = calculateOffset(page, limit);
 		return transformer.transfrom(productRepository.findByCriteria(criteria, limit, offset), ProductDTO.class);
 	}
@@ -66,10 +66,5 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public int countProductsByCriteria(ProductCriteria criteria) {
 		return productRepository.countByCriteria(criteria);
-	}
-	
-	private static void validate(int page, int limit) {
-		Checks.checkParam(page >= 1, "page number can not be less that 1: %d", page);
-		Checks.checkParam(limit >= 1, "limit can not be less that 1: %d", limit);
 	}
 }

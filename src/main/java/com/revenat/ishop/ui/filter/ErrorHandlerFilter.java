@@ -10,11 +10,13 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.json.JSONObject;
 
+import com.revenat.ishop.application.service.I18nService;
 import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
-import com.revenat.ishop.infrastructure.exception.base.ApplicationException;
 import com.revenat.ishop.infrastructure.exception.flow.FlowException;
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
+import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
 import com.revenat.ishop.infrastructure.exception.security.AccessDeniedException;
+import com.revenat.ishop.infrastructure.exception.security.AuthenticationException;
 import com.revenat.ishop.ui.config.Constants.Attribute;
 import com.revenat.ishop.ui.config.Constants.Page;
 import com.revenat.ishop.ui.util.RoutingUtils;
@@ -30,6 +32,12 @@ import com.revenat.ishop.ui.util.UrlUtils;
  */
 public class ErrorHandlerFilter extends AbstractFilter {
 	private static final String INTERNAL_ERROR = "Internal error";
+	
+	private final I18nService i18nService;
+	
+	public ErrorHandlerFilter(I18nService i18nService) {
+		this.i18nService = i18nService;
+	}
 
 	@Override
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -45,54 +53,73 @@ public class ErrorHandlerFilter extends AbstractFilter {
 	private void processException(Exception e, HttpServletRequest req, HttpServletResponse resp) {
 		String requestUri = req.getRequestURI();
 		int statusCode = getStausCode(e);
+		logException(e, requestUri, statusCode);
+		
+		if (statusCode == HttpServletResponse.SC_BAD_REQUEST || statusCode == HttpServletResponse.SC_NOT_FOUND) {
+			req.setAttribute(Attribute.ERROR_MESSAGE, requestUri);
+		}
+		
+		req.setAttribute(Attribute.STATUS_CODE, statusCode);
+		resp.setStatus(statusCode);
+	}
+
+	private void logException(Exception e, String requestUri, int statusCode) {
 		if (statusCode != HttpServletResponse.SC_BAD_REQUEST) {
 			LOGGER.error("Request {} failed: {}", requestUri, e.getMessage(), e);
 		} else {
 			LOGGER.warn("Bad request {}: {}", requestUri, e.getMessage(), e);
 		}
-		req.setAttribute(Attribute.STATUS_CODE, statusCode);
-		resp.setStatus(statusCode);
 	}
 
 	private void sendResponse(HttpServletRequest req, HttpServletResponse resp, Exception e)
 			throws IOException, ServletException {
 		String requestUri = req.getRequestURI();
 		if (UrlUtils.isAjaxJsonUrl(requestUri)) {
-			String json = getJsonResponse(e);
+			String json = getJsonResponse(e, req);
 			RoutingUtils.sendJSON(json, resp);
 		} else if (UrlUtils.isAjaxHtmlUrl(requestUri)) {
-			RoutingUtils.sendHtmlFragment(INTERNAL_ERROR, resp);
+			String msg = i18nService.getMessage("message.error.500", req.getLocale());
+			RoutingUtils.sendHtmlFragment(msg, resp);
 		} else {
 			RoutingUtils.forwardToPage(Page.ERROR, req, resp);
 		}
 	}
 
 	private int getStausCode(Exception e) {
-		if (e instanceof ApplicationException) {
-			return ((ApplicationException) e).getCode();
-		} else {
+		if (e instanceof InvalidParameterException || e instanceof ValidationException) {
+			return HttpServletResponse.SC_BAD_REQUEST;
+		} else if (e instanceof AccessDeniedException) {
+			return HttpServletResponse.SC_FORBIDDEN;
+		} else if (e instanceof AuthenticationException) {
+			return HttpServletResponse.SC_UNAUTHORIZED;
+		} else if (e instanceof ResourceNotFoundException) {
+			return HttpServletResponse.SC_NOT_FOUND;
+		}
+		else {
 			return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 		}
 	}
 
-	private String getJsonResponse(Exception e) {
+	private String getJsonResponse(Exception e, HttpServletRequest req) {
 		JSONObject json = new JSONObject();
-		json.put("message", getMessage(getStausCode(e), e.getMessage()));
+		json.put("message", getMessage(req, e));
 		return json.toString();
 	}
 
-	private String getMessage(int statusCode, String badRequestMessage) {
+	private String getMessage(HttpServletRequest req, Exception e) {
+		int statusCode = getStausCode(e);
 		switch (statusCode) {
 		case 400:
-			return badRequestMessage;
+			FlowException exc = (FlowException) e;
+			return i18nService.getMessage(exc.getMessageCode(), req.getLocale(), exc.getArgs());
 		case 401:
-			return "You must be authorized to view this resource";
+			return i18nService.getMessage("message.error.401", req.getLocale());
 		case 403:
-			return "You don't have permissions to view this resource";
+			return i18nService.getMessage("message.error.403", req.getLocale());
 		case 404:
-			return "Resource not found";
+			return i18nService.getMessage("message.error.404", req.getLocale(), req.getRequestURI());
 		default:
-			return INTERNAL_ERROR;
+			return i18nService.getMessage("message.error.500", req.getLocale());
 		}
 	}
 
@@ -122,7 +149,7 @@ public class ErrorHandlerFilter extends AbstractFilter {
 		public void sendError(int sc, String msg) throws IOException {
 			switch (sc) {
 			case 400:
-				throw new InvalidParameterException(msg);
+				throw new InvalidParameterException(msg, "message.error.400", msg);
 			case 403:
 				throw new AccessDeniedException(msg);
 			case 404:

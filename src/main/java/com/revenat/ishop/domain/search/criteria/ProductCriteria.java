@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.revenat.ishop.domain.entity.Product;
-import com.revenat.ishop.infrastructure.util.Checks;
 
 /**
  * This value object represents criteria object to search for {@link Product} with.
@@ -18,16 +17,9 @@ public class ProductCriteria {
 	private final List<Integer> producerIds;
 
 	private ProductCriteria(String query, List<Integer> categories, List<Integer> producers) {
-		checkParams(query, categories, producers);
 		this.query = query;
 		this.categoryIds = categories;
 		this.producerIds = producers;
-	}
-	
-	private static void checkParams(String query, List<Integer> categories, List<Integer> producers) {
-		Checks.checkParam(query != null, "Search query cannot be null");
-		Checks.checkParam(categories != null, "List with categories id can not be null");
-		Checks.checkParam(producers != null, "List with producers id can not be null");
 	}
 
 	public static ProductCriteria byCategories(String query, List<Integer> categoryIds) {

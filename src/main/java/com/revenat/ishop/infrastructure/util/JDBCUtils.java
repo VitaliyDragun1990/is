@@ -1,13 +1,13 @@
 package com.revenat.ishop.infrastructure.util;
 
+import static java.util.Objects.requireNonNull;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-
-import com.revenat.ishop.infrastructure.util.Checks;
 
 /**
  * Contains helper methods to work with JDBC.
@@ -138,17 +138,19 @@ public final class JDBCUtils {
 	}
 
 	private static void checkParams(Connection conn, String sql, ResultSetHandler<?>... handlers) {
-		Checks.checkParam(conn != null, "Connection can not be null");
-		Checks.checkParam(sql != null, "Sql string can not be null");
+		requireNonNull(conn, "Connection can not be null");
+		requireNonNull(sql, "Sql string can not be null");
 		for (ResultSetHandler<?> handler : handlers) {
-			Checks.checkParam(handler != null, "Result set handler can not be null");
+			requireNonNull(handler, "Result set handler can not be null");
 		}
 	}
 
-	private static void checkParams(Connection conn, String sql, List<Object[]> parameterssList) {
+	private static void checkParams(Connection conn, String sql, List<Object[]> parametersList) {
 		checkParams(conn, sql);
-		Checks.checkParam(parameterssList != null && !parameterssList.isEmpty(),
-				"Can not execute insertBatch with null or empty parameter list");
+		requireNonNull(parametersList, "Can not execute insertBatch with null parameter list");
+		if (parametersList.isEmpty()) {
+			throw new IllegalArgumentException("Can not execute insertBatch with empty parameter list");
+		}
 	}
 
 	/**

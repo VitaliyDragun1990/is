@@ -24,7 +24,6 @@ import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.application.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.application.service.impl.ShoppingCartServiceImpl;
 import com.revenat.ishop.domain.entity.Product;
-import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.transform.transformer.impl.SimpleDTOTransformer;
 
@@ -67,7 +66,7 @@ public class ShoppingCartStringMapperTest {
 		assertThat(cookieString, containsString("2-3"));
 	}
 	
-	@Test(expected = InvalidParameterException.class)
+	@Test(expected = NullPointerException.class)
 	public void shouldNotAllowToMarshallNullShoppingCart() throws Exception {
 		mapper.marshall(null);
 	}
@@ -84,7 +83,7 @@ public class ShoppingCartStringMapperTest {
 		assertContainsItemWithQuantity(shoppingCart, 18, 5);
 	}
 	
-	@Test(expected = InvalidParameterException.class)
+	@Test(expected = NullPointerException.class)
 	public void shouldNotAllowToUnmarshallNullCookieString() throws Exception {
 		mapper.unmarshall(null);
 	}
