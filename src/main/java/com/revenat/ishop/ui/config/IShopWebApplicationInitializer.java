@@ -190,5 +190,4 @@ public class IShopWebApplicationInitializer implements WebApplicationInitializer
 		ctx.refresh();
 		return ctx;
 	}
-
 }
