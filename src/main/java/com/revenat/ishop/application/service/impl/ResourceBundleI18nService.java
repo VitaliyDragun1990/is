@@ -3,20 +3,19 @@ package com.revenat.ishop.application.service.impl;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.revenat.ishop.application.service.I18nService;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Value;
 
-@Component
+
+@Service
 public class ResourceBundleI18nService implements I18nService {
-	
-	@Value("i18n.bundle")
 	private String bundlePath;
-	
-	public ResourceBundleI18nService() {
-	}
 
-	public ResourceBundleI18nService(String bundlePath) {
+	@Autowired
+	public ResourceBundleI18nService(@Value("${i18n.bundle}") String bundlePath) {
 		this.bundlePath = bundlePath;
 	}
 

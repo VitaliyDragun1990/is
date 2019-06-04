@@ -1,15 +1,19 @@
 package com.revenat.ishop.domain.entity;
 
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Column;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
+@Entity
 @Table(name="account")
 public class Account extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = -8951792395607124164L;
 
+	@Column
 	private String name;
+	@Column
 	private String email;
-	@Column("avatar_url")
+	@Column(name = "avatar_url")
 	private String avatarUrl;
 	
 	public Account() {

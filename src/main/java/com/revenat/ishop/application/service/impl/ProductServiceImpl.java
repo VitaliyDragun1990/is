@@ -2,27 +2,27 @@ package com.revenat.ishop.application.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.revenat.ishop.application.dto.ProductDTO;
 import com.revenat.ishop.application.service.ProductService;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 
-@Component
+@Service
 @Transactional(readOnly=true)
 public class ProductServiceImpl extends PageableResultService implements ProductService {
 	
-	@Autowired
 	private ProductRepository productRepository;
-	@Autowired
 	private Transformer transformer;
 	
-	public ProductServiceImpl() {
-	}
-	
+	@Autowired
 	public ProductServiceImpl(ProductRepository productRepository, Transformer transformer) {
 		this.productRepository = productRepository;
 		this.transformer = transformer;
@@ -31,40 +31,43 @@ public class ProductServiceImpl extends PageableResultService implements Product
 	@Override
 	public List<ProductDTO> findProducts(int page, int limit) {
 		validateParams(page, limit);
-		int offset = calculateOffset(page, limit);
-		return transformer.transfrom(productRepository.findAll(limit, offset), ProductDTO.class);
+//		int offset = calculateOffset(page, limit);
+		Pageable sortById = new PageRequest(page-1, limit, Direction.ASC, "id");
+		return transformer.transfrom(productRepository.findAll(sortById), ProductDTO.class);
 	}
 
 	@Override
 	public List<ProductDTO> findProductsByCategory(String categoryUrl, int page, int limit) {
 		validateParams(page, limit);
-		int offset = calculateOffset(page, limit);
-		return transformer.transfrom(productRepository.findByCategory(categoryUrl, limit, offset), ProductDTO.class);
+//		int offset = calculateOffset(page, limit);
+		Pageable sortByNameAsc = new PageRequest(page-1, limit, Direction.ASC, "name");
+		return transformer.transfrom(productRepository.findByCategoryUrl(categoryUrl, sortByNameAsc), ProductDTO.class);
 	}
 	
 	@Override
 	public List<ProductDTO> findProductsByCriteria(ProductCriteria criteria, int page, int limit) {
 		validateParams(page, limit);
-		int offset = calculateOffset(page, limit);
-		return transformer.transfrom(productRepository.findByCriteria(criteria, limit, offset), ProductDTO.class);
+//		int offset = calculateOffset(page, limit);
+		Pageable sortByNameAsc = new PageRequest(page-1, limit, Direction.ASC, "name");
+		return transformer.transfrom(productRepository.findByCriteria(criteria, sortByNameAsc), ProductDTO.class);
 	}
 
-	private static int calculateOffset(int page, int productsPerPage) {
-		return (page - 1) * productsPerPage;
-	}
+//	private static int calculateOffset(int page, int productsPerPage) {
+//		return (page - 1) * productsPerPage;
+//	}
 	
 	@Override
 	public int countAllProducts() {
-		return productRepository.countAll();
+		return (int) productRepository.count();
 	}
 
 	@Override
 	public int countProductsByCategory(String categoryUrl) {
-		return productRepository.countByCategory(categoryUrl);
+		return productRepository.countByCategoryUrl(categoryUrl);
 	}
 
 	@Override
 	public int countProductsByCriteria(ProductCriteria criteria) {
-		return productRepository.countByCriteria(criteria);
+		return (int) productRepository.countByCriteria(criteria);
 	}
 }

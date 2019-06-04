@@ -2,18 +2,26 @@ package com.revenat.ishop.domain.entity;
 
 import java.math.BigDecimal;
 
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Child;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Column;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+@Entity
 @Table(name="order_item")
 public class OrderItem extends AbstractEntity<Long> {
 	private static final long serialVersionUID = -4694344400417048155L;
 	
-	@Column("order_id")
+	@Column(name = "order_id")
 	private Long orderId;
-	@Child(idColumnName="product_id")
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
+	
+	@Column
 	private Integer quantity;
 	
 	public OrderItem() {

@@ -1,17 +1,23 @@
 package com.revenat.ishop.infrastructure.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.mail.DefaultAuthenticator;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.SimpleEmail;
+import javax.annotation.PreDestroy;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
-import com.revenat.ishop.infrastructure.framework.annotation.di.OnDestroy;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Value;
 import com.revenat.ishop.infrastructure.service.NotificationService;
 
 /**
@@ -21,34 +27,32 @@ import com.revenat.ishop.infrastructure.service.NotificationService;
  * @author Vitaly Dragun
  *
  */
-@Component
+@Service
 public class AsyncEmailNotificationService implements NotificationService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AsyncEmailNotificationService.class);
 	private final ExecutorService executorService;
 	
-	@Value("email.fromEmail")
 	private String fromEmail;
-	@Value("email.sendTryAttempts")
 	private String sendTryAttempts;
-	@Value("email.smtp.server")
-	private String server;
-	@Value("email.smtp.port")
-	private String port;
-	@Value("email.smtp.username")
-	private String username;
-	@Value("email.smtp.password")
-	private String password;
+	private final JavaMailSender mailSender;
 
-	public AsyncEmailNotificationService() {
+	@Autowired
+	public AsyncEmailNotificationService(JavaMailSender mailSender,
+			@Value("${email.smtp.fromEmail}") String fromEmail,
+			@Value("${email.smtp.sendTryAttempts}") String sendTryAttempts) {
 		this.executorService = Executors.newCachedThreadPool();
+		this.mailSender = mailSender;
+		this.fromEmail = fromEmail;
+		this.sendTryAttempts = sendTryAttempts;
 	}
+	
 
 	@Override
 	public void sendNotification(String recipientEmail, String title, String content) {
 		executorService.submit(new EmailItem(recipientEmail, title, content));
 	}
 
-	@OnDestroy
+	@PreDestroy
 	@Override
 	public void shutdown() {
 		executorService.shutdown();
@@ -74,24 +78,11 @@ public class AsyncEmailNotificationService implements NotificationService {
 		@Override
 		public void run() {
 			try {
-				SimpleEmail email = new SimpleEmail();
-				email.setCharset("utf-8");
-
-				email.setHostName(server);
-				email.setSmtpPort(Integer.parseInt(port));
-				email.setSSLCheckServerIdentity(true);
-				email.setStartTLSEnabled(true);
-
-				email.setAuthenticator(
-						new DefaultAuthenticator(username,password));
-				email.setFrom(fromEmail);
-				email.setSubject(subject);
-				email.setMsg(content);
-				email.addTo(recipientEmail);
-				email.send();
-				LOGGER.info("Email with subject '{}' and content '{}' has been sent to {}", subject, content,
-						recipientEmail);
-			} catch (EmailException e) {
+				MimeMailMessage msg = buildMessage(subject, content, recipientEmail);
+				mailSender.send(msg.getMimeMessage());
+				LOGGER.info("Email with subject '{}' and content '{}' has been sent to {}",
+						subject, content, recipientEmail);
+			} catch (MailException e) {
 				LOGGER.error("Can't send email: " + e.getMessage(), e);
 				tryAttempts--;
 				if (isValidTry()) {
@@ -103,6 +94,15 @@ public class AsyncEmailNotificationService implements NotificationService {
 			} catch (Exception e) {
 				LOGGER.error("Error during sending email: {}", e.getMessage(), e);
 			}
+		}
+
+		private MimeMailMessage buildMessage(String msgSubject, String msgContent, String email) throws UnsupportedEncodingException, MessagingException {
+			MimeMessageHelper messageHelper = new MimeMessageHelper(mailSender.createMimeMessage(), false);
+			messageHelper.setSubject(msgSubject);
+			messageHelper.setTo(new InternetAddress(email, ""));
+			messageHelper.setFrom(fromEmail, "");
+			messageHelper.setText(msgContent);
+			return new MimeMailMessage(messageHelper);
 		}
 	}
 }

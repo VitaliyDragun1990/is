@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
+import org.springframework.stereotype.Component;
+
 
 @Component
 public class CachedFieldProvider implements FieldProvider {

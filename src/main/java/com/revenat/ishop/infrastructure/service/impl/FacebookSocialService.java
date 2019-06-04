@@ -1,17 +1,19 @@
 package com.revenat.ishop.infrastructure.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
-import com.restfb.Version;
-import com.restfb.exception.FacebookException;
 import com.restfb.FacebookClient.AccessToken;
 import com.restfb.Parameter;
+import com.restfb.Version;
+import com.restfb.exception.FacebookException;
 import com.restfb.scope.FacebookPermissions;
 import com.restfb.scope.ScopeBuilder;
 import com.restfb.types.User;
 import com.revenat.ishop.infrastructure.exception.security.AuthenticationException;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Value;
 import com.revenat.ishop.infrastructure.service.SocialAccount;
 import com.revenat.ishop.infrastructure.service.SocialService;
 
@@ -22,26 +24,29 @@ import com.revenat.ishop.infrastructure.service.SocialService;
  * @author Vitaly Dragun
  *
  */
-@Component
+@Service
 public class FacebookSocialService implements SocialService {
-	@Value("social.facebook.appId")
+//	@Value("${social.facebook.appId}")
 	private String appId;
-	@Value("social.facebook.secret")
+//	@Value("${social.facebook.secret}")
 	private String secret;
-	@Value("app.host")
+//	@Value("${app.host}")
 	private String host;
-	@Value("social.redirectUri")
+//	@Value("${social.redirectUri}")
 	private String redirectUri;
-
-	public FacebookSocialService() {
-	}
 	
-	public FacebookSocialService(String appId, String secret, String redirectUrl) {
+	@Autowired
+	public FacebookSocialService(
+			@Value("${social.facebook.appId}") String appId,
+			@Value("${social.facebook.secret}") String secret,
+			@Value("${app.host}") String host,
+			@Value("${social.redirectUri}") String redirectUri) {
 		this.appId = appId;
 		this.secret = secret;
-//		this.redirectUrl = redirectUrl;
+		this.host = host;
+		this.redirectUri = redirectUri;
 	}
-	
+
 	private String getRedirectUrl() {
 		return host + redirectUri;
 	}

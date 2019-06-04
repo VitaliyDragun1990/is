@@ -2,6 +2,10 @@ package com.revenat.ishop.application.service.impl;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.revenat.ishop.application.dto.ClientAccount;
 import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.application.service.AuthenticationService;
@@ -9,9 +13,6 @@ import com.revenat.ishop.domain.entity.Account;
 import com.revenat.ishop.infrastructure.exception.PersistenceException;
 import com.revenat.ishop.infrastructure.exception.flow.FlowException;
 import com.revenat.ishop.infrastructure.exception.security.AuthenticationException;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
 import com.revenat.ishop.infrastructure.service.AvatarService;
 import com.revenat.ishop.infrastructure.service.SocialAccount;
@@ -25,20 +26,14 @@ import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
  * @author Vitaly Dragun
  *
  */
-@Component
+@Service
 public class SocialAuthenticationService implements AuthenticationService {
-	@Autowired
 	private SocialService socialService;
-	@Autowired
 	private AvatarService avatarService;
-	@Autowired
 	private AccountRepository accountRepository;
-	@Autowired
 	private Transformer transformer;
-	
-	public SocialAuthenticationService() {
-	}
 
+	@Autowired
 	public SocialAuthenticationService(SocialService socialService, AvatarService avatarService,
 			AccountRepository accountRepository, Transformer transformer) {
 		this.socialService = socialService;

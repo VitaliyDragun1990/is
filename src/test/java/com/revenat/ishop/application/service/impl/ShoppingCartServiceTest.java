@@ -20,10 +20,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.revenat.ishop.application.dto.ProductDTO;
 import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.application.service.ShoppingCartService;
+import com.revenat.ishop.domain.entity.Category;
+import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
+import com.revenat.ishop.infrastructure.transform.transformer.impl.BasicFieldProvider;
 import com.revenat.ishop.infrastructure.transform.transformer.impl.SimpleDTOTransformer;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -41,11 +44,20 @@ public class ShoppingCartServiceTest {
 
 	@Before
 	public void setUp() {
-		service = new ShoppingCartServiceImpl(productRepository, new SimpleDTOTransformer());
+		service = new ShoppingCartServiceImpl(productRepository, new SimpleDTOTransformer(new BasicFieldProvider()));
 		
 		Product p = new Product();
 		p.setId(PRODUCT_ID);
 		p.setPrice(PRODUCT_PRICE);
+		
+		Producer someProducer = new Producer();
+		someProducer.setId(1);
+		
+		Category someCategory = new Category();
+		someCategory.setId(1);
+		
+		p.setCategory(someCategory);
+		p.setProducer(someProducer);
 		
 		when(productRepository.findById(PRODUCT_ID)).thenReturn(p);
 	}

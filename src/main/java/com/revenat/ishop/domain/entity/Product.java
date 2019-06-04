@@ -2,20 +2,34 @@ package com.revenat.ishop.domain.entity;
 
 import java.math.BigDecimal;
 
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Column;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+@Entity
 @Table(name="product")
 public class Product extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = 2900041021842951941L;
 	
+	@Column
 	private String name;
+	@Column
 	private String description;
-	@Column("image_link")
+	@Column(name = "image_link")
 	private String imageLink;
+	@Column
 	private BigDecimal price;
-	private String category;
-	private String producer;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "category_id", nullable = false)
+	private Category category;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "producer_id", nullable = false)
+	private Producer producer;
 	
 	public Product() {
 		price = BigDecimal.ZERO;
@@ -53,19 +67,19 @@ public class Product extends AbstractEntity<Integer> {
 		this.price = price;
 	}
 
-	public String getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
 
-	public String getProducer() {
+	public Producer getProducer() {
 		return producer;
 	}
 
-	public void setProducer(String producer) {
+	public void setProducer(Producer producer) {
 		this.producer = producer;
 	}
 

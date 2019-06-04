@@ -3,6 +3,12 @@ package com.revenat.ishop.application.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+
 import com.revenat.ishop.application.dto.ClientAccount;
 import com.revenat.ishop.application.dto.OrderDTO;
 import com.revenat.ishop.application.model.ClientSession;
@@ -14,34 +20,25 @@ import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.domain.entity.OrderItem;
 import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
 import com.revenat.ishop.infrastructure.exception.security.AccessDeniedException;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
-import com.revenat.ishop.infrastructure.framework.factory.TransactionSynchronizationManager;
 import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 import com.revenat.ishop.infrastructure.util.Checks;
 
-@Component
+@Service
 public class OrderManagerImpl extends PageableResultService implements OrderManager {
 	private static final String CART_REQUIRED_MSG_CODE = "message.error.requiredCartWithProducts";
 	
-	@Autowired
 	private AuthenticationService authService;
-	@Autowired
 	private OrderService orderService;
-	@Autowired
 	private FeedbackService feedbackService;
-	@Autowired
 	private Transformer transformer;
-	
-	public OrderManagerImpl() {
-	}
-	
+
+	@Autowired
 	public OrderManagerImpl(AuthenticationService authService, OrderService orderService,
-			FeedbackService feedbackService) {
+			FeedbackService feedbackService, Transformer transformer) {
 		this.authService = authService;
 		this.orderService = orderService;
 		this.feedbackService = feedbackService;
+		this.transformer = transformer;
 	}
 
 	@Transactional(readOnly=false)
@@ -55,15 +52,18 @@ public class OrderManagerImpl extends PageableResultService implements OrderMana
 				transformer.untransfrom(cart.getItems(), OrderItem.class),
 				userAccount.getId());
 		
-		TransactionSynchronizationManager.addSynchronization(() -> {
-			cart.clear();
-			feedbackService.sendNewOrderNotification(userAccount.getEmail(), clientSession.getClientLocale(), order);
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+			@Override
+			public void afterCommit() {
+				cart.clear();
+				feedbackService.sendNewOrderNotification(userAccount.getEmail(), clientSession.getClientLocale(), order);
+			}
 		});
 		
 		return order.getId();
 	}
 	
-	@Transactional
+	@Transactional(readOnly=true)
 	@Override
 	public OrderDTO getById(long id, ClientSession clientSession) {
 		OrderDTO order = getOrder(id);
@@ -73,7 +73,7 @@ public class OrderManagerImpl extends PageableResultService implements OrderMana
 		return order;
 	}
 	
-	@Transactional
+	@Transactional(readOnly=true)
 	@Override
 	public List<OrderDTO> findByClient(ClientSession clientSession, int page, int limit) {
 		validateParams(page, limit);
@@ -81,7 +81,7 @@ public class OrderManagerImpl extends PageableResultService implements OrderMana
 		return orderService.findByAccountId(userAccount.getId(), page, limit);
 	}
 
-	@Transactional
+	@Transactional(readOnly=true)
 	@Override
 	public int coundByClient(ClientSession clientSession) {
 		ClientAccount userAccount = authService.getAuthenticatedUserAccount(clientSession);

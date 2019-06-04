@@ -35,6 +35,8 @@ import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
 import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
 import com.revenat.ishop.infrastructure.exception.security.AccessDeniedException;
+import com.revenat.ishop.infrastructure.transform.transformer.impl.BasicFieldProvider;
+import com.revenat.ishop.infrastructure.transform.transformer.impl.SimpleDTOTransformer;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class OrderManagerTest {
@@ -52,12 +54,12 @@ public class OrderManagerTest {
 	private OrderService orderService;
 	@Mock
 	private FeedbackService feedbackService;
-
+	
 	private OrderManager orderManager;
 
 	@Before
 	public void setUp() {
-		orderManager = new OrderManagerImpl(authService, orderService, feedbackService);
+		orderManager = new OrderManagerImpl(authService, orderService, feedbackService, new SimpleDTOTransformer(new BasicFieldProvider()));
 //		Account clientAccount = new Account(CLIENT_NAME, CLIENT_EMAIL);
 		ClientAccount clientAccount = new ClientAccount(1, CLIENT_NAME, CLIENT_EMAIL, "");
 		clientAccount.setId(1);

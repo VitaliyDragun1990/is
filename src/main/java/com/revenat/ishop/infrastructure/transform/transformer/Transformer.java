@@ -30,7 +30,7 @@ public interface Transformer {
 	 * @param dtoClass Class of the specified DTO object to convert to
 	 * @return List of the specified DTOs
 	 */
-	<T, P extends Transformable<T>> List<P> transfrom(List<T> entities, Class<P> dtoClass);
+	<T, P extends Transformable<T>> List<P> transfrom(Iterable<T> entities, Class<P> dtoClass);
 
 	/**
 	 * Converts specified entity into existing DTO object

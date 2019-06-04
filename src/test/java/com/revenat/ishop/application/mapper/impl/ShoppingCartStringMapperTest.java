@@ -23,8 +23,11 @@ import com.revenat.ishop.application.dto.ProductDTO;
 import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.application.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.application.service.impl.ShoppingCartServiceImpl;
+import com.revenat.ishop.domain.entity.Category;
+import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
+import com.revenat.ishop.infrastructure.transform.transformer.impl.BasicFieldProvider;
 import com.revenat.ishop.infrastructure.transform.transformer.impl.SimpleDTOTransformer;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -37,13 +40,19 @@ public class ShoppingCartStringMapperTest {
 	
 	@Before
 	public void setup() {
-		mapper = new ShoppingCartStringMapper(new ShoppingCartServiceImpl(productRepository, new SimpleDTOTransformer()));
+		mapper = new ShoppingCartStringMapper(new ShoppingCartServiceImpl(productRepository, new SimpleDTOTransformer(new BasicFieldProvider())));
 		when(productRepository.findById(Mockito.any(Integer.class))).thenAnswer(new Answer<Product>() {
 			@Override
 			public Product answer(InvocationOnMock invocation) throws Throwable {
 				int productId = invocation.getArgument(0);
 				Product p = new Product();
 				p.setId(productId);
+				Producer pr = new Producer();
+				pr.setId(productId);
+				Category ct = new Category();
+				ct.setId(productId);
+				p.setProducer(pr);
+				p.setCategory(ct);
 				return p;
 			}
 		});

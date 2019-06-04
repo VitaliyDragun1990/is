@@ -1,19 +1,19 @@
 package com.revenat.ishop.domain.entity;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Column;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Table;
-
+@Entity
 @Table(name="category")
-@XmlRootElement(name ="category")
 public class Category extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = -1834996509365201052L;
 	
+	@Column
 	private String name;
+	@Column
 	private String url;
-	@Column("product_count")
+	@Column(name = "product_count")
 	private Integer productCount;
 	
 	public Category() {
@@ -37,24 +37,19 @@ public class Category extends AbstractEntity<Integer> {
 		return productCount;
 	}
 	
-
-	@XmlAttribute
 	@Override
 	public void setId(Integer id) {
 		super.setId(id);
 	}
 
-	@XmlAttribute
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	@XmlAttribute
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
-	@XmlAttribute(name="product-count")
 	public void setProductCount(int productCount) {
 		this.productCount = productCount;
 	}

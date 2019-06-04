@@ -7,9 +7,9 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
 import com.revenat.ishop.infrastructure.transform.Transformable;
 import com.revenat.ishop.infrastructure.transform.exception.TransformException;
 import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
@@ -24,13 +24,10 @@ import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 public class SimpleDTOTransformer implements Transformer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SimpleDTOTransformer.class);
 	
+	private final FieldProvider fieldProvider;
+	
+	
 	@Autowired
-	private FieldProvider fieldProvider;
-	
-	public SimpleDTOTransformer() {
-		fieldProvider = new BasicFieldProvider();
-	}
-	
 	public SimpleDTOTransformer(FieldProvider fieldProvider) {
 		this.fieldProvider = fieldProvider;
 	}
@@ -43,7 +40,7 @@ public class SimpleDTOTransformer implements Transformer {
 	}
 	
 	@Override
-	public <T, P extends Transformable<T>> List<P> transfrom(List<T> entities, Class<P> dtoClass) {
+	public <T, P extends Transformable<T>> List<P> transfrom(Iterable<T> entities, Class<P> dtoClass) {
 		checkParams(entities, dtoClass);
 		
 		List<P> list = new ArrayList<>();

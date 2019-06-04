@@ -2,26 +2,24 @@ package com.revenat.ishop.application.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.revenat.ishop.application.dto.ProducerDTO;
 import com.revenat.ishop.application.service.ProducerService;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.ProducerRepository;
 import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 
-@Component
+@Service
 @Transactional(readOnly=true)
 public class ProducerServiceImpl implements ProducerService {
-	@Autowired
 	private ProducerRepository producerRepository;
-	@Autowired
 	private Transformer transformer;
-
-	public ProducerServiceImpl() {
-	}
 	
+	@Autowired
 	public ProducerServiceImpl(ProducerRepository producerRepository, Transformer transformer) {
 		this.producerRepository = producerRepository;
 		this.transformer = transformer;
@@ -33,7 +31,7 @@ public class ProducerServiceImpl implements ProducerService {
 
 	@Override
 	public List<ProducerDTO> findAllProducers() {
-		return transformer.transfrom(producerRepository.findAll(), ProducerDTO.class);
+		return transformer.transfrom(producerRepository.findAll(new Sort("name")), ProducerDTO.class);
 	}
 	
 	@Override

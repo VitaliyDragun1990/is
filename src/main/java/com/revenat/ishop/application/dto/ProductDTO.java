@@ -3,8 +3,11 @@ package com.revenat.ishop.application.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.revenat.ishop.domain.entity.Category;
+import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.infrastructure.transform.Transformable;
+import com.revenat.ishop.infrastructure.transform.annotation.Ignore;
 import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 import com.revenat.ishop.infrastructure.util.CommonUtil;
 
@@ -16,21 +19,27 @@ public class ProductDTO implements Transformable<Product>, Serializable {
 	private String description;
 	private String imageLink;
 	private BigDecimal price;
-	private String category;
-	private String producer;
+	@Ignore
+	private CategoryDTO category;
+	@Ignore
+	private ProducerDTO producer;
 	
 	public ProductDTO() {
 		price = BigDecimal.ZERO;
 	}
 	
 	@Override
-	public void transform(Product product, Transformer tarnsformer) {
-		this.id = product.getId();	
+	public void transform(Product product, Transformer transformer) {
+		this.id = product.getId();
+		this.category = transformer.transform(product.getCategory(), CategoryDTO.class);
+		this.producer = transformer.transform(product.getProducer(), ProducerDTO.class);
 	}
 	
 	@Override
-	public Product untransform(Product product, Transformer tarnsformer) {
+	public Product untransform(Product product, Transformer transformer) {
 		product.setId(id);
+		product.setCategory(transformer.untransform(category, Category.class));
+		product.setProducer(transformer.untransform(producer, Producer.class));
 		return product;
 	}
 	
@@ -59,11 +68,11 @@ public class ProductDTO implements Transformable<Product>, Serializable {
 	}
 
 	public String getCategory() {
-		return category;
+		return category.getName();
 	}
 
 	public String getProducer() {
-		return producer;
+		return producer.getName();
 	}
 
 	public void setPrice(BigDecimal price) {

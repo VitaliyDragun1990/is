@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.revenat.ishop.application.mapper.ShoppingCartMapper;
 import com.revenat.ishop.application.model.ShoppingCart;
@@ -12,8 +14,7 @@ import com.revenat.ishop.application.service.ShoppingCartService;
 import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
 import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
 import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
+
 
 /**
  * This component is responsible for mapping {@link ShoppingCart} instance
@@ -22,17 +23,14 @@ import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
  * @author Vitaly Dragun
  *
  */
-@Component
+@Service
 public class ShoppingCartStringMapper implements ShoppingCartMapper<String> {
 	private static final String CART_ITEM_CODING_FORMAT = "%d-%d|";
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingCartStringMapper.class);
 
-	@Autowired
 	private ShoppingCartService cartService;
-
-	public ShoppingCartStringMapper() {
-	}
 	
+	@Autowired
 	public ShoppingCartStringMapper(ShoppingCartService cartService) {
 		this.cartService = cartService;
 	}
@@ -47,6 +45,7 @@ public class ShoppingCartStringMapper implements ShoppingCartMapper<String> {
 	 * @throws InvalidParameterException if specified {@link ShoppingCart} instance is
 	 *                              null;
 	 */
+	@Override
 	public String marshall(ShoppingCart shoppingCart) {
 		checkParam(shoppingCart);
 		
@@ -80,6 +79,7 @@ public class ShoppingCartStringMapper implements ShoppingCartMapper<String> {
 	 * @return {@link ShoppingCart} instance obtained by unmarshalling string.
 	 * @throws InvalidParameterException if specified string is {@code null}
 	 */
+	@Override
 	public ShoppingCart unmarshall(String shoppingCartString) {
 		checkParam(shoppingCartString);
 		

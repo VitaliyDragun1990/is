@@ -1,29 +1,26 @@
 package com.revenat.ishop.application.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.revenat.ishop.application.dto.ProductDTO;
 import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.application.service.ShoppingCartService;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
 import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 import com.revenat.ishop.infrastructure.util.Checks;
 
-@Component
+@Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 	private static final String VALID_PRODUCT_QUANTITY_MSG_CODE = "message.error.validProductQuantity";
 	
-	@Autowired
 	private ProductRepository productRepository;
-	@Autowired
 	private Transformer transformer;
 
-	public ShoppingCartServiceImpl() {
-	}
-
+	@Autowired
 	public ShoppingCartServiceImpl(ProductRepository productRepository, Transformer transformer) {
 		this.productRepository = productRepository;
 		this.transformer = transformer;

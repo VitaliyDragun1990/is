@@ -1,14 +1,17 @@
 package com.revenat.ishop.domain.entity;
 
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Column;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
+@Entity
 @Table(name="producer")
 public class Producer extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = -4130535481455511674L;
 	
+	@Column
 	private String name;
-	@Column("product_count")
+	@Column(name = "product_count")
 	private Integer productCount;
 	
 	public Producer() {

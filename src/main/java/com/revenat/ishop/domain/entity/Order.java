@@ -6,18 +6,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Column;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Table;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.entity.Transient;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
+@Entity
 @Table(name="\"order\"")
 public class Order extends AbstractEntity<Long> {
 	private static final long serialVersionUID = 4243683635737044229L;
 
-	@Column("account_id")
+	@Column(name = "account_id")
 	private Integer accountId;
 	@Transient
 	private List<OrderItem> items;
+	
+	@Column(columnDefinition = "TIMESTAMP")
 	private LocalDateTime created;
 	
 	public Order() {

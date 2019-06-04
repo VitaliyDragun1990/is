@@ -2,31 +2,30 @@ package com.revenat.ishop.application.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.revenat.ishop.application.dto.OrderDTO;
 import com.revenat.ishop.application.service.OrderService;
 import com.revenat.ishop.domain.entity.Order;
 import com.revenat.ishop.domain.entity.OrderItem;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Autowired;
-import com.revenat.ishop.infrastructure.framework.annotation.di.Component;
-import com.revenat.ishop.infrastructure.framework.annotation.persistence.service.Transactional;
 import com.revenat.ishop.infrastructure.repository.OrderItemRepository;
 import com.revenat.ishop.infrastructure.repository.OrderRepository;
 import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 
-@Component
+@Service
 @Transactional(readOnly=true)
 public class OrderServiceImpl implements OrderService {
 	
-	@Autowired
 	private OrderRepository orderRepository;
-	@Autowired
 	private OrderItemRepository orderItemRepository;
-	@Autowired
 	private Transformer transformer;
-
-	public OrderServiceImpl() {
-	}
 	
+	@Autowired
 	public OrderServiceImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository,
 			Transformer transformer) {
 		this.orderRepository = orderRepository;
@@ -42,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
 		orderRepository.save(order);
 		
 		orderItems.forEach(item -> item.setOrderId(order.getId()));
-		orderItemRepository.saveAll(orderItems);
+		orderItemRepository.save(orderItems);
 		
 		order.setItems(orderItems);
 		
@@ -60,8 +59,9 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	public List<OrderDTO> findByAccountId(int accountId, int page, int limit) {
-		int offset = calculateOffset(page, limit);
-		List<Order> orders = orderRepository.findByAccountId(accountId, limit, offset);
+//		int offset = calculateOffset(page, limit);
+		Pageable sortByIdDesc = new PageRequest(page-1, limit, Direction.DESC, "id");
+		List<Order> orders = orderRepository.findByAccountId(accountId, sortByIdDesc);
 
 		orders.forEach(this::loadOrderItemsForOrder);
 		
@@ -80,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
 		order.setItems(orderItems);
 	}
 	
-	private static int calculateOffset(int page, int productsPerPage) {
-		return (page - 1) * productsPerPage;
-	}
+//	private static int calculateOffset(int page, int productsPerPage) {
+//		return (page - 1) * productsPerPage;
+//	}
 }

@@ -3,9 +3,19 @@ package com.revenat.ishop.domain.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class AbstractEntity<T> implements Serializable {
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
+public abstract class AbstractEntity<T extends Serializable> implements Serializable {
 	private static final long serialVersionUID = 3911762542288653980L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID")
 	private T id;
 
 	public T getId() {
