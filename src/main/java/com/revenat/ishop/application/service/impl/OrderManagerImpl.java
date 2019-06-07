@@ -11,17 +11,17 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import com.revenat.ishop.application.dto.ClientAccount;
 import com.revenat.ishop.application.dto.OrderDTO;
+import com.revenat.ishop.application.exception.ResourceNotFoundException;
+import com.revenat.ishop.application.exception.security.AccessDeniedException;
 import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.application.service.AuthenticationService;
 import com.revenat.ishop.application.service.FeedbackService;
 import com.revenat.ishop.application.service.OrderManager;
 import com.revenat.ishop.application.service.OrderService;
+import com.revenat.ishop.application.transform.transformer.Transformer;
+import com.revenat.ishop.application.util.Checks;
 import com.revenat.ishop.domain.entity.OrderItem;
-import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
-import com.revenat.ishop.infrastructure.exception.security.AccessDeniedException;
-import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
-import com.revenat.ishop.infrastructure.util.Checks;
 
 @Service
 public class OrderManagerImpl extends PageableResultService implements OrderManager {

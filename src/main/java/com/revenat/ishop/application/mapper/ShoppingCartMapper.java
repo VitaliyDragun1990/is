@@ -1,7 +1,7 @@
 package com.revenat.ishop.application.mapper;
 
 import com.revenat.ishop.application.model.ShoppingCart;
-import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
+import com.revenat.ishop.domain.exception.flow.InvalidParameterException;
 
 /**
  * This interface represents contract with responsibility of marshalling

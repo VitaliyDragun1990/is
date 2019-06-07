@@ -13,7 +13,7 @@ import com.restfb.exception.FacebookException;
 import com.restfb.scope.FacebookPermissions;
 import com.restfb.scope.ScopeBuilder;
 import com.restfb.types.User;
-import com.revenat.ishop.infrastructure.exception.security.AuthenticationException;
+import com.revenat.ishop.application.exception.security.AuthenticationException;
 import com.revenat.ishop.infrastructure.service.SocialAccount;
 import com.revenat.ishop.infrastructure.service.SocialService;
 

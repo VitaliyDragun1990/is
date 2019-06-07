@@ -18,16 +18,16 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.revenat.ishop.application.dto.ProductDTO;
+import com.revenat.ishop.application.exception.ResourceNotFoundException;
 import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.application.service.ShoppingCartService;
+import com.revenat.ishop.application.transform.transformer.impl.BasicFieldProvider;
+import com.revenat.ishop.application.transform.transformer.impl.SimpleDTOTransformer;
 import com.revenat.ishop.domain.entity.Category;
 import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.entity.Product;
-import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
-import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
+import com.revenat.ishop.domain.exception.flow.InvalidParameterException;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
-import com.revenat.ishop.infrastructure.transform.transformer.impl.BasicFieldProvider;
-import com.revenat.ishop.infrastructure.transform.transformer.impl.SimpleDTOTransformer;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ShoppingCartServiceTest {

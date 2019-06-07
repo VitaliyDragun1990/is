@@ -21,16 +21,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import com.revenat.ishop.application.dto.ClientAccount;
+import com.revenat.ishop.application.exception.security.AuthenticationException;
 import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.application.service.AuthenticationService.Credentials;
+import com.revenat.ishop.application.transform.transformer.impl.BasicFieldProvider;
+import com.revenat.ishop.application.transform.transformer.impl.SimpleDTOTransformer;
 import com.revenat.ishop.domain.entity.Account;
-import com.revenat.ishop.infrastructure.exception.security.AuthenticationException;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
 import com.revenat.ishop.infrastructure.service.AvatarService;
 import com.revenat.ishop.infrastructure.service.SocialAccount;
 import com.revenat.ishop.infrastructure.service.SocialService;
-import com.revenat.ishop.infrastructure.transform.transformer.impl.BasicFieldProvider;
-import com.revenat.ishop.infrastructure.transform.transformer.impl.SimpleDTOTransformer;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class SocialAuthenticationServiceTest {

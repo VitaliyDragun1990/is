@@ -2,10 +2,10 @@ package com.revenat.ishop.application.dto;
 
 import java.io.Serializable;
 
+import com.revenat.ishop.application.transform.Transformable;
+import com.revenat.ishop.application.transform.transformer.Transformer;
+import com.revenat.ishop.application.util.CommonUtil;
 import com.revenat.ishop.domain.entity.Account;
-import com.revenat.ishop.infrastructure.transform.Transformable;
-import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
-import com.revenat.ishop.infrastructure.util.CommonUtil;
 
 /**
  * This interface represents currently logged in user in the application.

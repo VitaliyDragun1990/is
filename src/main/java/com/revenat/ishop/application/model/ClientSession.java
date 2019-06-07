@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import com.revenat.ishop.application.dto.ClientAccount;
 import com.revenat.ishop.application.dto.ProductDTO;
-import com.revenat.ishop.infrastructure.util.CommonUtil;
+import com.revenat.ishop.application.util.CommonUtil;
 
 /**
  * This component holds information about particular application client (in

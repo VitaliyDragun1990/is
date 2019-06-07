@@ -12,7 +12,6 @@ public class CategoryDTO extends BaseDTO<Integer, Category> implements Serializa
 	private String url;
 	private Integer productCount;
 
-
 	public String getName() {
 		return name;
 	}

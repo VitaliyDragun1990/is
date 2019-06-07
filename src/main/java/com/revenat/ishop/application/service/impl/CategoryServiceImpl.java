@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.revenat.ishop.application.dto.CategoryDTO;
 import com.revenat.ishop.application.service.CategoryService;
+import com.revenat.ishop.application.transform.transformer.Transformer;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
 import com.revenat.ishop.infrastructure.repository.CategoryRepository;
-import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 
 @Service
 @Transactional(readOnly=true)

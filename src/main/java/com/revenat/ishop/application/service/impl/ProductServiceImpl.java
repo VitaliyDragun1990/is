@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.revenat.ishop.application.dto.ProductDTO;
 import com.revenat.ishop.application.service.ProductService;
+import com.revenat.ishop.application.transform.transformer.Transformer;
 import com.revenat.ishop.domain.search.criteria.ProductCriteria;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
-import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 
 @Service
 @Transactional(readOnly=true)

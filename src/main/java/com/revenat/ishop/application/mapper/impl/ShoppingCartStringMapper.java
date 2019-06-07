@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.revenat.ishop.application.exception.ResourceNotFoundException;
 import com.revenat.ishop.application.mapper.ShoppingCartMapper;
 import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.application.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.application.service.ShoppingCartService;
-import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
-import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
-import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
+import com.revenat.ishop.domain.exception.flow.InvalidParameterException;
+import com.revenat.ishop.domain.exception.flow.ValidationException;
 
 
 /**

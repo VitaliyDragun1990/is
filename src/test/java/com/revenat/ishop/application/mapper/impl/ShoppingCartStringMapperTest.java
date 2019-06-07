@@ -23,12 +23,12 @@ import com.revenat.ishop.application.dto.ProductDTO;
 import com.revenat.ishop.application.model.ShoppingCart;
 import com.revenat.ishop.application.model.ShoppingCart.ShoppingCartItem;
 import com.revenat.ishop.application.service.impl.ShoppingCartServiceImpl;
+import com.revenat.ishop.application.transform.transformer.impl.BasicFieldProvider;
+import com.revenat.ishop.application.transform.transformer.impl.SimpleDTOTransformer;
 import com.revenat.ishop.domain.entity.Category;
 import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.entity.Product;
 import com.revenat.ishop.infrastructure.repository.ProductRepository;
-import com.revenat.ishop.infrastructure.transform.transformer.impl.BasicFieldProvider;
-import com.revenat.ishop.infrastructure.transform.transformer.impl.SimpleDTOTransformer;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ShoppingCartStringMapperTest {

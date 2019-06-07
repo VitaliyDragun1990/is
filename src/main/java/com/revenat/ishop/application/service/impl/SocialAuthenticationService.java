@@ -7,17 +7,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.revenat.ishop.application.dto.ClientAccount;
+import com.revenat.ishop.application.exception.security.AuthenticationException;
 import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.application.service.AuthenticationService;
+import com.revenat.ishop.application.transform.transformer.Transformer;
 import com.revenat.ishop.domain.entity.Account;
-import com.revenat.ishop.infrastructure.exception.PersistenceException;
-import com.revenat.ishop.infrastructure.exception.flow.FlowException;
-import com.revenat.ishop.infrastructure.exception.security.AuthenticationException;
+import com.revenat.ishop.domain.exception.FlowException;
+import com.revenat.ishop.domain.exception.PersistenceException;
 import com.revenat.ishop.infrastructure.repository.AccountRepository;
 import com.revenat.ishop.infrastructure.service.AvatarService;
 import com.revenat.ishop.infrastructure.service.SocialAccount;
 import com.revenat.ishop.infrastructure.service.SocialService;
-import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 
 /**
  * Default implementation of the {@link AuthenticationService} interface which

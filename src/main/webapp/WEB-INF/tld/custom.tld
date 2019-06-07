@@ -19,7 +19,7 @@
 			]]>
 		</description>
 		<name>i18n</name>
-		<tag-class>com.revenat.ishop.ui.tag.I18nTag</tag-class>
+		<tag-class>com.revenat.ishop.presentation.tag.I18nTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<description>

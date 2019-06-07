@@ -1,6 +1,6 @@
 package com.revenat.ishop.application.service.impl;
 
-import com.revenat.ishop.infrastructure.util.Checks;
+import com.revenat.ishop.application.util.Checks;
 
 abstract class PageableResultService {
 	private static final String INVALID_PAGE_NUMBER_MSG_CODE = "message.error.invalidPageNumber";

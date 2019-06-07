@@ -3,13 +3,13 @@ package com.revenat.ishop.application.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.revenat.ishop.application.transform.Transformable;
+import com.revenat.ishop.application.transform.annotation.Ignore;
+import com.revenat.ishop.application.transform.transformer.Transformer;
+import com.revenat.ishop.application.util.CommonUtil;
 import com.revenat.ishop.domain.entity.Category;
 import com.revenat.ishop.domain.entity.Producer;
 import com.revenat.ishop.domain.entity.Product;
-import com.revenat.ishop.infrastructure.transform.Transformable;
-import com.revenat.ishop.infrastructure.transform.annotation.Ignore;
-import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
-import com.revenat.ishop.infrastructure.util.CommonUtil;
 
 public class ProductDTO implements Transformable<Product>, Serializable {
 	private static final long serialVersionUID = 4328294218680349054L;

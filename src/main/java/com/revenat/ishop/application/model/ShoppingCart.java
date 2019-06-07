@@ -10,13 +10,13 @@ import java.util.List;
 
 import com.revenat.ishop.application.dto.ProductDTO;
 import com.revenat.ishop.application.dto.base.BaseDTO;
+import com.revenat.ishop.application.transform.annotation.Ignore;
+import com.revenat.ishop.application.transform.transformer.Transformer;
+import com.revenat.ishop.application.util.Checks;
+import com.revenat.ishop.application.util.CommonUtil;
 import com.revenat.ishop.domain.entity.OrderItem;
 import com.revenat.ishop.domain.entity.Product;
-import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
-import com.revenat.ishop.infrastructure.transform.annotation.Ignore;
-import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
-import com.revenat.ishop.infrastructure.util.Checks;
-import com.revenat.ishop.infrastructure.util.CommonUtil;
+import com.revenat.ishop.domain.exception.flow.ValidationException;
 
 /**
  * This component represents client's shopping cart. It can store at most

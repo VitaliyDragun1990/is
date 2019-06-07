@@ -3,9 +3,9 @@ package com.revenat.ishop.application.dto;
 import java.math.BigDecimal;
 
 import com.revenat.ishop.application.dto.base.BaseDTO;
+import com.revenat.ishop.application.transform.annotation.Ignore;
+import com.revenat.ishop.application.transform.transformer.Transformer;
 import com.revenat.ishop.domain.entity.OrderItem;
-import com.revenat.ishop.infrastructure.transform.annotation.Ignore;
-import com.revenat.ishop.infrastructure.transform.transformer.Transformer;
 
 public class OrderItemDTO extends BaseDTO<Long, OrderItem> {
 	private Long orderId;

@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import com.revenat.ishop.application.dto.ProductDTO;
 import com.revenat.ishop.application.model.ShoppingCart.ShoppingCartItem;
-import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
+import com.revenat.ishop.domain.exception.flow.ValidationException;
 
 public class ShoppingCartTest {
 

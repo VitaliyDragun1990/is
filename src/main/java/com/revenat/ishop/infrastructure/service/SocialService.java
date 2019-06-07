@@ -1,6 +1,6 @@
 package com.revenat.ishop.infrastructure.service;
 
-import com.revenat.ishop.infrastructure.exception.security.AuthenticationException;
+import com.revenat.ishop.application.exception.security.AuthenticationException;
 
 /**
  * This interface represents component responsible for getting access to

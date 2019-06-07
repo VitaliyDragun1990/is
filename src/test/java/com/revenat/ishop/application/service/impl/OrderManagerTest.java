@@ -25,18 +25,18 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.revenat.ishop.application.dto.ClientAccount;
 import com.revenat.ishop.application.dto.OrderDTO;
 import com.revenat.ishop.application.dto.ProductDTO;
+import com.revenat.ishop.application.exception.ResourceNotFoundException;
+import com.revenat.ishop.application.exception.security.AccessDeniedException;
 import com.revenat.ishop.application.model.ClientSession;
 import com.revenat.ishop.application.service.AuthenticationService;
 import com.revenat.ishop.application.service.FeedbackService;
 import com.revenat.ishop.application.service.OrderManager;
 import com.revenat.ishop.application.service.OrderService;
+import com.revenat.ishop.application.transform.transformer.impl.BasicFieldProvider;
+import com.revenat.ishop.application.transform.transformer.impl.SimpleDTOTransformer;
 import com.revenat.ishop.domain.entity.Account;
-import com.revenat.ishop.infrastructure.exception.ResourceNotFoundException;
-import com.revenat.ishop.infrastructure.exception.flow.InvalidParameterException;
-import com.revenat.ishop.infrastructure.exception.flow.ValidationException;
-import com.revenat.ishop.infrastructure.exception.security.AccessDeniedException;
-import com.revenat.ishop.infrastructure.transform.transformer.impl.BasicFieldProvider;
-import com.revenat.ishop.infrastructure.transform.transformer.impl.SimpleDTOTransformer;
+import com.revenat.ishop.domain.exception.flow.InvalidParameterException;
+import com.revenat.ishop.domain.exception.flow.ValidationException;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class OrderManagerTest {
